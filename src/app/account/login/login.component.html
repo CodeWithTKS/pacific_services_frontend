@@ -1,0 +1,51 @@
+<!-- Redesigned Login Page -->
+<div class="bg">
+    <div class="container d-flex align-items-center justify-content-center">
+        <div class="row w-100 shadow rounded overflow-hidden bg-white">
+            <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center bg-light">
+                <img src="../../../assets/img/Customer relationship.png" alt="Business Plan" class="img-fluid">
+            </div>
+            <div class="col-md-6 p-4 d-flex flex-column justify-content-center">
+                <div class="text-center mb-4">
+                    <img src="../../../assets/img/logo.png" alt="Logo" class="img-fluid mb-2" style="max-width: 150px;">
+                    <h2 class="h4">Welcome Back!</h2>
+                    <p class="text-muted">Log in to your account to continue</p>
+                </div>
+
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" formControlName="email" class="form-control"
+                            placeholder="Enter your email">
+                        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                            class="text-danger mt-1">
+                            <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</small>
+                            <small *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <input [type]="showPassword ? 'text' : 'password'" id="password"
+                                formControlName="password_hash" class="form-control" placeholder="Enter your password">
+                            <button class="btn btn-outline-secondary" type="button"
+                                (click)="togglePasswordVisibility()">
+                                <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                            class="text-danger mt-1">
+                            <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+                            <small *ngIf="loginForm.get('password')?.errors?.['minlength']">Minimum 6 characters
+                                required.</small>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-100 mb-3" type="submit"
+                        [disabled]="loginForm.invalid">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

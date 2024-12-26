@@ -1,0 +1,20 @@
+.bg {
+    background: linear-gradient(135deg, #4b79a1, #283e51);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.shadow {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.needs-validation .form-control:invalid {
+    border-color: #e74c3c;
+}
+
+.needs-validation .form-control:invalid:focus {
+    box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+}
