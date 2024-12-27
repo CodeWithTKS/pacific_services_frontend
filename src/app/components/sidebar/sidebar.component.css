@@ -1,7 +1,7 @@
 .font {
     /* font-family: Arial, Helvetica, sans-serif; */
     color: white;
-    font-family: Dancing Script, cursive;
+    font-family: Dancing Script, cursive !important;
     margin: 0;
 }
 
@@ -10,7 +10,7 @@
     bottom: 20px;
     right: 20px;
     z-index: 1000;
-    background-color: #343a40;
+    background-color: #004d99;
     /* Dark theme */
     color: #fff;
     border: none;

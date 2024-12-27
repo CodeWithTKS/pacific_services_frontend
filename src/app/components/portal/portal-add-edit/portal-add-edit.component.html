@@ -1,0 +1,134 @@
+<div class="container mt-5">
+    <!-- Dynamic Title -->
+    <h3>{{ isEditMode ? 'Edit Portal' : 'Add Portal' }}</h3>
+
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <!-- Name Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter name" aria-label="Name">
+                    <mat-error *ngIf="myForm.get('name')?.hasError('required')">Name is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Code Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Code</mat-label>
+                    <input matInput formControlName="code" placeholder="Enter code" aria-label="Code">
+                    <mat-error *ngIf="myForm.get('code')?.hasError('required')">Code is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Contact No Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Contact No</mat-label>
+                    <input matInput formControlName="contactNo" placeholder="Enter contact number"
+                        aria-label="Contact No">
+                    <mat-error *ngIf="myForm.get('contactNo')?.hasError('required')">Contact No is required</mat-error>
+                    <mat-error *ngIf="myForm.get('contactNo')?.hasError('pattern')">Invalid Contact No</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Contact Person Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Contact Person</mat-label>
+                    <input matInput formControlName="contactPerson" placeholder="Enter contact person"
+                        aria-label="Contact Person">
+                    <mat-error *ngIf="myForm.get('contactPerson')?.hasError('required')">Contact Person is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Email Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" placeholder="Enter email" aria-label="Email">
+                    <mat-error *ngIf="myForm.get('email')?.hasError('required')">Email is required</mat-error>
+                    <mat-error *ngIf="myForm.get('email')?.hasError('email')">Invalid Email</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Fax Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Fax</mat-label>
+                    <input matInput formControlName="fax" placeholder="Enter fax" aria-label="Fax">
+                </mat-form-field>
+            </div>
+
+            <!-- Account No Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>AC No</mat-label>
+                    <input matInput formControlName="acNo" placeholder="Enter account number"
+                        aria-label="Account Number">
+                    <mat-error *ngIf="myForm.get('acNo')?.hasError('required')">Account No is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Balance Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Balance</mat-label>
+                    <input matInput formControlName="balance" placeholder="Enter balance" aria-label="Balance">
+                    <mat-error *ngIf="myForm.get('balance')?.hasError('required')">Balance is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Transaction Limit Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Transaction Limit</mat-label>
+                    <input matInput formControlName="transactionLimit" placeholder="Enter transaction limit"
+                        aria-label="Transaction Limit">
+                    <mat-error *ngIf="myForm.get('transactionLimit')?.hasError('required')">Transaction Limit is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Service Tax Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Service Tax</mat-label>
+                    <input matInput formControlName="serviceTax" placeholder="Enter service tax"
+                        aria-label="Service Tax">
+                    <mat-error *ngIf="myForm.get('serviceTax')?.hasError('required')">Service Tax is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- TDS Rate Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>TDS Rate</mat-label>
+                    <input matInput formControlName="tdsRate" placeholder="Enter TDS rate" aria-label="TDS Rate">
+                    <mat-error *ngIf="myForm.get('tdsRate')?.hasError('required')">TDS Rate is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Opening Balance Date Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Opening Balance Date</mat-label>
+                    <input matInput formControlName="openingBalanceDate" [matDatepicker]="picker"
+                        placeholder="Select date" aria-label="Opening Balance Date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="myForm.get('openingBalanceDate')?.hasError('required')">Opening Balance Date is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12">
+                <button mat-raised-button color="primary" type="submit" [disabled]="myForm.invalid">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

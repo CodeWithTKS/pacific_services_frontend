@@ -1,0 +1,5 @@
+::ng-deep .sort .mat-sort-header-arrow,
+[dir=rtl] .mat-sort-header-position-before .mat-sort-header-arrow {
+    margin: 0 0 0 6px;
+    color: white !important;
+}

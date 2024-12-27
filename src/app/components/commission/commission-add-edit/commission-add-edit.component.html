@@ -1,0 +1,123 @@
+<div class="container mt-5">
+    <!-- Dynamic Title -->
+    <h3>{{ isEditMode ? 'Edit Commission' : 'Add Commission' }}</h3>
+
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <!-- Portal Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Portal</mat-label>
+                    <mat-select formControlName="portalId" aria-label="Select Portal">
+                        <mat-option *ngFor="let portal of portalList" [value]="portal.PortalID">
+                            {{ portal.Name }} ({{ portal.Code }})
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myForm.get('portalId')?.hasError('required')">Portal is required</mat-error>
+                </mat-form-field>
+            </div>
+
+
+            <!-- From Amount Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>From Amount</mat-label>
+                    <input matInput formControlName="FromAmount" placeholder="Enter from amount"
+                        aria-label="From Amount">
+                    <mat-error *ngIf="myForm.get('FromAmount')?.hasError('required')">From Amount is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- To Amount Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>To Amount</mat-label>
+                    <input matInput formControlName="ToAmount" placeholder="Enter to amount" aria-label="To Amount">
+                    <mat-error *ngIf="myForm.get('ToAmount')?.hasError('required')">To Amount is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Bank Type Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Bank Type</mat-label>
+                    <input matInput formControlName="BankType" placeholder="Enter bank type" aria-label="Bank Type">
+                    <mat-error *ngIf="myForm.get('BankType')?.hasError('required')">Bank Type is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Amount Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Amount</mat-label>
+                    <input matInput formControlName="Amount" placeholder="Enter amount" aria-label="Amount">
+                    <mat-error *ngIf="myForm.get('Amount')?.hasError('required')">Amount is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Percentage Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Percentage</mat-label>
+                    <input matInput formControlName="Percentage" placeholder="Enter percentage" aria-label="Percentage">
+                    <mat-error *ngIf="myForm.get('Percentage')?.hasError('required')">Percentage is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Pacific Type Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Pacific Type</mat-label>
+                    <input matInput formControlName="PacificType" placeholder="Enter Pacific Type"
+                        aria-label="Pacific Type">
+                    <mat-error *ngIf="myForm.get('PacificType')?.hasError('required')">Pacific Type is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Pacific Fixed Amount Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Pacific Fixed Amount</mat-label>
+                    <input matInput formControlName="PacificFixedAmount" placeholder="Enter Pacific Fixed Amount"
+                        aria-label="Pacific Fixed Amount">
+                </mat-form-field>
+            </div>
+
+            <!-- Pacific Amount Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Pacific Amount</mat-label>
+                    <input matInput formControlName="PacificAmount" placeholder="Enter Pacific Amount"
+                        aria-label="Pacific Amount">
+                </mat-form-field>
+            </div>
+
+            <!-- Pacific Extra Amount Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Pacific Extra Amount</mat-label>
+                    <input matInput formControlName="PacificExtraAmount" placeholder="Enter Pacific Extra Amount"
+                        aria-label="Pacific Extra Amount">
+                </mat-form-field>
+            </div>
+
+            <!-- Commission Type Section -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Commission Type</mat-label>
+                    <input matInput formControlName="CommissionType" placeholder="Enter Commission Type"
+                        aria-label="Commission Type">
+                    <mat-error *ngIf="myForm.get('CommissionType')?.hasError('required')">Commission Type is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+        </div>
+        <!-- Submit Button -->
+        <div class="col-12">
+            <button mat-raised-button color="primary" type="submit" [disabled]="myForm.invalid">Submit</button>
+        </div>
+    </form>
+</div>

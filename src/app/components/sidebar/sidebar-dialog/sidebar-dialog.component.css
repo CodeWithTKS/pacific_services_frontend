@@ -3,7 +3,7 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-    background-color: #212529;
+    background-color: #004d99;
     width: 300px;
     height: 100vh;
     position: fixed;
@@ -19,7 +19,7 @@
 .nav-item.active a {
     background-color: white;
     border-radius: 5px 15px 15px 5px;
-    color: rgb(0, 0, 0);
+    color: #004d99;
     font-weight: 600;
     padding: 10px;
     width: 200px;
@@ -45,7 +45,7 @@
 /* Hover effect for links */
 .nav-link:hover {
     background-color: #f3f3f3;
-    color: rgb(0, 0, 0);
+    color: #004d99;
     font-weight: 600;
 }
 
@@ -58,13 +58,13 @@
 /* Dropdown item hover */
 .dropdown-item:hover {
     background-color: #f3f3f3;
-    color: rgb(0, 0, 0);
+    color: #004d99;
 }
 
 /* Font styles */
 .font {
     font-family: 'Dancing Script', cursive;
-    color: rgb(0, 0, 0);
+    color: #004d99;
 }
 
 /* Custom styling for dropdown toggle */
@@ -77,9 +77,4 @@
 /* Styling for logout link */
 .nav-item a[role="button"] {
     cursor: pointer;
-}
-
-/* Sidebar background */
-.bg {
-    background-color: #ff8219;
 }

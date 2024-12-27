@@ -7,10 +7,10 @@
             <mat-label>Search</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Search by Portal ID, Commission Type, etc.">
         </mat-form-field>
-        <button mat-flat-button>Add Commission</button>
+        <button mat-flat-button routerLink="/admin/commission/addcommission">Add Commission</button>
     </div>
     <div class="table-responsive" style="margin-top: 20px;">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table"
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 sort"
             style="width: 100%; border-collapse: collapse;">
 
             <!-- CommissionID Column -->
@@ -20,11 +20,11 @@
                 <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.CommissionID }}</td>
             </ng-container>
 
-            <!-- PortalId Column -->
-            <ng-container matColumnDef="portalId">
+            <!-- portalName Column -->
+            <ng-container matColumnDef="portalName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Portal ID</th>
-                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.portalId }}</td>
+                    style="background: #004d99; color: white; padding: 10px;">Portal Name</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.portalName }}</td>
             </ng-container>
 
             <!-- FromAmount Column -->
@@ -52,7 +52,8 @@
             <ng-container matColumnDef="Amount">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Amount</th>
-                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.Amount | currency }}</td>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.Amount | currency:'INR'
+                    }}</td>
             </ng-container>
 
             <!-- Percentage Column -->
@@ -114,8 +115,9 @@
                 <th mat-header-cell *matHeaderCellDef style="background: #004d99; color: white; padding: 10px;">Actions
                 </th>
                 <td mat-cell *matCellDef="let commission" style="padding: 10px; display: flex;">
-                    <button mat-button color="primary" style="margin-right: 10px;">Edit</button>
-                    <button mat-button color="warn">Delete</button>
+                    <button mat-button color="primary" style="margin-right: 10px;"
+                        (click)="editCommission(commission)">Edit</button>
+                    <button mat-button color="warn" (click)="deleteItem(commission.CommissionID)">Delete</button>
                 </td>
             </ng-container>
 
@@ -125,6 +127,7 @@
         </table>
 
         <!-- Pagination -->
-        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="commissionList.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons></mat-paginator>
     </div>
 </div>
