@@ -1,1 +1,91 @@
-<p>portal-list works!</p>
+<div style=" padding: 20px;">
+    <div class="">
+        <h3 class="m-0 font">Portal List</h3>
+    </div>
+    <div class="desktop phone justify-content-between align-content-center mt-3">
+        <mat-form-field appearance="outline" class="search-box">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search by Name, Code, or Contact">
+        </mat-form-field>
+        <button mat-flat-button>Add Portal</button>
+    </div>
+    <div class="table-responsive" style="margin-top: 20px;">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table"
+            style="width: 100%; border-collapse: collapse;">
+            <!-- PortalID Column -->
+            <ng-container matColumnDef="PortalID">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Portal ID</th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.PortalID }}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Name</th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.Name }}</td>
+            </ng-container>
+
+            <!-- Code Column -->
+            <ng-container matColumnDef="Code">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Code</th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.Code }}</td>
+            </ng-container>
+
+            <!-- ContactNo Column -->
+            <ng-container matColumnDef="ContactNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Contact No</th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.ContactNo }}</td>
+            </ng-container>
+
+            <!-- ContactPerson Column -->
+            <ng-container matColumnDef="ContactPerson">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Contact Person</th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.ContactPerson }}</td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="Email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Email</th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.Email || 'N/A' }}</td>
+            </ng-container>
+
+            <!-- Balance Column -->
+            <ng-container matColumnDef="Balance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Balance</th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.Balance | currency }}</td>
+            </ng-container>
+
+            <!-- CreatedAt Column -->
+            <ng-container matColumnDef="CreatedAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Created At</th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">
+                    {{ portal.CreatedAt | date: 'dd/MM/yyyy, h:mm a' }}
+                </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef style="background: #004d99; color: white; padding: 10px;">Actions
+                </th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">
+                    <button mat-button color="primary" style="margin-right: 10px;">Edit</button>
+                    <button mat-button color="warn">Delete</button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #004d99;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #ddd;"></tr>
+        </table>
+
+        <!-- Pagination -->
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

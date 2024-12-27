@@ -1,1 +1,155 @@
-<p>money-transfer-list works!</p>
+<div style="padding: 20px;">
+    <div class="">
+        <h3 class="m-0 font">Money Transfer List</h3>
+    </div>
+    <div class="desktop phone justify-content-between align-content-center mt-3">
+        <mat-form-field appearance="outline" class="search-box">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search by Portal ID, Commission Type, etc.">
+        </mat-form-field>
+        <button mat-flat-button>Add Money Transfer</button>
+    </div>
+    <div class="table-responsive" style="margin-top: 20px;">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table"
+            style="width: 100%; border-collapse: collapse;">
+
+            <!-- TransferID Column -->
+            <ng-container matColumnDef="TransferID">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Transfer ID</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.TransferID }}</td>
+            </ng-container>
+
+            <!-- TransactionNo Column -->
+            <ng-container matColumnDef="TransactionNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Transaction No</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.TransactionNo }}</td>
+            </ng-container>
+
+            <!-- portalId Column -->
+            <ng-container matColumnDef="portalId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Portal ID</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.portalId }}</td>
+            </ng-container>
+
+            <!-- ACNo Column -->
+            <ng-container matColumnDef="ACNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">AC No</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.ACNo }}</td>
+            </ng-container>
+
+            <!-- FirstName Column -->
+            <ng-container matColumnDef="FirstName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">First Name</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.FirstName }}</td>
+            </ng-container>
+
+            <!-- LastName Column -->
+            <ng-container matColumnDef="LastName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Last Name</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.LastName }}</td>
+            </ng-container>
+
+            <!-- TransactionType Column -->
+            <ng-container matColumnDef="TransactionType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Transaction Type</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.TransactionType }}</td>
+            </ng-container>
+
+            <!-- Type Column -->
+            <ng-container matColumnDef="Type">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Type</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.Type }}</td>
+            </ng-container>
+
+            <!-- Date Column -->
+            <ng-container matColumnDef="Date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Date</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">
+                    {{ transfer.Date | date: 'dd/MM/yyyy' }}
+                </td>
+            </ng-container>
+
+            <!-- TotalCash Column -->
+            <ng-container matColumnDef="TotalCash">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Total Cash</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.TotalCash }}</td>
+            </ng-container>
+
+            <!-- CollectionAmt Column -->
+            <ng-container matColumnDef="CollectionAmt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Collection Amt</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.CollectionAmt }}</td>
+            </ng-container>
+
+            <!-- SalasarFixedAmt Column -->
+            <ng-container matColumnDef="SalasarFixedAmt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Salasar Fixed Amt</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.SalasarFixedAmt }}</td>
+            </ng-container>
+
+            <!-- BankCharge Column -->
+            <ng-container matColumnDef="BankCharge">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Bank Charge</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.BankCharge }}</td>
+            </ng-container>
+
+            <!-- SalasarCharge Column -->
+            <ng-container matColumnDef="SalasarCharge">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Salasar Charge</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.SalasarCharge }}</td>
+            </ng-container>
+
+            <!-- SalasarExtra Column -->
+            <ng-container matColumnDef="SalasarExtra">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Salasar Extra</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.SalasarExtra }}</td>
+            </ng-container>
+
+            <!-- BankDeposit Column -->
+            <ng-container matColumnDef="BankDeposit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Bank Deposit</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.BankDeposit }}</td>
+            </ng-container>
+
+            <!-- CustDeposit Column -->
+            <ng-container matColumnDef="CustDeposit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Cust Deposit</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.CustDeposit }}</td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef style="background: #004d99; color: white; padding: 10px;">Actions
+                </th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px; display: flex;">
+                    <button mat-button color="primary" style="margin-right: 10px;">Edit</button>
+                    <button mat-button color="warn">Delete</button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #004d99;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #ddd;"></tr>
+        </table>
+
+        <!-- Pagination -->
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

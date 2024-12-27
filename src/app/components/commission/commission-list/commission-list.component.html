@@ -1,1 +1,130 @@
-<p>commission-list works!</p>
+<div style="padding: 20px;">
+    <div class="">
+        <h3 class="m-0 font">Commission List</h3>
+    </div>
+    <div class="desktop phone justify-content-between align-content-center mt-3">
+        <mat-form-field appearance="outline" class="search-box">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search by Portal ID, Commission Type, etc.">
+        </mat-form-field>
+        <button mat-flat-button>Add Commission</button>
+    </div>
+    <div class="table-responsive" style="margin-top: 20px;">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table"
+            style="width: 100%; border-collapse: collapse;">
+
+            <!-- CommissionID Column -->
+            <ng-container matColumnDef="CommissionID">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Commission ID</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.CommissionID }}</td>
+            </ng-container>
+
+            <!-- PortalId Column -->
+            <ng-container matColumnDef="portalId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Portal ID</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.portalId }}</td>
+            </ng-container>
+
+            <!-- FromAmount Column -->
+            <ng-container matColumnDef="FromAmount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">From Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.FromAmount }}</td>
+            </ng-container>
+
+            <!-- ToAmount Column -->
+            <ng-container matColumnDef="ToAmount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">To Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.ToAmount }}</td>
+            </ng-container>
+
+            <!-- BankType Column -->
+            <ng-container matColumnDef="BankType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Bank Type</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.BankType }}</td>
+            </ng-container>
+
+            <!-- Amount Column -->
+            <ng-container matColumnDef="Amount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.Amount | currency }}</td>
+            </ng-container>
+
+            <!-- Percentage Column -->
+            <ng-container matColumnDef="Percentage">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Percentage</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.Percentage || 'N/A' }}
+                </td>
+            </ng-container>
+
+            <!-- PacificType Column -->
+            <ng-container matColumnDef="PacificType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Pacific Type</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificType }}</td>
+            </ng-container>
+
+            <!-- PacificFixedAmount Column -->
+            <ng-container matColumnDef="PacificFixedAmount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Pacific Fixed Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificFixedAmount }}
+                </td>
+            </ng-container>
+
+            <!-- PacificAmount Column -->
+            <ng-container matColumnDef="PacificAmount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Pacific Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificAmount }}</td>
+            </ng-container>
+
+            <!-- PacificExtraAmount Column -->
+            <ng-container matColumnDef="PacificExtraAmount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Pacific Extra Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificExtraAmount }}
+                </td>
+            </ng-container>
+
+            <!-- CommissionType Column -->
+            <ng-container matColumnDef="CommissionType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Commission Type</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.CommissionType }}</td>
+            </ng-container>
+
+            <!-- CreatedAt Column -->
+            <ng-container matColumnDef="CreatedAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Created At</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">
+                    {{ commission.CreatedAt | date: 'dd/MM/yyyy' }}
+                </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef style="background: #004d99; color: white; padding: 10px;">Actions
+                </th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px; display: flex;">
+                    <button mat-button color="primary" style="margin-right: 10px;">Edit</button>
+                    <button mat-button color="warn">Delete</button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #004d99;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #ddd;"></tr>
+        </table>
+
+        <!-- Pagination -->
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
