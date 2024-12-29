@@ -15,11 +15,25 @@ export class MoneyTransferService {
     }
 
     // Get all money transfers
-    GetMoneyTransfers(): Observable<any> {
+    GetMoneyTransfers(filters?: { fromDate?: string; toDate?: string; portalId?: number }): Observable<any> {
+        const params: any = {};
+
+        // Add query parameters only if filters exist and have values
+        if (filters?.fromDate) {
+            params.fromDate = filters.fromDate;
+        }
+        if (filters?.toDate) {
+            params.toDate = filters.toDate;
+        }
+        if (filters?.portalId) {
+            params.portalId = filters.portalId;
+        }
+
         return this.httpClient
-            .get(environment.baseURL + `/moneyTransfer`)
+            .get(environment.baseURL + `/moneyTransfer`, { params })
             .pipe(catchError(this.handleError));
     }
+
 
     // Add a new money transfer
     AddMoneyTransfer(moneyTransferData: FormData): Observable<any> {
@@ -32,6 +46,12 @@ export class MoneyTransferService {
     UpdateMoneyTransfer(transferId: any, moneyTransferData: any): Observable<any> {
         return this.httpClient
             .put(environment.baseURL + `/moneyTransfer/${transferId}`, moneyTransferData)
+            .pipe(catchError(this.handleError));
+    }
+
+    UpdateMoneyTransferNo(transferId: any, moneyTransferData: any): Observable<any> {
+        return this.httpClient
+            .put(environment.baseURL + `/moneyTransfer/transferNo/${transferId}`, moneyTransferData)
             .pipe(catchError(this.handleError));
     }
 

@@ -3,11 +3,14 @@
         <h3 class="m-0 font">Commission List</h3>
     </div>
     <div class="desktop phone justify-content-between align-content-center mt-3">
-        <mat-form-field appearance="outline" class="search-box">
+        <mat-form-field appearance="fill">
             <mat-label>Search</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Search by Portal ID, Commission Type, etc.">
         </mat-form-field>
-        <button mat-flat-button routerLink="/admin/commission/addcommission">Add Commission</button>
+        <div class="desktop phone gap-3">
+            <button mat-flat-button (click)="excelDownload('commission-list')">Export To Excel</button>
+            <button mat-flat-button routerLink="/admin/commission/addcommission">Add Commission</button>
+        </div>
     </div>
     <div class="table-responsive" style="margin-top: 20px;">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 sort"

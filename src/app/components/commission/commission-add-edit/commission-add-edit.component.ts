@@ -41,23 +41,6 @@ export class CommissionAddEditComponent implements OnInit {
     this.GetPortals();
   }
 
-  GetPortals() {
-    this.portalService.GetPortals().subscribe({
-      next: (res: any) => {
-        console.log('Response Data:', res);
-        this.portalList = res;
-        if (this.commissionData?.CommissionID) {
-          this.myForm.patchValue({
-            portalId: parseInt(this.commissionData?.portalId) || '',
-          })
-        }
-      },
-      error: (err: any) => {
-        console.error('Error fetching portals:', err);
-      },
-    });
-  }
-
   // Creating the form group with validations
   createForm(): void {
     this.myForm = this.fb.group({
@@ -88,6 +71,23 @@ export class CommissionAddEditComponent implements OnInit {
       PacificAmount: commission.PacificAmount || '0',
       PacificExtraAmount: commission.PacificExtraAmount || '0',
       CommissionType: commission.CommissionType || '',
+    });
+  }
+
+  GetPortals() {
+    this.portalService.GetPortals().subscribe({
+      next: (res: any) => {
+        console.log('Response Data:', res);
+        this.portalList = res;
+        if (this.commissionData?.CommissionID) {
+          this.myForm.patchValue({
+            portalId: parseInt(this.commissionData?.portalId) || '',
+          })
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching portals:', err);
+      },
     });
   }
 

@@ -11,6 +11,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { CommissionService } from '../../../services/commission.service';
 import { CommissionDeleteComponent } from '../commission-delete/commission-delete.component';
+import { ExcelService } from '../../../services/excel.service';
 
 @Component({
   selector: 'app-commission-list',
@@ -40,12 +41,13 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
     'Action',
   ];
   dataSource = new MatTableDataSource<any>([]);
-
+  dataForExcel: any[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private commissionService: CommissionService,
     private router: Router,
+    private ExcelService: ExcelService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -113,4 +115,48 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  excelDownload(title: string) {
+    // Assuming contains the list of portals
+    let dataToExport = this.commissionList.map((x: any) => ({
+      CommissionID: x.CommissionID,
+      portalId: x.portalId,
+      FromAmount: x.FromAmount,
+      ToAmount: x.ToAmount,
+      BankType: x.BankType,
+      Amount: x.Amount,
+      Percentage: x.Percentage,
+      PacificType: x.PacificType,
+      PacificFixedAmount: x.PacificFixedAmount,
+      PacificAmount: x.PacificAmount,
+      PacificExtraAmount: x.PacificExtraAmount,
+      CommissionType: x.CommissionType,
+      CreatedAt: x.CreatedAt,
+      portalName: x.portalName
+    }));
+
+    // Prepare the data to export by converting each row to its values
+    this.dataForExcel = []; // Clear previous data
+    dataToExport.forEach((row: any) => {
+      this.dataForExcel.push(Object.values(row));
+    });
+
+    console.log(this.dataForExcel);
+
+    // Extract header names dynamically from the keys of the first object
+    let headers = Object.keys(dataToExport[0]);
+
+    // Define the report data with headers and data
+    let reportData = {
+      data: this.dataForExcel,
+      headers: headers, // Use keys as headers
+      title: title
+    };
+
+    // Call the Excel service to generate the excel file
+    this.ExcelService.generateExcel(reportData);
+
+    // Clear data after export
+    this.dataForExcel = [];
+  }
+
 }

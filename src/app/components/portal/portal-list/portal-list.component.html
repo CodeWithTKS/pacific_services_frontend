@@ -3,11 +3,14 @@
         <h3 class="m-0 font">Portal List</h3>
     </div>
     <div class="desktop phone justify-content-between align-content-center mt-3">
-        <mat-form-field appearance="outline" class="search-box">
+        <mat-form-field appearance="fill">
             <mat-label>Search</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Search by Name, Code, or Contact">
         </mat-form-field>
-        <button mat-flat-button routerLink="/admin/portal/addportal">Add Portal</button>
+        <div class="desktop phone gap-3">
+            <button mat-flat-button (click)="excelDownload('portal-list')">Export To Excel</button>
+            <button mat-flat-button routerLink="/admin/portal/addportal">Add Portal</button>
+        </div>
     </div>
     <div class="table-responsive" style="margin-top: 20px;">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8  sort"
