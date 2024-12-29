@@ -1,1 +1,56 @@
-<p>dashboard works!</p>
+<div class="container mt-5">
+    <div class="row g-4 justify-content-center">
+        <!-- Total Portals Card -->
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card shadow-xl border-0 text-center h-100">
+                <div class="card-body py-4">
+                    <div class="icon-circle bg-primary text-white mb-3 mx-auto">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h5 class="card-title text-primary mb-3">Total Portals</h5>
+                    <p class="card-text display-6 fw-bold text-dark">{{ totalPortals }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Balance Card -->
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card shadow-xl border-0 text-center h-100">
+                <div class="card-body py-4">
+                    <div class="icon-circle bg-success text-white mb-3 mx-auto">
+                        <i class="fas fa-rupee-sign"></i>
+                    </div>
+                    <h5 class="card-title text-success mb-3">Total Balance</h5>
+                    <p class="card-text display-6 fw-bold text-dark">{{ totalBalance | currency:'INR' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total CashSum Card -->
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card shadow-xl border-0 text-center h-100">
+                <div class="card-body py-4">
+                    <div class="icon-circle bg-warning text-white mb-3 mx-auto">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h5 class="card-title text-warning mb-3">Total Money Transfer</h5>
+                    <p class="card-text display-6 fw-bold text-dark">{{ overallTotal | currency:'INR' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Receive Balance Card -->
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card shadow-xl border-0 text-center h-100">
+                <div class="card-body py-4">
+                    <div class="icon-circle bg-info text-white mb-3 mx-auto">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h5 class="card-title text-info mb-3">Total Receive Balance</h5>
+                    <p class="card-text display-6 fw-bold text-dark">{{ totalWithTransaction | currency:'INR' }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

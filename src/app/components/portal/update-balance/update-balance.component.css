@@ -1,0 +1,53 @@
+.text-center {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.transaction-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.balance-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.before-balance,
+.after-balance {
+    font-size: 16px;
+    color: #555;
+}
+
+.before-balance span,
+.after-balance span {
+    font-weight: bold;
+    color: #2a7cf5;
+}
+
+.form-field {
+    width: 100%;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.cancel-btn {
+    background-color: #f44336;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f;
+}

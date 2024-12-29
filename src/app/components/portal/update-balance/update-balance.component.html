@@ -1,0 +1,34 @@
+<div class="p-3">
+    <h3 class="text-center">Update Balance</h3>
+    <form [formGroup]="transactionForm" (ngSubmit)="onConfirm()" class="transaction-form">
+        <div class="balance-section">
+            <!-- Display Before Balance as text -->
+            <div class="before-balance">
+                <strong>Before Balance:</strong>
+                <span>{{ data?.Balance }}</span> <!-- Display before balance -->
+            </div>
+
+            <!-- Input for New Balance -->
+            <div class="form-field">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Transaction No</mat-label>
+                    <input matInput formControlName="Balance" placeholder="Enter Balance">
+                    <mat-error *ngIf="transactionForm.get('Balance')?.hasError('required')">Balance is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Display After Balance as text -->
+            <div class="after-balance">
+                <strong>After Balance:</strong>
+                <span>{{ afterBalance }}</span> <!-- Display after balance -->
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="button-group">
+            <button mat-button class="cancel-btn" (click)="onCancel()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="transactionForm.invalid">Submit</button>
+        </div>
+    </form>
+</div>

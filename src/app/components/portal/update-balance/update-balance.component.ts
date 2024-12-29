@@ -1,0 +1,68 @@
+import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { portalService } from '../../../services/portal.service';
+
+@Component({
+  selector: 'app-update-balance',
+  standalone: true,
+  imports: [MatButtonModule, CommonModule, ReactiveFormsModule,
+    FormsModule, MatFormFieldModule, MatInputModule,],
+  templateUrl: './update-balance.component.html',
+  styleUrl: './update-balance.component.css'
+})
+export class UpdateBalanceComponent implements OnInit {
+  transactionForm!: FormGroup;
+  afterBalance: number = 0; // Variable to store calculated after balance
+  portalData: any;
+
+  constructor(private fb: FormBuilder,
+    private portalService: portalService,
+    public dialogRef: MatDialogRef<UpdateBalanceComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.portalData = data
+  }
+
+  ngOnInit(): void {
+    this.transactionForm = this.fb.group({
+      Balance: ['', Validators.required],
+    });
+
+    // Initialize the afterBalance with the before balance
+    this.afterBalance = this.data?.Balance;
+
+    // Subscribe to the Balance form control changes
+    this.transactionForm.get('Balance')?.valueChanges.subscribe(value => {
+      if (value) {
+        this.afterBalance = this.data?.Balance + +value; // Calculate the after balance
+      } else {
+        this.afterBalance = this.data?.Balance; // Reset to before balance if input is cleared
+      }
+    });
+  }
+
+  onConfirm(): void {
+    const obj = {
+      Balance: this.afterBalance
+    }
+    // Get the updated balance from the form
+    this.portalService.updateBalancePortal(this.portalData.PortalID, obj).subscribe({
+      next: (response) => {
+        console.log('Portal updated successfully', response);
+        this.dialogRef.close(true);
+      },
+      error: (error) => {
+        console.error('Error updating portal', error);
+      }
+    });
+  }
+
+  onCancel(): void {
+    this.dialogRef.close(false);
+  }
+}

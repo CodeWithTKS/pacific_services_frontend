@@ -34,6 +34,11 @@ export class MoneyTransferService {
             .pipe(catchError(this.handleError));
     }
 
+    getMoneyTransferStats(): Observable<any> {
+        return this.httpClient
+            .get(environment.baseURL + `/moneyTransfer/total/stats`)
+            .pipe(catchError(this.handleError));
+    }
 
     // Add a new money transfer
     AddMoneyTransfer(moneyTransferData: FormData): Observable<any> {

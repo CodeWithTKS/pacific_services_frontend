@@ -79,6 +79,8 @@
                 </th>
                 <td mat-cell *matCellDef="let portal" style="padding: 10px;">
                     <button mat-button color="primary" style="margin-right: 10px;"
+                        (click)="updateBalancePortal(portal)">Update Balance</button>
+                    <button mat-button color="primary" style="margin-right: 10px;"
                         (click)="editPortal(portal)">Edit</button>
                     <button mat-button color="warn" (click)="deleteItem(portal.PortalID)">Delete</button>
                 </td>

@@ -9,9 +9,10 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
+import { ExcelService } from '../../../services/excel.service';
 import { portalService } from '../../../services/portal.service';
 import { PortalDeleteComponent } from '../portal-delete/portal-delete.component';
-import { ExcelService } from '../../../services/excel.service';
+import { UpdateBalanceComponent } from '../update-balance/update-balance.component';
 
 @Component({
   selector: 'app-portal-list',
@@ -81,6 +82,18 @@ export class PortalListComponent implements OnInit, AfterViewInit {
     this.router.navigate([`/admin/portal/editportal/${portal.PortalID}`], {
       state: { portalData: portal } // Pass portal data using state
     });
+  }
+
+  updateBalancePortal(portal: any): void {
+    const dialogRef = this.dialog.open(UpdateBalanceComponent, {
+      width: '400px',
+      height: '300px',
+      data: portal
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.GetPortals();
+    })
   }
 
   deleteItem(portalId: any): void {
