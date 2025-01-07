@@ -84,6 +84,10 @@ export class PortalListComponent implements OnInit, AfterViewInit {
     });
   }
 
+  viewPortal(portal: any) {
+    this.router.navigate([`/admin/portal/viewportal/${portal.PortalID}`])
+  }
+
   updateBalancePortal(portal: any): void {
     const dialogRef = this.dialog.open(UpdateBalanceComponent, {
       width: '400px',

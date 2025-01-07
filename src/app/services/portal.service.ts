@@ -20,10 +20,16 @@ export class portalService {
             .get(environment.baseURL + `/portal`)
             .pipe(catchError(this.handleError));
     }
-    
+
     getPortalStats(): Observable<any> {
         return this.httpClient
             .get(environment.baseURL + `/portal/total/stats`)
+            .pipe(catchError(this.handleError));
+    }
+
+    getPortalLogsById(id: any): Observable<any> {
+        return this.httpClient
+            .get(environment.baseURL + `/portal/${id}/logs`)
             .pipe(catchError(this.handleError));
     }
 
@@ -31,6 +37,13 @@ export class portalService {
     AddPortal(portalData: FormData): Observable<any> {
         return this.httpClient
             .post(environment.baseURL + `/portal`, portalData)
+            .pipe(catchError(this.handleError));
+    }
+
+    // Add a portal logs
+    addPortalLog(portalData: any): Observable<any> {
+        return this.httpClient
+            .post(environment.baseURL + `/portal/create/logs`, portalData)
             .pipe(catchError(this.handleError));
     }
 

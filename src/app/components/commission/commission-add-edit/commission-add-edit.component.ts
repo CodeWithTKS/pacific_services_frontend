@@ -22,7 +22,8 @@ export class CommissionAddEditComponent implements OnInit {
   isEditMode: boolean = false; // Default to 'false' for adding a portal
   commissionData: any;
   portalList: any[] = [];
-
+  commissionTypes: string[] = ['Fixed', 'Percentage'];
+  selectedType: any
   constructor(private fb: FormBuilder,
     private commissionService: CommissionService,
     private portalService: portalService,
@@ -47,10 +48,9 @@ export class CommissionAddEditComponent implements OnInit {
       portalId: ['', [Validators.required]],
       FromAmount: ['', [Validators.required]],
       ToAmount: ['', [Validators.required]],
-      BankType: ['', [Validators.required]],
-      Amount: ['', [Validators.required]],
-      Percentage: ['', [Validators.required]],
-      PacificType: ['', [Validators.required]],
+      BankType: ['no',],
+      Amount: [''],
+      Percentage: [''],
       PacificFixedAmount: [''],
       PacificAmount: [''],
       PacificExtraAmount: [''],
@@ -66,7 +66,6 @@ export class CommissionAddEditComponent implements OnInit {
       BankType: commission.BankType || '',
       Amount: commission.Amount || '',
       Percentage: commission.Percentage || '0',
-      PacificType: commission.PacificType || '0',
       PacificFixedAmount: commission.PacificFixedAmount || '0',
       PacificAmount: commission.PacificAmount || '0',
       PacificExtraAmount: commission.PacificExtraAmount || '0',
@@ -90,6 +89,29 @@ export class CommissionAddEditComponent implements OnInit {
       },
     });
   }
+
+  onCommissionTypeChange(selectedType: string): void {
+    this.selectedType = selectedType
+  }
+
+  onPercentageKeyUp(event: KeyboardEvent): void {
+    const inputValue = parseFloat((event.target as HTMLInputElement).value); // Convert to number
+    if (this.selectedType === "Percentage") {
+      const Amount = this.myForm.value?.Amount;
+      if (Amount && !isNaN(inputValue)) { // Ensure both are valid numbers
+        const PacificAmount = (Amount * inputValue) / 100;
+        const PacificExtraAmount = Amount - PacificAmount;
+        this.myForm.patchValue({
+          PacificFixedAmount: Amount,
+          PacificAmount: PacificAmount,
+          PacificExtraAmount: PacificExtraAmount
+        });
+      } else {
+        console.error('Invalid PacificFixedAmount or inputValue');
+      }
+    }
+  }
+
 
   // Submit function
   onSubmit(): void {

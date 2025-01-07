@@ -63,6 +63,8 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Transfer ID</th>
                 <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.TransferID }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> Total:
+                </td>
             </ng-container>
 
             <!-- TransactionNo Column -->
@@ -70,6 +72,8 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Transaction No</th>
                 <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.TransactionNo }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
+                <!-- Empty footer -->
             </ng-container>
 
             <!-- portal Name Column -->
@@ -77,6 +81,8 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Portal Name</th>
                 <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.portalName }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
+                <!-- Empty footer -->
             </ng-container>
 
             <!-- ACNo Column -->
@@ -84,6 +90,8 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">AC No</th>
                 <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.ACNo }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
+                <!-- Empty footer -->
             </ng-container>
 
             <!-- FullName Column -->
@@ -92,85 +100,85 @@
                     style="background: #004d99; color: white; padding: 10px;">Full Name</th>
                 <td mat-cell *matCellDef="let transfer" style="padding: 10px;">
                     {{ transfer.FirstName }} {{ transfer.LastName }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
+                <!-- Empty footer -->
             </ng-container>
 
-            <!-- TransactionType Column -->
-            <ng-container matColumnDef="TransactionType">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Transaction Type</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.TransactionType }}</td>
-            </ng-container>
-
-            <!-- Type Column -->
-            <ng-container matColumnDef="Type">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Type</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.Type }}</td>
-            </ng-container>
-
-            <!-- Date Column -->
+            <!-- TransactionDate Column -->
             <ng-container matColumnDef="Date">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Date</th>
+                    style="background: #004d99; color: white; padding: 10px;">Transaction Date</th>
                 <td mat-cell *matCellDef="let transfer" style="padding: 10px;">
-                    {{ transfer.Date | date: 'dd/MM/yyyy' }}
+                    {{ transfer.TransactionDate | date: 'dd/MM/yyyy' }}
                 </td>
-            </ng-container>
-
-            <!-- TotalCash Column -->
-            <ng-container matColumnDef="TotalCash">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Total Cash</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.TotalCash }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
+                <!-- Empty footer -->
             </ng-container>
 
             <!-- CollectionAmt Column -->
             <ng-container matColumnDef="CollectionAmt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Collection Amt</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.CollectionAmt }}</td>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.CollectionAmt |
+                    currency:'INR' }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;">
+                    {{ getTotalCollectionAmt() | currency:'INR' }}</td>
+                <!-- Empty footer -->
             </ng-container>
 
-            <!-- SalasarFixedAmt Column -->
-            <ng-container matColumnDef="SalasarFixedAmt">
+            <!-- FixedAmt Column -->
+            <ng-container matColumnDef="FixedAmt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Salasar Fixed Amt</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.SalasarFixedAmt }}</td>
+                    style="background: #004d99; color: white; padding: 10px;"> Fixed Amt</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.FixedAmt | currency:'INR' }}
+                </td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;">
+                    {{getTotalFixedAmt() | currency:'INR'}}</td>
+                <!-- Empty footer -->
             </ng-container>
 
             <!-- BankCharge Column -->
             <ng-container matColumnDef="BankCharge">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Bank Charge</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.BankCharge }}</td>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.BankCharge | currency:'INR'
+                    }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> {{
+                    getTotalBankCharge() | currency:'INR' }}</td>
+                <!-- Empty footer -->
             </ng-container>
 
-            <!-- SalasarCharge Column -->
-            <ng-container matColumnDef="SalasarCharge">
+            <!-- Extra Column -->
+            <ng-container matColumnDef="Extra">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Salasar Charge</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.SalasarCharge }}</td>
-            </ng-container>
-
-            <!-- SalasarExtra Column -->
-            <ng-container matColumnDef="SalasarExtra">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Salasar Extra</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.SalasarExtra }}</td>
+                    style="background: #004d99; color: white; padding: 10px;"> Extra</th>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.Extra | currency:'INR' }}
+                </td>
+                <td mat-footer-cell *matFooterCellDef style="font-weight: bold;"
+                    style="background: #004d99; color: white; padding: 10px;">{{ getTotalExtra() | currency:'INR' }}
+                </td>
             </ng-container>
 
             <!-- BankDeposit Column -->
             <ng-container matColumnDef="BankDeposit">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Bank Deposit</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.BankDeposit }}</td>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.BankDeposit | currency:'INR'
+                    }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;">
+                    {{ getTotalBankDeposit() | currency:'INR'}} </td>
+                <!-- Empty footer -->
             </ng-container>
 
             <!-- CustDeposit Column -->
             <ng-container matColumnDef="CustDeposit">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Cust Deposit</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.CustDeposit }}</td>
+                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.CustDeposit | currency:'INR'
+                    }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;">
+                    {{ getTotalCustDeposit() | currency:'INR' }} </td>
+                <!-- Empty footer -->
             </ng-container>
 
             <!-- Actions Column -->
@@ -186,12 +194,16 @@
                         *ngIf="commission.TransactionNo === null">Edit</button>
                     <button mat-button color="warn" (click)="deleteItem(commission.TransferID)">Delete</button>
                 </td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
+                <!-- Empty footer -->
             </ng-container>
 
             <!-- Header and Row Declarations -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #004d99;"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #ddd;">
             </tr>
+            <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"
+                style="background: #f5f5f5; font-weight: bold;"></tr>
         </table>
 
         <!-- Pagination -->

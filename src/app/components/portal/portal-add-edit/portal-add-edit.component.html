@@ -5,7 +5,7 @@
     <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
         <div class="row">
             <!-- Name Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Name</mat-label>
                     <input matInput formControlName="name" placeholder="Enter name" aria-label="Name">
@@ -14,7 +14,7 @@
             </div>
 
             <!-- Code Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Code</mat-label>
                     <input matInput formControlName="code" placeholder="Enter code" aria-label="Code">
@@ -23,10 +23,10 @@
             </div>
 
             <!-- Contact No Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Contact No</mat-label>
-                    <input matInput formControlName="contactNo" placeholder="Enter contact number"
+                    <input matInput type="number" min="0" formControlName="contactNo" placeholder="Enter contact number"
                         aria-label="Contact No">
                     <mat-error *ngIf="myForm.get('contactNo')?.hasError('required')">Contact No is required</mat-error>
                     <mat-error *ngIf="myForm.get('contactNo')?.hasError('pattern')">Invalid Contact No</mat-error>
@@ -34,7 +34,7 @@
             </div>
 
             <!-- Contact Person Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Contact Person</mat-label>
                     <input matInput formControlName="contactPerson" placeholder="Enter contact person"
@@ -45,7 +45,7 @@
             </div>
 
             <!-- Email Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Email</mat-label>
                     <input matInput formControlName="email" placeholder="Enter email" aria-label="Email">
@@ -54,35 +54,28 @@
                 </mat-form-field>
             </div>
 
-            <!-- Fax Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-                <mat-form-field class="full-width" appearance="fill">
-                    <mat-label>Fax</mat-label>
-                    <input matInput formControlName="fax" placeholder="Enter fax" aria-label="Fax">
-                </mat-form-field>
-            </div>
-
             <!-- Account No Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>AC No</mat-label>
-                    <input matInput formControlName="acNo" placeholder="Enter account number"
+                    <input matInput type="number" min="0" formControlName="acNo" placeholder="Enter account number"
                         aria-label="Account Number">
                     <mat-error *ngIf="myForm.get('acNo')?.hasError('required')">Account No is required</mat-error>
                 </mat-form-field>
             </div>
 
             <!-- Balance Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Balance</mat-label>
-                    <input matInput formControlName="balance" placeholder="Enter balance" aria-label="Balance">
+                    <input matInput type="number" min="0" formControlName="balance" placeholder="Enter balance"
+                        aria-label="Balance" [readonly]="isEditMode">
                     <mat-error *ngIf="myForm.get('balance')?.hasError('required')">Balance is required</mat-error>
                 </mat-form-field>
             </div>
 
             <!-- Transaction Limit Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Transaction Limit</mat-label>
                     <input matInput formControlName="transactionLimit" placeholder="Enter transaction limit"
@@ -93,7 +86,7 @@
             </div>
 
             <!-- Service Tax Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Service Tax</mat-label>
                     <input matInput formControlName="serviceTax" placeholder="Enter service tax"
@@ -104,7 +97,7 @@
             </div>
 
             <!-- TDS Rate Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>TDS Rate</mat-label>
                     <input matInput formControlName="tdsRate" placeholder="Enter TDS rate" aria-label="TDS Rate">
@@ -113,7 +106,7 @@
             </div>
 
             <!-- Opening Balance Date Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Opening Balance Date</mat-label>
                     <input matInput formControlName="openingBalanceDate" [matDatepicker]="picker"

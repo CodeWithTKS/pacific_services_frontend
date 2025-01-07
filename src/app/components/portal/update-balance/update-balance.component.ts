@@ -53,6 +53,25 @@ export class UpdateBalanceComponent implements OnInit {
     // Get the updated balance from the form
     this.portalService.updateBalancePortal(this.portalData.PortalID, obj).subscribe({
       next: (response) => {
+        this.addSalaryLogs();
+      },
+      error: (error) => {
+        console.error('Error updating portal', error);
+      }
+    });
+  }
+
+  addSalaryLogs() {
+    const logs = {
+      portalId: this.portalData.PortalID,
+      beforeBalance: this.data?.Balance,
+      balance: this.transactionForm.value?.Balance,
+      type: 'Add Balance',
+      afterBalance: this.afterBalance,
+      createdAt: new Date()
+    }
+    this.portalService.addPortalLog(logs).subscribe({
+      next: (response) => {
         console.log('Portal updated successfully', response);
         this.dialogRef.close(true);
       },
@@ -61,7 +80,6 @@ export class UpdateBalanceComponent implements OnInit {
       }
     });
   }
-
   onCancel(): void {
     this.dialogRef.close(false);
   }

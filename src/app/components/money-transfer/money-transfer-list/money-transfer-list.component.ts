@@ -39,15 +39,11 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
     'portalName',
     'ACNo',
     'FullName',
-    'TransactionType',
-    'Type',
     'Date',
-    'TotalCash',
     'CollectionAmt',
-    'SalasarFixedAmt',
+    'FixedAmt',
     'BankCharge',
-    'SalasarCharge',
-    'SalasarExtra',
+    'Extra',
     'BankDeposit',
     'CustDeposit',
     'Action',
@@ -121,6 +117,37 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
       ? moment(this.range.value.end).format('YYYY-MM-DD')
       : '';
     return `${start} to ${end}`;
+  }
+
+  getTotalExtra() {
+    return this.dataSource.data
+      .map((transfer: any) => transfer.Extra)
+      .reduce((acc, value) => acc + (value || 0), 0);
+  }
+  getTotalCollectionAmt() {
+    return this.dataSource.data
+      .map((transfer: any) => transfer.CollectionAmt)
+      .reduce((acc, value) => acc + (value || 0), 0);
+  }
+  getTotalFixedAmt() {
+    return this.dataSource.data
+      .map((transfer: any) => transfer.FixedAmt)
+      .reduce((acc, value) => acc + (value || 0), 0);
+  }
+  getTotalBankCharge() {
+    return this.dataSource.data
+      .map((transfer: any) => transfer.BankCharge)
+      .reduce((acc, value) => acc + (value || 0), 0);
+  }
+  getTotalBankDeposit() {
+    return this.dataSource.data
+      .map((transfer: any) => transfer.BankDeposit)
+      .reduce((acc, value) => acc + (value || 0), 0);
+  }
+  getTotalCustDeposit() {
+    return this.dataSource.data
+      .map((transfer: any) => transfer.CustDeposit)
+      .reduce((acc, value) => acc + (value || 0), 0);
   }
 
   applyDateFilter(): void {
@@ -203,8 +230,6 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
       LastName: x.LastName,
       Date: x.Date,
       Block: x.Block,
-      TransactionType: x.TransactionType,
-      Type: x.Type,
       FirstName: x.FirstName,
       ContactNo: x.ContactNo,
       IFSCNo: x.IFSCNo,
@@ -218,10 +243,9 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
       Cash1: x.Cash1,
       TotalCash: x.TotalCash,
       CollectionAmt: x.CollectionAmt,
-      SalasarFixedAmt: x.SalasarFixedAmt,
+      FixedAmt: x.FixedAmt,
       BankCharge: x.BankCharge,
-      SalasarCharge: x.SalasarCharge,
-      SalasarExtra: x.SalasarExtra,
+      Extra: x.Extra,
       BankDeposit: x.BankDeposit,
       CustDeposit: x.CustDeposit,
       CreatedAt: x.CreatedAt

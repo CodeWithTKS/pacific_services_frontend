@@ -5,10 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MoneyTransferService } from '../../../services/moneyTransfer.service';
 import { portalService } from '../../../services/portal.service';
+import { CommissionService } from '../../../services/commission.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-money-add-edit',
@@ -16,7 +19,8 @@ import { portalService } from '../../../services/portal.service';
 
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatSelectModule, MatFormFieldModule, MatInputModule,
-    MatButtonModule, RouterModule, MatCardModule],
+    MatButtonModule, RouterModule, MatCardModule, MatDatepickerModule],
+  providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './money-add-edit.component.html',
   styleUrl: './money-add-edit.component.css'
@@ -25,21 +29,24 @@ export class MoneyAddEditComponent implements OnInit {
   transactionForm!: FormGroup;
   isEditMode: boolean = false; // Default to 'false' for adding a portal
   portalList: any[] = [];
+  commissionList: any[] = [];
   moneyData: any;
   cashDenominations = [
-    { label: 'Cash 500', name: 'Cash500', placeholder: 'Enter Cash 500 Amount' },
-    { label: 'Cash 100', name: 'Cash100', placeholder: 'Enter Cash 100 Amount' },
-    { label: 'Cash 50', name: 'Cash50', placeholder: 'Enter Cash 50 Amount' },
-    { label: 'Cash 20', name: 'Cash20', placeholder: 'Enter Cash 20 Amount' },
-    { label: 'Cash 10', name: 'Cash10', placeholder: 'Enter Cash 10 Amount' },
-    { label: 'Cash 5', name: 'Cash5', placeholder: 'Enter Cash 5 Amount' },
-    { label: 'Cash 1', name: 'Cash1', placeholder: 'Enter Cash 1 Amount' },
-    { label: 'TotalCash', name: 'TotalCash', placeholder: 'Enter Total Cash' },
+    { name: 'Cash500', label: '₹500', placeholder: 'Enter number of notes', multiplier: 500 },
+    { name: 'Cash100', label: '₹100', placeholder: 'Enter number of notes', multiplier: 100 },
+    { name: 'Cash50', label: '₹50', placeholder: 'Enter number of notes', multiplier: 50 },
+    { name: 'Cash20', label: '₹20', placeholder: 'Enter number of notes', multiplier: 20 },
+    { name: 'Cash10', label: '₹10', placeholder: 'Enter number of notes', multiplier: 10 },
+    { name: 'Cash5', label: '₹5', placeholder: 'Enter number of notes', multiplier: 5 },
+    { name: 'Cash1', label: '₹1', placeholder: 'Enter number of notes', multiplier: 1 }
   ];
+  denominationTotals: { [key: string]: number } = {};
+  selectedPortalId: any;
 
   constructor(private fb: FormBuilder,
     private portalService: portalService,
     private moneyTransferService: MoneyTransferService,
+    private commissionService: CommissionService,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
   }
@@ -53,6 +60,7 @@ export class MoneyAddEditComponent implements OnInit {
       this.populateForm(this.moneyData);
     }
     this.GetPortals();
+    this.GetCommissions();
     // Subscribe to valueChanges for cash denomination fields
     this.transactionForm.valueChanges.subscribe(() => {
       this.updateTotalCash();
@@ -67,8 +75,7 @@ export class MoneyAddEditComponent implements OnInit {
       LastName: ['', Validators.required],
       ContactNo: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       IFSCNo: ['', Validators.required],
-      TransactionType: ['', Validators.required],
-      Type: ['', Validators.required],
+      TransactionDate: [''],
       Cash1: ['', [Validators.pattern(/^\d+$/)]],
       Cash500: ['', [Validators.pattern(/^\d+$/)]],
       Cash100: ['', [Validators.pattern(/^\d+$/)]],
@@ -76,12 +83,11 @@ export class MoneyAddEditComponent implements OnInit {
       Cash20: ['', [Validators.pattern(/^\d+$/)]],
       Cash10: ['', [Validators.pattern(/^\d+$/)]],
       Cash5: ['', [Validators.pattern(/^\d+$/)]],
-      TotalCash: [{ value: '' }], // Calculated field
+      TotalCash: [{ value: '0' }], // Calculated field
       CollectionAmt: ['', Validators.required],
-      SalasarFixedAmt: ['', Validators.required],
+      FixedAmt: ['', Validators.required],
       BankCharge: ['', Validators.required],
-      SalasarCharge: ['', Validators.required],
-      SalasarExtra: ['', Validators.required],
+      Extra: ['', Validators.required],
       BankDeposit: ['', Validators.required],
       CustDeposit: ['', Validators.required]
     });
@@ -95,8 +101,7 @@ export class MoneyAddEditComponent implements OnInit {
       LastName: money.LastName,
       ContactNo: money.ContactNo,
       IFSCNo: money.IFSCNo,
-      TransactionType: money.TransactionType,
-      Type: money.Type,
+      TransactionDate: money.TransactionDate,
       Cash1: money.Cash1,
       Cash500: money.Cash500,
       Cash100: money.Cash100,
@@ -106,13 +111,14 @@ export class MoneyAddEditComponent implements OnInit {
       Cash5: money.Cash5,
       TotalCash: money.TotalCash,
       CollectionAmt: money.CollectionAmt,
-      SalasarFixedAmt: money.SalasarFixedAmt,
+      FixedAmt: money.FixedAmt,
       BankCharge: money.BankCharge,
-      SalasarCharge: money.SalasarCharge,
-      SalasarExtra: money.SalasarExtra,
+      Extra: money.Extra,
       BankDeposit: money.BankDeposit,
       CustDeposit: money.CustDeposit,
     });
+    this.GetCommissions();
+    this.updateTotalCash();
   }
 
   GetPortals() {
@@ -132,6 +138,26 @@ export class MoneyAddEditComponent implements OnInit {
     });
   }
 
+  GetCommissions() {
+    this.commissionService.GetCommissions().subscribe({
+      next: (res: any) => {
+        console.log('Response Data:', res);
+        this.commissionList = res;
+      }
+    })
+  }
+
+  updateDenominationTotal(field: string, multiplier: number): void {
+    const value = this.transactionForm.get(field)?.value || 0; // Get current value or 0
+    this.denominationTotals[field] = value * multiplier; // Calculate the denomination total
+    this.updateTotalCash(); // Recalculate the total cash
+  }
+
+  onPortalSelect(event: MatSelectChange): void {
+    this.selectedPortalId = event.value;
+    console.log("selectedPortalId", this.selectedPortalId);
+  }
+
   // Method to calculate and update TotalCash
   updateTotalCash(): void {
     const cashFields = [
@@ -146,16 +172,67 @@ export class MoneyAddEditComponent implements OnInit {
 
     let totalCash = 0;
 
-    // Sum up the values of cash fields, considering their multipliers
-    cashFields.forEach(({ field, multiplier }) => {
-      const value = parseInt(this.transactionForm.get(field)?.value || '0', 10);
-      if (!isNaN(value)) {
-        totalCash += value * multiplier;
-      }
+    // Calculate the total cash based on the fields and their multipliers
+    cashFields.forEach(cash => {
+      const value = this.transactionForm.get(cash.field)?.value || 0;
+      totalCash += value * cash.multiplier;
     });
 
-    // Update the TotalCash field
-    this.transactionForm.get('TotalCash')?.setValue(totalCash, { emitEvent: false });
+    if (this.selectedPortalId && this.portalList?.length) {
+      // Filter portalList by selectedPortalId
+      const portal = this.portalList.filter(
+        c => String(c.PortalID) === String(this.selectedPortalId) // Convert both to strings for comparison
+      );
+      
+      // Ensure total cash does not exceed the limit
+      const cashLimit = portal[0].TransactionLimit;
+      if (totalCash > cashLimit) {
+        totalCash = cashLimit;
+        alert(`Total cash exceeds the limit of ${cashLimit}. It has been set to the maximum limit.`);
+      }
+
+      const totalCashControl = this.transactionForm.get('TotalCash');
+      const collectionAmtControl = this.transactionForm.get('CollectionAmt');
+      const FixedAmtControl = this.transactionForm.get('FixedAmt');
+      const bankChargeControl = this.transactionForm.get('BankCharge');
+      const ExtraControl = this.transactionForm.get('Extra');
+      const bankDepositControl = this.transactionForm.get('BankDeposit');
+      const custDepositControl = this.transactionForm.get('CustDeposit');
+
+      // Update TotalCash and CollectionAmt
+      totalCashControl?.setValue(totalCash, { emitEvent: false });
+      collectionAmtControl?.setValue(totalCash, { emitEvent: false });
+
+      // Determine FixedAmt based on CollectionAmt and commissionList
+      const collectionAmt = totalCash; // Assuming CollectionAmt equals TotalCash
+      if (this.selectedPortalId && this.commissionList?.length) {
+        // Filter commissionList by selectedPortalId
+        const portalCommissions = this.commissionList.filter(
+          c => String(c.portalId) === String(this.selectedPortalId) // Convert both to strings for comparison
+        );
+
+        console.log("sds", portalCommissions);
+
+        // Find the applicable commission range
+        const commission = portalCommissions.find(
+          c => collectionAmt >= c.FromAmount && collectionAmt <= c.ToAmount
+        );
+
+        if (commission) {
+          FixedAmtControl?.setValue(commission.PacificFixedAmount, { emitEvent: false });
+          bankChargeControl?.setValue(commission.PacificAmount, { emitEvent: false });
+          ExtraControl?.setValue(commission.PacificExtraAmount, { emitEvent: false });
+          bankDepositControl?.setValue(totalCash - commission.PacificExtraAmount, { emitEvent: false });
+          custDepositControl?.setValue(totalCash - commission.PacificFixedAmount, { emitEvent: false });
+        } else {
+          FixedAmtControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+          bankChargeControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+          ExtraControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+          bankDepositControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+          custDepositControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+        }
+      }
+    }
   }
 
   onSubmit(): void {

@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   totalBalance: number = 0;
   totalWithTransaction: number = 0;
   overallTotal: number = 0;
+  portalList: any[] = [];
 
   constructor(private portalService: portalService,
     private moneyService: MoneyTransferService
@@ -22,6 +23,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPortalStats();
+    this.GetPortals();
     this.getMoneyTransferStats();
   }
 
@@ -30,6 +32,16 @@ export class DashboardComponent implements OnInit {
       next: (res: any) => {
         this.totalPortals = res.totalPortals;
         this.totalBalance = res.totalBalance;
+      }
+    })
+  }
+
+  GetPortals() {
+    this.portalService.GetPortals().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        
+        this.portalList = res;
       }
     })
   }

@@ -8,7 +8,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-xl-3">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Portal</mat-label>
-                    <mat-select formControlName="portalId">
+                    <mat-select formControlName="portalId" (selectionChange)="onPortalSelect($event)">
                         <mat-option *ngFor="let portal of portalList" [value]="portal.PortalID">
                             {{ portal.Name }} ({{ portal.Code }})
                         </mat-option>
@@ -22,7 +22,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-xl-3">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Account No</mat-label>
-                    <input matInput formControlName="ACNo" placeholder="Enter Account No">
+                    <input matInput type="number" formControlName="ACNo" min="0" placeholder="Enter Account No">
                     <mat-error *ngIf="transactionForm.get('ACNo')?.hasError('required')">Account No is
                         required</mat-error>
                 </mat-form-field>
@@ -52,7 +52,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-xl-3">
                 <mat-form-field class="full-width" appearance="fill">
                     <mat-label>Contact No</mat-label>
-                    <input matInput formControlName="ContactNo" placeholder="Enter Contact No">
+                    <input matInput type="number" min="0" formControlName="ContactNo" placeholder="Enter Contact No">
                     <mat-error *ngIf="transactionForm.get('ContactNo')?.hasError('required')">Contact No is
                         required</mat-error>
                     <mat-error *ngIf="transactionForm.get('ContactNo')?.hasError('pattern')">Enter a valid 10-digit
@@ -73,39 +73,56 @@
             <!-- Transaction Type -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-3">
                 <mat-form-field class="full-width" appearance="fill">
-                    <mat-label>Transaction Type</mat-label>
-                    <input matInput formControlName="TransactionType" placeholder="Enter Transaction Type">
-                    <mat-error *ngIf="transactionForm.get('TransactionType')?.hasError('required')">Transaction Type is
-                        required</mat-error>
+                    <mat-label>Choose a Transaction date</mat-label>
+                    <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY"
+                        formControlName="TransactionDate" />
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="transactionForm.get('TransactionDate')?.hasError('required')">
+                        Date is required
+                    </mat-error>
                 </mat-form-field>
             </div>
 
-            <!-- Type -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-                <mat-form-field class="full-width" appearance="fill">
-                    <mat-label>Type</mat-label>
-                    <input matInput formControlName="Type" placeholder="Enter Type">
-                    <mat-error *ngIf="transactionForm.get('Type')?.hasError('required')">Type is required</mat-error>
-                </mat-form-field>
-            </div>
             <div class="col-xl-6">
                 <mat-card appearance="outlined" class="p-3">
+                    <p class="text-danger fw-bold">Cash Details</p>
                     <div class="row">
                         <!-- Cash Denominations -->
-                        <div class="col-12 col-sm-6 col-md-4 col-xl-6" *ngFor="let cash of cashDenominations">
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-4" *ngFor="let cash of cashDenominations">
                             <mat-form-field class="full-width" appearance="fill">
                                 <mat-label>{{ cash.label }}</mat-label>
-                                <input matInput [formControlName]="cash.name" placeholder="{{ cash.placeholder }}"
-                                    [readonly]="cash.name === 'TotalCash'">
-                                <mat-error *ngIf="transactionForm.get(cash.name)?.hasError('pattern')">Enter a valid
-                                    number</mat-error>
+                                <input matInput type="number" min="0" [formControlName]="cash.name"
+                                    placeholder="{{ cash.placeholder }}" [readonly]="cash.name === 'TotalCash'"
+                                    (input)="updateDenominationTotal(cash.name, cash.multiplier)" />
+                                <mat-error *ngIf="transactionForm.get(cash.name)?.hasError('pattern')">
+                                    Enter a valid number
+                                </mat-error>
                             </mat-form-field>
+                            <p *ngIf="cash.name !== 'TotalCash'" class="m-0">
+                                Total: <span class="text-danger" style="font-size: 18px; font-weight: 600;">{{
+                                    denominationTotals[cash.name] || 0 }}</span>
+                            </p>
+                        </div>
+                        <!-- Total Cash -->
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-4">
+                            <mat-form-field class="full-width" appearance="fill">
+                                <mat-label>TotalCash</mat-label>
+                                <input matInput formControlName="TotalCash" placeholder="Enter TotalCash" readonly>
+                                <mat-error *ngIf="transactionForm.get('TotalCash')?.hasError('required')">TotalCash is
+                                    required</mat-error>
+                            </mat-form-field>
+                            <p class="m-0">
+                                Total: <span class="text-danger" style="font-size: 18px; font-weight: 600;">
+                                    {{ transactionForm.value?.TotalCash || 0 }}</span>
+                            </p>
                         </div>
                     </div>
                 </mat-card>
             </div>
             <div class="col-xl-6">
                 <mat-card appearance="outlined" class="p-3">
+                    <p class="text-danger fw-bold">Deposite</p>
                     <div class="row">
                         <!-- Collection Amount -->
                         <div class="col-12 col-sm-6 col-md-4 col-xl-6">
@@ -118,14 +135,13 @@
                             </mat-form-field>
                         </div>
 
-                        <!-- Salasar Fixed Amount -->
+                        <!--  Fixed Amount -->
                         <div class="col-12 col-sm-6 col-md-4 col-xl-6">
                             <mat-form-field class="full-width" appearance="fill">
-                                <mat-label>Salasar Fixed Amount</mat-label>
-                                <input matInput formControlName="SalasarFixedAmt"
-                                    placeholder="Enter Salasar Fixed Amount">
-                                <mat-error *ngIf="transactionForm.get('SalasarFixedAmt')?.hasError('required')">
-                                    Salasar Fixed Amount is required
+                                <mat-label> Fixed Amount</mat-label>
+                                <input matInput formControlName="FixedAmt" placeholder="Enter  Fixed Amount">
+                                <mat-error *ngIf="transactionForm.get('FixedAmt')?.hasError('required')">
+                                    Fixed Amount is required
                                 </mat-error>
                             </mat-form-field>
                         </div>
@@ -141,24 +157,13 @@
                             </mat-form-field>
                         </div>
 
-                        <!-- Salasar Charge -->
+                        <!--  Extra -->
                         <div class="col-12 col-sm-6 col-md-4 col-xl-6">
                             <mat-form-field class="full-width" appearance="fill">
-                                <mat-label>Salasar Charge</mat-label>
-                                <input matInput formControlName="SalasarCharge" placeholder="Enter Salasar Charge">
-                                <mat-error *ngIf="transactionForm.get('SalasarCharge')?.hasError('required')">
-                                    Salasar Charge is required
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-
-                        <!-- Salasar Extra -->
-                        <div class="col-12 col-sm-6 col-md-4 col-xl-6">
-                            <mat-form-field class="full-width" appearance="fill">
-                                <mat-label>Salasar Extra</mat-label>
-                                <input matInput formControlName="SalasarExtra" placeholder="Enter Salasar Extra">
-                                <mat-error *ngIf="transactionForm.get('SalasarExtra')?.hasError('required')">
-                                    Salasar Extra is required
+                                <mat-label> Extra</mat-label>
+                                <input matInput formControlName="Extra" placeholder="Enter  Extra">
+                                <mat-error *ngIf="transactionForm.get('Extra')?.hasError('required')">
+                                    Extra is required
                                 </mat-error>
                             </mat-form-field>
                         </div>

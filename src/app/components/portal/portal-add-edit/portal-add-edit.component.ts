@@ -48,7 +48,6 @@ export class PortalAddEditComponent implements OnInit {
       contactNo: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], // Contact no must be 10 digits
       contactPerson: ['', [Validators.required]],
       email: [''],
-      fax: [''],
       acNo: [''],
       balance: [''],
       transactionLimit: [''],
@@ -65,7 +64,6 @@ export class PortalAddEditComponent implements OnInit {
       contactNo: portal.ContactNo || '',
       contactPerson: portal.ContactPerson || '',
       email: portal.Email || '',
-      fax: portal.Fax || '',
       acNo: portal.ACNo || '',
       balance: portal.Balance || '',
       transactionLimit: portal.TransactionLimit || '',
