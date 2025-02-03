@@ -20,5 +20,9 @@ export const AdminRoutingModule: Routes = [{
       path: 'commission',
       loadChildren: () => import('./commission/commission-routing.module').then(m => m.CommissionRoutingModule),
     },
+    {
+      path: 'aeps',
+      loadChildren: () => import('./aeps/aeps-routing.module').then(m => m.AepsRoutingModule),
+    },
   ]
 }]

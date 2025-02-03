@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule,
-    MatInputModule,MatSortModule],
+    MatInputModule, MatSortModule],
   templateUrl: './view-portal.component.html',
   styleUrl: './view-portal.component.css'
 })
@@ -26,6 +26,7 @@ export class ViewPortalComponent implements OnInit, AfterViewInit {
     'BeforeBalance',
     'balance',
     'type',
+    'transactionType',
     'AfterBalance',
     'CreatedAt',
   ];

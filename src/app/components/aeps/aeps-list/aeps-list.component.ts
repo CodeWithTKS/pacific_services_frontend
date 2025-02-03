@@ -14,22 +14,23 @@ import { Router, RouterModule } from '@angular/router';
 import moment from 'moment';
 import { ExcelService } from '../../../services/excel.service';
 import { MoneyTransferService } from '../../../services/moneyTransfer.service';
-import { MoneyDeleteComponent } from '../money-delete/money-delete.component';
-import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
 import { portalService } from '../../../services/portal.service';
 import { MatSelectModule } from '@angular/material/select';
+import { AepsDeleteComponent } from '../aeps-delete/aeps-delete.component';
+import { AepsService } from '../../../services/aeps.service';
+import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
 
 @Component({
-  selector: 'app-money-transfer-list',
+  selector: 'app-aeps-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDatepickerModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule, RouterModule,
     MatInputModule, MatButtonModule, MatSortModule, MatDialogModule, MatSelectModule],
   providers: [provideNativeDateAdapter()],
-  templateUrl: './money-transfer-list.component.html',
-  styleUrl: './money-transfer-list.component.css'
+  templateUrl: './aeps-list.component.html',
+  styleUrl: './aeps-list.component.css'
 })
-export class MoneyTransferListComponent implements OnInit, AfterViewInit {
+export class AepsListComponent implements OnInit, AfterViewInit {
   moneyList: any[] = [];
   portalList: any[] = [];
   displayedColumns: string[] = [
@@ -40,10 +41,8 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
     'FullName',
     'Date',
     'CollectionAmt',
-    'FixedAmt',
-    'BankCharge',
+    'TransactionType',
     'Extra',
-    'BankDeposit',
     'CustDeposit',
     'Action',
   ];
@@ -54,7 +53,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   range: FormGroup;
   filters = {};
 
-  constructor(private moneyTransferService: MoneyTransferService,
+  constructor(private AepsService: AepsService,
     private portalService: portalService,
     private router: Router,
     private ExcelService: ExcelService,
@@ -78,7 +77,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
 
   GetMoneyTransfers(): void {
     const filters = this.filters || {}; // Default to an empty object if no filters provided
-    this.moneyTransferService.GetMoneyTransfers(filters).subscribe({
+    this.AepsService.GetMoneyTransfers(filters).subscribe({
       next: (res: any) => {
         console.log('Response Data:', res);
         this.dataSource.data = res;
@@ -185,13 +184,13 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   }
 
   editTransfer(money: any): void {
-    this.router.navigate([`/admin/money-transfer/editmoney/${money.TransferID}`], {
+    this.router.navigate([`/admin/aeps/editmoney/${money.TransferID}`], {
       state: { moneyData: money } // Pass portal data using state
     });
   }
 
   deleteItem(TransferID: any): void {
-    const dialogRef = this.dialog.open(MoneyDeleteComponent, {
+    const dialogRef = this.dialog.open(AepsDeleteComponent, {
       width: '400px',
       height: '170px',
       data: {
@@ -203,7 +202,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Delete confirmed');
-        this.moneyTransferService.DeleteMoneyTransfer(TransferID).subscribe({
+        this.AepsService.DeleteMoneyTransfer(TransferID).subscribe({
           next: (response) => {
             this.GetMoneyTransfers();
             console.log('Commission deleted successfully:', response);

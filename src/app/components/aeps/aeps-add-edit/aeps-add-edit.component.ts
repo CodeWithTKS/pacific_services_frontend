@@ -3,28 +3,28 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { MoneyTransferService } from '../../../services/moneyTransfer.service';
-import { portalService } from '../../../services/portal.service';
+import { AepsService } from '../../../services/aeps.service';
 import { CommissionService } from '../../../services/commission.service';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { portalService } from '../../../services/portal.service';
 
 @Component({
-  selector: 'app-money-add-edit',
+  selector: 'app-aeps-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatSelectModule, MatFormFieldModule, MatInputModule,
     MatButtonModule, RouterModule, MatCardModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './money-add-edit.component.html',
-  styleUrl: './money-add-edit.component.css'
+  templateUrl: './aeps-add-edit.component.html',
+  styleUrl: './aeps-add-edit.component.css'
 })
-export class MoneyAddEditComponent implements OnInit {
+export class AepsAddEditComponent implements OnInit {
   transactionForm!: FormGroup;
   isEditMode: boolean = false; // Default to 'false' for adding a portal
   portalList: any[] = [];
@@ -40,11 +40,21 @@ export class MoneyAddEditComponent implements OnInit {
     { name: 'Cash1', label: '₹1', placeholder: 'Enter number of notes', multiplier: 1 }
   ];
   denominationTotals: { [key: string]: number } = {};
-  selectedPortalId: any;
+  transactionTypeList = [
+    { value: 'aeps_withdrawal', label: 'AEPS Withdrawal' },
+    { value: 'aeps_deposit', label: 'AEPS Deposit' },
+    { value: 'account_opening', label: 'A/C Opening' },
+    { value: 'other', label: 'Other' }
+  ];
+  isOtherSelected = false;
+  otherTypeList = [
+    { value: 'debit', label: 'Debit' },
+    { value: 'credit', label: 'Credit' }
+  ];
 
   constructor(private fb: FormBuilder,
     private portalService: portalService,
-    private moneyTransferService: MoneyTransferService,
+    private AepsService: AepsService,
     private commissionService: CommissionService,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
@@ -84,11 +94,11 @@ export class MoneyAddEditComponent implements OnInit {
       Cash5: ['', [Validators.pattern(/^\d+$/)]],
       TotalCash: [{ value: '0' }], // Calculated field
       CollectionAmt: ['', Validators.required],
-      FixedAmt: ['', Validators.required],
-      BankCharge: ['', Validators.required],
       Extra: ['', Validators.required],
-      BankDeposit: ['', Validators.required],
-      CustDeposit: ['', Validators.required]
+      CustDeposit: ['', Validators.required],
+      TransactionType: ['', Validators.required],
+      OtherType: [''],
+      OtherName: [''],
     });
   }
 
@@ -110,11 +120,11 @@ export class MoneyAddEditComponent implements OnInit {
       Cash5: money.Cash5,
       TotalCash: money.TotalCash,
       CollectionAmt: money.CollectionAmt,
-      FixedAmt: money.FixedAmt,
-      BankCharge: money.BankCharge,
       Extra: money.Extra,
-      BankDeposit: money.BankDeposit,
       CustDeposit: money.CustDeposit,
+      TransactionType: money.TransactionType,
+      OtherType: money.OtherType,
+      OtherName: money.OtherName,
     });
     this.GetCommissions();
     this.updateTotalCash();
@@ -152,9 +162,22 @@ export class MoneyAddEditComponent implements OnInit {
     this.updateTotalCash(); // Recalculate the total cash
   }
 
-  onPortalSelect(event: MatSelectChange): void {
-    this.selectedPortalId = event.value;
-    console.log("selectedPortalId", this.selectedPortalId);
+  onTransactionTypeChange(selectedValue: string) {
+    this.isOtherSelected = selectedValue === 'other';
+
+    if (this.isOtherSelected) {
+      // Add required validators when "Other" is selected
+      this.transactionForm.get('OtherType')?.setValidators(Validators.required);
+      this.transactionForm.get('OtherName')?.setValidators(Validators.required);
+    } else {
+      // Remove validators when "Other" is not selected
+      this.transactionForm.get('OtherType')?.clearValidators();
+      this.transactionForm.get('OtherName')?.clearValidators();
+    }
+
+    // Update form validation
+    this.transactionForm.get('OtherType')?.updateValueAndValidity();
+    this.transactionForm.get('OtherName')?.updateValueAndValidity();
   }
 
   // Method to calculate and update TotalCash
@@ -177,61 +200,12 @@ export class MoneyAddEditComponent implements OnInit {
       totalCash += value * cash.multiplier;
     });
 
-    if (this.selectedPortalId && this.portalList?.length) {
-      // Filter portalList by selectedPortalId
-      const portal = this.portalList.filter(
-        c => String(c.PortalID) === String(this.selectedPortalId) // Convert both to strings for comparison
-      );
-      
-      // Ensure total cash does not exceed the limit
-      const cashLimit = portal[0].TransactionLimit;
-      if (totalCash > cashLimit) {
-        totalCash = cashLimit;
-        alert(`Total cash exceeds the limit of ${cashLimit}. It has been set to the maximum limit.`);
-      }
+    const totalCashControl = this.transactionForm.get('TotalCash');
+    const collectionAmtControl = this.transactionForm.get('CollectionAmt');
 
-      const totalCashControl = this.transactionForm.get('TotalCash');
-      const collectionAmtControl = this.transactionForm.get('CollectionAmt');
-      const FixedAmtControl = this.transactionForm.get('FixedAmt');
-      const bankChargeControl = this.transactionForm.get('BankCharge');
-      const ExtraControl = this.transactionForm.get('Extra');
-      const bankDepositControl = this.transactionForm.get('BankDeposit');
-      const custDepositControl = this.transactionForm.get('CustDeposit');
-
-      // Update TotalCash and CollectionAmt
-      totalCashControl?.setValue(totalCash, { emitEvent: false });
-      collectionAmtControl?.setValue(totalCash, { emitEvent: false });
-
-      // Determine FixedAmt based on CollectionAmt and commissionList
-      const collectionAmt = totalCash; // Assuming CollectionAmt equals TotalCash
-      if (this.selectedPortalId && this.commissionList?.length) {
-        // Filter commissionList by selectedPortalId
-        const portalCommissions = this.commissionList.filter(
-          c => String(c.portalId) === String(this.selectedPortalId) // Convert both to strings for comparison
-        );
-
-        console.log("sds", portalCommissions);
-
-        // Find the applicable commission range
-        const commission = portalCommissions.find(
-          c => collectionAmt >= c.FromAmount && collectionAmt <= c.ToAmount
-        );
-
-        if (commission) {
-          FixedAmtControl?.setValue(commission.PacificFixedAmount, { emitEvent: false });
-          bankChargeControl?.setValue(commission.PacificAmount, { emitEvent: false });
-          ExtraControl?.setValue(commission.PacificExtraAmount, { emitEvent: false });
-          bankDepositControl?.setValue(totalCash - commission.PacificExtraAmount, { emitEvent: false });
-          custDepositControl?.setValue(totalCash - commission.PacificFixedAmount, { emitEvent: false });
-        } else {
-          FixedAmtControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
-          bankChargeControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
-          ExtraControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
-          bankDepositControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
-          custDepositControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
-        }
-      }
-    }
+    // Update TotalCash and CollectionAmt
+    totalCashControl?.setValue(totalCash, { emitEvent: false });
+    collectionAmtControl?.setValue(totalCash, { emitEvent: false });
   }
 
   onSubmit(): void {
@@ -239,10 +213,10 @@ export class MoneyAddEditComponent implements OnInit {
       const formData = this.transactionForm.value;
       if (this.moneyData && this.moneyData.TransferID) {
         // Update an existing money-transfer
-        this.moneyTransferService.UpdateMoneyTransfer(this.moneyData.TransferID, formData).subscribe({
+        this.AepsService.UpdateMoneyTransfer(this.moneyData.TransferID, formData).subscribe({
           next: (response) => {
             console.log('money-transfer updated successfully', response);
-            this.router.navigate(['/admin/money-transfer']); // Navigate back to the money-transfer list
+            this.router.navigate(['/admin/aeps']); // Navigate back to the money-transfer list
           },
           error: (error) => {
             console.error('Error updating money-transfer', error);
@@ -250,10 +224,10 @@ export class MoneyAddEditComponent implements OnInit {
         });
       } else {
         // Add a new money-transfer
-        this.moneyTransferService.AddMoneyTransfer(formData).subscribe({
+        this.AepsService.AddMoneyTransfer(formData).subscribe({
           next: (response) => {
             console.log('money-transfer added successfully', response);
-            this.router.navigate(['/admin/money-transfer']); // Navigate back to the money-transfer list
+            this.router.navigate(['/admin/aeps']); // Navigate back to the money-transfer list
           },
           error: (error) => {
             console.error('Error adding money-transfer', error);

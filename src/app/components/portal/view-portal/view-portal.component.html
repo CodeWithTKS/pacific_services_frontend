@@ -50,6 +50,14 @@
                 <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.type }}
                 </td>
             </ng-container>
+            
+            <ng-container matColumnDef="transactionType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Transaction Type
+                </th>
+                <td mat-cell *matCellDef="let portal" style="padding: 10px;">{{ portal.transactionType }}
+                </td>
+            </ng-container>
 
             <ng-container matColumnDef="AfterBalance">
                 <th mat-header-cell *matHeaderCellDef style="background: #004d99; color: white; padding: 10px;">After
