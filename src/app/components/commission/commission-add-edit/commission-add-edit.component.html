@@ -6,7 +6,7 @@
         <div class="row">
             <!-- Portal Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Portal</mat-label>
                     <mat-select formControlName="portalId" aria-label="Select Portal">
                         <mat-option *ngFor="let portal of portalList" [value]="portal.PortalID">
@@ -20,7 +20,7 @@
 
             <!-- From Amount Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>From Amount</mat-label>
                     <input matInput formControlName="FromAmount" placeholder="Enter from amount"
                         aria-label="From Amount">
@@ -31,7 +31,7 @@
 
             <!-- To Amount Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>To Amount</mat-label>
                     <input matInput formControlName="ToAmount" placeholder="Enter to amount" aria-label="To Amount">
                     <mat-error *ngIf="myForm.get('ToAmount')?.hasError('required')">To Amount is required</mat-error>
@@ -40,7 +40,7 @@
 
             <!-- Commission Type Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Commission Type</mat-label>
                     <mat-select formControlName="CommissionType" placeholder="Select Commission Type"
                         (valueChange)="onCommissionTypeChange($event)">
@@ -53,7 +53,7 @@
 
             <!-- Amount Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Amount</mat-label>
                     <input matInput formControlName="Amount" placeholder="Enter amount" aria-label="Amount">
                     <mat-error *ngIf="myForm.get('Amount')?.hasError('required')">Amount is required</mat-error>
@@ -62,7 +62,7 @@
 
             <!-- Percentage Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Percentage</mat-label>
                     <input matInput formControlName="Percentage" placeholder="Enter percentage" aria-label="Percentage"
                         (keyup)="onPercentageKeyUp($event)">
@@ -72,7 +72,7 @@
 
             <!-- Pacific Fixed Amount Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Pacific Fixed Amount</mat-label>
                     <input matInput formControlName="PacificFixedAmount" placeholder="Enter Pacific Fixed Amount"
                         aria-label="Pacific Fixed Amount">
@@ -81,7 +81,7 @@
 
             <!-- Pacific Amount Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Pacific Amount</mat-label>
                     <input matInput formControlName="PacificAmount" placeholder="Enter Pacific Amount"
                         aria-label="Pacific Amount">
@@ -90,7 +90,7 @@
 
             <!-- Pacific Extra Amount Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="fill">
+                <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Pacific Extra Amount</mat-label>
                     <input matInput formControlName="PacificExtraAmount" placeholder="Enter Pacific Extra Amount"
                         aria-label="Pacific Extra Amount">
