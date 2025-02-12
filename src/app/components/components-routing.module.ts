@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
-import { DashboardComponent } from "./dashboard/dashboard.component";
 import { ComponentsComponent } from "./components.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
 
 export const AdminRoutingModule: Routes = [{
   path: '',
@@ -23,6 +23,18 @@ export const AdminRoutingModule: Routes = [{
     {
       path: 'aeps',
       loadChildren: () => import('./aeps/aeps-routing.module').then(m => m.AepsRoutingModule),
+    },
+    {
+      path: 'user',
+      loadChildren: () => import('./users/users-routing.module').then(m => m.UsersRoutingModule),
+    },
+    {
+      path: 'service',
+      loadChildren: () => import('./services/services-routing.module').then(m => m.ServicesRoutingModule),
+    },
+    {
+      path: 'sales',
+      loadChildren: () => import('./sales/sales-routing.module').then(m => m.SalesRoutingModule),
     },
   ]
 }]

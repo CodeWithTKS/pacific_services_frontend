@@ -13,6 +13,7 @@
     font-family: Arial, sans-serif;
     z-index: 1000;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
 }
 
 /* Sidebar active link */
