@@ -7,7 +7,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AepsService } from '../../../services/aeps.service';
 import { CommissionService } from '../../../services/commission.service';
@@ -84,7 +84,7 @@ export class AepsAddEditComponent implements OnInit {
       LastName: ['', Validators.required],
       ContactNo: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       IFSCNo: ['', Validators.required],
-      TransactionDate: [''],
+      TransactionDate: [new Date()],
       Cash1: ['', [Validators.pattern(/^\d+$/)]],
       Cash500: ['', [Validators.pattern(/^\d+$/)]],
       Cash100: ['', [Validators.pattern(/^\d+$/)]],
@@ -95,7 +95,6 @@ export class AepsAddEditComponent implements OnInit {
       TotalCash: [{ value: '0' }], // Calculated field
       CollectionAmt: ['', Validators.required],
       Extra: ['', Validators.required],
-      CustDeposit: ['', Validators.required],
       TransactionType: ['', Validators.required],
       OtherType: [''],
       OtherName: [''],
@@ -121,7 +120,6 @@ export class AepsAddEditComponent implements OnInit {
       TotalCash: money.TotalCash,
       CollectionAmt: money.CollectionAmt,
       Extra: money.Extra,
-      CustDeposit: money.CustDeposit,
       TransactionType: money.TransactionType,
       OtherType: money.OtherType,
       OtherName: money.OtherName,

@@ -15,7 +15,7 @@ export class salesService {
     }
 
     // Get all sales
-    Getsales(filters?: { fromDate?: string; toDate?: string; portalId?: number }): Observable<any> {
+    Getsales(filters?: { fromDate?: string; toDate?: string}): Observable<any> {
         const params: any = {};
 
         // Add query parameters only if filters exist and have values
@@ -24,9 +24,6 @@ export class salesService {
         }
         if (filters?.toDate) {
             params.toDate = filters.toDate;
-        }
-        if (filters?.portalId) {
-            params.portalId = filters.portalId;
         }
         return this.httpClient
             .get(environment.baseURL + `/sales`, { params })

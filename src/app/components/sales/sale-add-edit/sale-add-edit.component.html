@@ -19,25 +19,8 @@
                         Customer name is required
                     </mat-error>
                 </mat-form-field>
-                <button mat-mini-fab type="button" style="background: #004d99;color: white; margin-bottom: 18px;">
-                    <mat-icon>add</mat-icon>
-                </button>
-            </div>
-
-            <!-- Portal Name Section -->
-            <div class="col-sm-12 col-md-4 d-flex align-items-center gap-2">
-                <mat-form-field class="full-width" appearance="fill">
-                    <mat-label>Portal Name</mat-label>
-                    <mat-select formControlName="portalId">
-                        <mat-option *ngFor="let portal of PortalList" [value]="portal.PortalID">
-                            {{ portal.Name }}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="myForm.get('portalId')?.hasError('required')">
-                        Portal name is required
-                    </mat-error>
-                </mat-form-field>
-                <button mat-mini-fab type="button" style="background: #004d99;color: white; margin-bottom: 18px;">
+                <button mat-mini-fab type="button" style="background: #004d99;color: white; margin-bottom: 18px;"
+                    (click)="addCustomer()">
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
@@ -57,8 +40,9 @@
                             <tr>
                                 <th>Service</th>
                                 <th>Price</th>
-                                <th>Commission</th>
-                                <th>Amount</th>
+                                <th>Description</th>
+                                <!-- <th>Commission</th>
+                                <th>Amount</th> -->
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -82,6 +66,11 @@
                                 </td>
                                 <td>
                                     <mat-form-field appearance="fill" class="full-width">
+                                        <input matInput type="text" formControlName="description">
+                                    </mat-form-field>
+                                </td>
+                                <!-- <td>
+                                    <mat-form-field appearance="fill" class="full-width">
                                         <input matInput type="number" formControlName="commission_price">
                                     </mat-form-field>
                                 </td>
@@ -89,7 +78,7 @@
                                     <mat-form-field appearance="fill" class="full-width">
                                         <input matInput type="number" formControlName="amount">
                                     </mat-form-field>
-                                </td>
+                                </td> -->
                                 <td class="text-center">
                                     <button mat-mini-fab type="button"
                                         style="background: #e62d15;color: white; margin-bottom: 18px;"

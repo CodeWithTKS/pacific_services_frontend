@@ -3,15 +3,15 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommissionService } from '../../../services/commission.service';
 import { MoneyTransferService } from '../../../services/moneyTransfer.service';
 import { portalService } from '../../../services/portal.service';
-import { CommissionService } from '../../../services/commission.service';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-money-add-edit',
@@ -74,7 +74,7 @@ export class MoneyAddEditComponent implements OnInit {
       LastName: ['', Validators.required],
       ContactNo: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       IFSCNo: ['', Validators.required],
-      TransactionDate: [''],
+      TransactionDate: [new Date()],
       Cash1: ['', [Validators.pattern(/^\d+$/)]],
       Cash500: ['', [Validators.pattern(/^\d+$/)]],
       Cash100: ['', [Validators.pattern(/^\d+$/)]],

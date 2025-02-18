@@ -8,16 +8,15 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import moment from 'moment';
-import { ExcelService } from '../../../services/excel.service';
-import { MoneyTransferService } from '../../../services/moneyTransfer.service';
-import { portalService } from '../../../services/portal.service';
-import { MatSelectModule } from '@angular/material/select';
-import { AepsDeleteComponent } from '../aeps-delete/aeps-delete.component';
 import { AepsService } from '../../../services/aeps.service';
+import { ExcelService } from '../../../services/excel.service';
+import { portalService } from '../../../services/portal.service';
+import { AepsDeleteComponent } from '../aeps-delete/aeps-delete.component';
 import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
 
 @Component({
@@ -44,7 +43,7 @@ export class AepsListComponent implements OnInit, AfterViewInit {
     'TransactionType',
     'Extra',
     'CustDeposit',
-    'Action',
+    // 'Action',
   ];
   dataSource = new MatTableDataSource<any>([]);
   dataForExcel: any[] = [];

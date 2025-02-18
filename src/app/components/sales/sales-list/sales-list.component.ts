@@ -12,10 +12,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import moment from 'moment';
 import { ExcelService } from '../../../services/excel.service';
 import { salesService } from '../../../services/sales.service';
-import { portalService } from '../../../services/portal.service';
-import moment from 'moment';
 
 @Component({
   selector: 'app-sales-list',
@@ -29,7 +28,6 @@ import moment from 'moment';
 })
 export class SalesListComponent implements OnInit, AfterViewInit {
   SaleList: any[] = [];
-  portalList: any[] = [];
   displayedColumns: string[] = [
     'id',
     'user_name',
@@ -47,18 +45,15 @@ export class SalesListComponent implements OnInit, AfterViewInit {
 
   constructor(private salesService: salesService,
     private ExcelService: ExcelService,
-    private portalService: portalService,
     private dialog: MatDialog, private fb: FormBuilder) {
     this.range = this.fb.group({
       start: [null],
       end: [null],
-      portalId: [null],
     });
   }
 
   ngOnInit(): void {
     this.Getsales();
-    this.GetPortals();
   }
 
   ngAfterViewInit() {
@@ -80,15 +75,6 @@ export class SalesListComponent implements OnInit, AfterViewInit {
       },
       error: (err: any) => console.error('Error fetching Services:', err),
     });
-  }
-
-  GetPortals(): void {
-    this.portalService.GetPortals().subscribe({
-      next: (res: any) => {
-        console.log('Response Data:', res);
-        this.portalList = res;
-      }
-    })
   }
 
   applyFilter(event: Event): void {
@@ -117,12 +103,10 @@ export class SalesListComponent implements OnInit, AfterViewInit {
     const end = this.range.value.end
       ? moment(this.range.value.end).format('YYYY-MM-DD')
       : null;
-    const portalId = this.range.value.portalId
-    if (start && end || portalId) {
+    if (start && end) {
       this.filters = {
         fromDate: start,
         toDate: end,
-        portalId: portalId
       };
       this.Getsales();
     }

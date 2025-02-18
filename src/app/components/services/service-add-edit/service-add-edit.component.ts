@@ -5,14 +5,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
+import { portalService } from '../../../services/portal.service';
 import { serviceService } from '../../../services/service.service';
 
 @Component({
   selector: 'app-service-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
-    MatFormFieldModule,
+    MatFormFieldModule, MatSelectModule,
     MatInputModule, MatButtonModule, RouterModule],
   templateUrl: './service-add-edit.component.html',
   styleUrl: './service-add-edit.component.css'
@@ -21,8 +23,10 @@ export class ServiceAddEditComponent implements OnInit {
   myForm!: FormGroup;
   isEditMode: boolean = false; // Default to 'false' for adding a Service
   Data: any;
+  PortalList: any[] = [];
 
   constructor(private fb: FormBuilder,
+    private portalService: portalService,
     private serviceService: serviceService,
     public dialogRef: MatDialogRef<ServiceAddEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -30,6 +34,7 @@ export class ServiceAddEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.GetPortals();
     // If editing an existing Service, set isEditMode to true and load the data
     this.Data = this.data;
     if (this.Data?.id) {
@@ -38,9 +43,18 @@ export class ServiceAddEditComponent implements OnInit {
     }
   }
 
+  GetPortals() {
+    this.portalService.GetPortals().subscribe({
+      next: (res: any) => {
+        console.log('Response Data:', res);
+        this.PortalList = res;
+      }
+    })
+  }
   // Creating the form group with validations
   createForm(): void {
     this.myForm = this.fb.group({
+      portalId: ['', [Validators.required]],
       service_name: ['', [Validators.required]],
       price: ['', [Validators.required]],
       commission_price: ['', [Validators.required]],
@@ -49,6 +63,7 @@ export class ServiceAddEditComponent implements OnInit {
 
   populateForm(data: any): void {
     this.myForm.patchValue({
+      portalId: data.portalId || '',
       service_name: data.service_name || '',
       price: data.price || '',
       commission_price: data.commission_price || '',

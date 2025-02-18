@@ -1,23 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { Router, RouterModule } from '@angular/router';
-import { serviceService } from '../../../services/service.service';
-import { portalService } from '../../../services/portal.service';
-import { userService } from '../../../services/user.service';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { Router, RouterModule } from '@angular/router';
 import { salesService } from '../../../services/sales.service';
+import { serviceService } from '../../../services/service.service';
+import { userService } from '../../../services/user.service';
+import { UserAddEditComponent } from '../../users/user-add-edit/user-add-edit.component';
 
 @Component({
   selector: 'app-sale-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatFormFieldModule, MatInputModule, MatButtonModule,
-    RouterModule, MatSelectModule, MatIconModule],
+    RouterModule, MatSelectModule, MatIconModule, MatDialogModule],
   templateUrl: './sale-add-edit.component.html',
   styleUrl: './sale-add-edit.component.css'
 })
@@ -26,29 +27,26 @@ export class SaleAddEditComponent implements OnInit {
   isEditMode: boolean = false; // Default to 'false' for adding a Service
   Data: any;
   ServiceList: any[] = [];
-  PortalList: any[] = [];
   UserList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private serviceService: serviceService,
     private salesService: salesService,
-    private portalService: portalService,
     private userService: userService,
+    private dialog: MatDialog,
     private router: Router) {
     this.createForm();
   }
 
   ngOnInit(): void {
     this.Getuser();
-    this.GetPortals();
     this.Getservices();
   }
 
   createForm(): void {
     this.myForm = this.fb.group({
       user_id: ['', [Validators.required]],
-      portalId: ['', [Validators.required]],
       services: this.fb.array([]), // FormArray for the table rows
       total_price: ['', [Validators.required]]
     })
@@ -72,15 +70,6 @@ export class SaleAddEditComponent implements OnInit {
     });
   }
 
-  GetPortals() {
-    this.portalService.GetPortals().subscribe({
-      next: (res: any) => {
-        console.log('Response Data:', res);
-        this.PortalList = res;
-      }
-    })
-  }
-
   get FormArray(): FormArray {
     return this.myForm.get('services') as FormArray;
   }
@@ -88,6 +77,8 @@ export class SaleAddEditComponent implements OnInit {
   addRow(): void {
     const newRow = this.fb.group({
       serviceId: [null],
+      portalId: [0],
+      description: [null],
       price: [0],
       commission_price: [0],
       amount: [0]
@@ -110,6 +101,7 @@ export class SaleAddEditComponent implements OnInit {
 
       // Patch values into the form array
       this.FormArray.at(index).patchValue({
+        portalId: selectedService.portalId,
         price: selectedService.price,
         commission_price: selectedService.commission_price,
         amount: selectedService.price - selectedService.commission_price
@@ -130,9 +122,22 @@ export class SaleAddEditComponent implements OnInit {
     this.myForm.patchValue({ total_price: total });
   }
 
+  addCustomer(): void {
+    const dialogRef = this.dialog.open(UserAddEditComponent, {
+      width: '400px',
+      height: '300px',
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.Getuser();
+    })
+  }
+
   // Submit function
   onSubmit(): void {
     if (this.myForm.valid) {
+      console.log(this.myForm.value);
+
       const formData = this.myForm.value;
       console.log(formData);
 
