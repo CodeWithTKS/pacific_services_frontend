@@ -43,7 +43,7 @@ export class AepsListComponent implements OnInit, AfterViewInit {
     'TransactionType',
     'Extra',
     'CustDeposit',
-    // 'Action',
+    'Action',
   ];
   dataSource = new MatTableDataSource<any>([]);
   dataForExcel: any[] = [];
