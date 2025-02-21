@@ -147,17 +147,6 @@
                 </td>
             </ng-container>
 
-            <!-- CustDeposit Column -->
-            <ng-container matColumnDef="CustDeposit">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Cust Deposit</th>
-                <td mat-cell *matCellDef="let transfer" style="padding: 10px;">{{ transfer.CustDeposit | currency:'INR'
-                    }}</td>
-                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;">
-                    {{ getTotalCustDeposit() | currency:'INR' }} </td>
-                <!-- Empty footer -->
-            </ng-container>
-
             <!-- Actions Column -->
             <ng-container matColumnDef="Action">
                 <th mat-header-cell *matHeaderCellDef style="background: #004d99; color: white; padding: 10px;">

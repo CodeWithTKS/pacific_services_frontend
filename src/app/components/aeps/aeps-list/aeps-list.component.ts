@@ -42,7 +42,6 @@ export class AepsListComponent implements OnInit, AfterViewInit {
     'CollectionAmt',
     'TransactionType',
     'Extra',
-    'CustDeposit',
     'Action',
   ];
   dataSource = new MatTableDataSource<any>([]);
@@ -139,11 +138,6 @@ export class AepsListComponent implements OnInit, AfterViewInit {
   getTotalBankDeposit() {
     return this.dataSource.data
       .map((transfer: any) => transfer.BankDeposit)
-      .reduce((acc, value) => acc + (value || 0), 0);
-  }
-  getTotalCustDeposit() {
-    return this.dataSource.data
-      .map((transfer: any) => transfer.CustDeposit)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
 
