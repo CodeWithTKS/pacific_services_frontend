@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -10,8 +10,6 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Router, RouterModule } from '@angular/router';
 import { salesService } from '../../../services/sales.service';
 import { serviceService } from '../../../services/service.service';
-import { userService } from '../../../services/user.service';
-import { UserAddEditComponent } from '../../users/user-add-edit/user-add-edit.component';
 
 @Component({
   selector: 'app-sale-add-edit',
@@ -27,37 +25,28 @@ export class SaleAddEditComponent implements OnInit {
   isEditMode: boolean = false; // Default to 'false' for adding a Service
   Data: any;
   ServiceList: any[] = [];
-  UserList: any[] = [];
+  paymentTypes: string[] = ['Cash', 'Online'];
 
   constructor(
     private fb: FormBuilder,
     private serviceService: serviceService,
     private salesService: salesService,
-    private userService: userService,
-    private dialog: MatDialog,
     private router: Router) {
     this.createForm();
   }
 
   ngOnInit(): void {
-    this.Getuser();
     this.Getservices();
   }
 
   createForm(): void {
     this.myForm = this.fb.group({
-      user_id: ['', [Validators.required]],
+      name: ['', [Validators.required]],
+      phone: [''],
+      paymentType: [''],
       services: this.fb.array([]), // FormArray for the table rows
+      subtotal_price: ['', [Validators.required]],
       total_price: ['', [Validators.required]]
-    })
-  }
-
-  Getuser() {
-    this.userService.Getuser().subscribe({
-      next: (res: any) => {
-        console.log('Response Data:', res);
-        this.UserList = res;
-      }
     })
   }
 
@@ -81,6 +70,7 @@ export class SaleAddEditComponent implements OnInit {
       description: [null],
       price: [0],
       commission_price: [0],
+      subamount: [0],
       amount: [0]
     });
     this.FormArray.push(newRow);
@@ -104,6 +94,7 @@ export class SaleAddEditComponent implements OnInit {
         portalId: selectedService.portalId,
         price: selectedService.price,
         commission_price: selectedService.commission_price,
+        subamount: selectedService.price,
         amount: selectedService.price - selectedService.commission_price
       });
 
@@ -118,19 +109,11 @@ export class SaleAddEditComponent implements OnInit {
     let total = this.FormArray.controls.reduce((sum, control) => {
       return sum + (control.get('amount')?.value || 0);
     }, 0);
-
+    let subtotal = this.FormArray.controls.reduce((sum, control) => {
+      return sum + (control.get('subamount')?.value || 0);
+    }, 0);
     this.myForm.patchValue({ total_price: total });
-  }
-
-  addCustomer(): void {
-    const dialogRef = this.dialog.open(UserAddEditComponent, {
-      width: '400px',
-      height: '300px',
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.Getuser();
-    })
+    this.myForm.patchValue({ subtotal_price: subtotal });
   }
 
   // Submit function

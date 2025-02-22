@@ -58,7 +58,21 @@
             <ng-container matColumnDef="user_name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Customer Name</th>
-                <td mat-cell *matCellDef="let Sale" style="padding: 10px;">{{ Sale.user_name }}</td>
+                <td mat-cell *matCellDef="let Sale" style="padding: 10px;">{{ Sale.name ||'N/A' }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Mobile No.</th>
+                <td mat-cell *matCellDef="let Sale" style="padding: 10px;">{{ Sale.phone ||'N/A' }}</td>
+                <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paymentType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Payment Type</th>
+                <td mat-cell *matCellDef="let Sale" style="padding: 10px;">{{ Sale.paymentType ||'N/A' }}</td>
                 <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
             </ng-container>
 

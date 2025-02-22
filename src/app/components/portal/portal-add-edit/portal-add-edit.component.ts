@@ -78,7 +78,11 @@ export class PortalAddEditComponent implements OnInit {
   onSubmit(): void {
     if (this.myForm.valid) {
       const formData = this.myForm.value;
-
+      // Add +1 day to OpeningBalanceDate
+      const openingBalanceDate = new Date(formData.openingBalanceDate);
+      openingBalanceDate.setDate(openingBalanceDate.getDate() + 1);
+      formData.openingBalanceDate = openingBalanceDate;
+      
       if (this.portalData && this.portalData.PortalID) {
         // Update an existing portal
         this.portalService.UpdatePortal(this.portalData.PortalID, formData).subscribe({

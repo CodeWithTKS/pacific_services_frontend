@@ -8,7 +8,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Name</mat-label>
-                    <input matInput formControlName="name" placeholder="Enter name" aria-label="Name">
+                    <input matInput formControlName="name" placeholder="Enter name">
                     <mat-error *ngIf="myForm.get('name')?.hasError('required')">Name is required</mat-error>
                 </mat-form-field>
             </div>

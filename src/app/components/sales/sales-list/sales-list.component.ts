@@ -31,6 +31,8 @@ export class SalesListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'id',
     'user_name',
+    'phone',
+    'paymentType',
     'service_names',
     'total_commission_price',
     'total_price',

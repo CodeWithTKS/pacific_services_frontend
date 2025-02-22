@@ -7,22 +7,32 @@
     <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="">
         <div class="row g-3">
             <!-- Customer Name Section -->
-            <div class="col-sm-12 col-md-4 d-flex align-items-center gap-2">
+            <div class="col-sm-12 col-md-4">
                 <mat-form-field class="full-width" appearance="fill">
-                    <mat-label>Customer Name</mat-label>
-                    <mat-select formControlName="user_id">
-                        <mat-option *ngFor="let user of UserList" [value]="user.id">
-                            {{ user.name }}
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter name">
+                    <mat-error *ngIf="myForm.get('name')?.hasError('required')">Name is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Phone -->
+            <div class="col-sm-12 col-md-4">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Phone</mat-label>
+                    <input matInput formControlName="phone" placeholder="Enter phone">
+                </mat-form-field>
+            </div>
+
+            <!-- Payement Type -->
+            <div class="col-sm-12 col-md-4">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Payment Type</mat-label>
+                    <mat-select formControlName="paymentType">
+                        <mat-option *ngFor="let type of paymentTypes" [value]="type">
+                            {{ type }}
                         </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="myForm.get('user_id')?.hasError('required')">
-                        Customer name is required
-                    </mat-error>
                 </mat-form-field>
-                <button mat-mini-fab type="button" style="background: #004d99;color: white; margin-bottom: 18px;"
-                    (click)="addCustomer()">
-                    <mat-icon>add</mat-icon>
-                </button>
             </div>
 
             <!-- Add Row Button -->
@@ -98,7 +108,7 @@
                     style="width: 300px; background: #f8f9fa; border-left: 5px solid #004d99;">
                     <h5 class="text-muted text-center">Total Amount</h5>
                     <mat-form-field class="full-width" appearance="fill">
-                        <input matInput formControlName="total_price" readonly class="text-end font-weight-bold"
+                        <input matInput formControlName="subtotal_price" readonly class="text-end font-weight-bold"
                             style="font-size: 1.5rem; color: #004d99; text-align: right;">
                     </mat-form-field>
                 </div>

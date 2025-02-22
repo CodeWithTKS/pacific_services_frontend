@@ -67,9 +67,9 @@
             <!-- CreatedAt Column -->
             <ng-container matColumnDef="CreatedAt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Created At</th>
+                    style="background: #004d99; color: white; padding: 10px;">Opening Date</th>
                 <td mat-cell *matCellDef="let portal" style="padding: 10px;">
-                    {{ portal.CreatedAt | date: 'dd/MM/yyyy, h:mm a' }}
+                    {{ portal.OpeningBalanceDate | date: 'dd/MM/yyyy' }}
                 </td>
             </ng-container>
 

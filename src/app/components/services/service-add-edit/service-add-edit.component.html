@@ -23,7 +23,7 @@
             <div class="col-sm-12">
                 <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Service Name</mat-label>
-                    <input matInput formControlName="service_name" placeholder="Enter service name" aria-label="Name">
+                    <input matInput formControlName="service_name" placeholder="Enter service name" >
                     <mat-error *ngIf="myForm.get('service_name')?.hasError('required')">service name is
                         required</mat-error>
                 </mat-form-field>
@@ -31,8 +31,8 @@
 
             <div class="col-sm-12">
                 <mat-form-field class="full-width" appearance="outline">
-                    <mat-label>Price</mat-label>
-                    <input matInput formControlName="price" placeholder="Enter price" aria-label="Name">
+                    <mat-label>Sales Price</mat-label>
+                    <input matInput formControlName="price" placeholder="Enter sales price" >
                     <mat-error *ngIf="myForm.get('price')?.hasError('required')">price is required</mat-error>
                 </mat-form-field>
             </div>
@@ -41,7 +41,7 @@
                 <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Commission Price</mat-label>
                     <input matInput formControlName="commission_price" placeholder="Enter commission price"
-                        aria-label="Name">
+                        >
                     <mat-error *ngIf="myForm.get('commission_price')?.hasError('required')">commission price is
                         required</mat-error>
                 </mat-form-field>
