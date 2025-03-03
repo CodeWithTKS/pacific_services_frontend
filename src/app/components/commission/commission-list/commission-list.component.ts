@@ -10,8 +10,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { CommissionService } from '../../../services/commission.service';
-import { CommissionDeleteComponent } from '../commission-delete/commission-delete.component';
 import { ExcelService } from '../../../services/excel.service';
+import { CommissionDeleteComponent } from '../commission-delete/commission-delete.component';
 
 @Component({
   selector: 'app-commission-list',
@@ -27,6 +27,7 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'CommissionID',
     'portalName',
+    'vendorName',
     'FromAmount',
     'ToAmount',
     'Percentage',

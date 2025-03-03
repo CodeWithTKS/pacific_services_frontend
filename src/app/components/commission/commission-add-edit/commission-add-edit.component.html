@@ -17,6 +17,27 @@
                 </mat-form-field>
             </div>
 
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Commission For</mat-label>
+                    <mat-select formControlName="CommissionFor" placeholder="Select Commission For">
+                        <mat-option *ngFor="let type of CommissionFor" [value]="type">
+                            {{ type }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4" *ngIf="myForm.value?.CommissionFor === 'vendor'">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Vendor</mat-label>
+                    <mat-select formControlName="VendorID" placeholder="Select Vendor">
+                        <mat-option *ngFor="let vendor of VendorList" [value]="vendor.id">
+                            {{ vendor.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
             <!-- From Amount Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">

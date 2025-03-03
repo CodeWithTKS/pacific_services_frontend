@@ -15,7 +15,7 @@ export class MoneyTransferService {
     }
 
     // Get all money transfers
-    GetMoneyTransfers(filters?: { fromDate?: string; toDate?: string; portalId?: number }): Observable<any> {
+    GetMoneyTransfers(filters?: { fromDate?: string; toDate?: string; portalId?: number; VendorID?: number }): Observable<any> {
         const params: any = {};
 
         // Add query parameters only if filters exist and have values
@@ -27,6 +27,9 @@ export class MoneyTransferService {
         }
         if (filters?.portalId) {
             params.portalId = filters.portalId;
+        }
+        if (filters?.VendorID) {
+            params.VendorID = filters.VendorID;
         }
 
         return this.httpClient

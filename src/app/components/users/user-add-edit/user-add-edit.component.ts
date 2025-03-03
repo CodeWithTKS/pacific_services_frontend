@@ -18,7 +18,7 @@ import { userService } from '../../../services/user.service';
   styleUrl: './user-add-edit.component.css'
 })
 export class UserAddEditComponent implements OnInit {
-  myForm!: FormGroup;
+  vendorForm!: FormGroup;
   isEditMode: boolean = false; // Default to 'false' for adding a User
   UserData: any;
 
@@ -36,26 +36,31 @@ export class UserAddEditComponent implements OnInit {
       this.isEditMode = true
       this.populateForm(this.UserData);
     }
+    this.vendorForm.get('main_balance')?.valueChanges.subscribe(value => {
+      this.vendorForm.patchValue({ virtual_balance: value }, { emitEvent: false });
+    });
   }
 
   // Creating the form group with validations
   createForm(): void {
-    this.myForm = this.fb.group({
+    this.vendorForm = this.fb.group({
       name: ['', [Validators.required]],
       phone: ['', [Validators.required]],
+      main_balance: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      virtual_balance: []
     });
   }
 
   populateForm(User: any): void {
-    this.myForm.patchValue({
+    this.vendorForm.patchValue({
       name: User.name || '',
       phone: User.phone || '',
     });
   }
   // Submit function
   onSubmit(): void {
-    if (this.myForm.valid) {
-      const formData = this.myForm.value;
+    if (this.vendorForm.valid) {
+      const formData = this.vendorForm.value;
 
       if (this.UserData && this.UserData.id) {
         // Update an existing User
@@ -88,6 +93,6 @@ export class UserAddEditComponent implements OnInit {
 
   // Getter for easy access to form controls in the template
   get formControls() {
-    return this.myForm.controls;
+    return this.vendorForm.controls;
   }
 }

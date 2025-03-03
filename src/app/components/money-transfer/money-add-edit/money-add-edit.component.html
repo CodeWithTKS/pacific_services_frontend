@@ -17,7 +17,17 @@
                         required</mat-error>
                 </mat-form-field>
             </div>
-
+            
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Vendor</mat-label>
+                    <mat-select formControlName="VendorID" placeholder="Select Vendor">
+                        <mat-option *ngFor="let vendor of VendorList" [value]="vendor.id">
+                            {{ vendor.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
             <!-- Account No -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-3">
                 <mat-form-field class="full-width" appearance="outline">
@@ -104,6 +114,17 @@
                                     denominationTotals[cash.name] || 0 }}</span>
                             </p>
                         </div>
+                        <!-- <div class="col-12 col-sm-6 col-md-4 col-xl-4" *ngFor="let cash of cashDenominations">
+                            <div class="denomination-box">
+                                <span>{{ cash.label }} X</span>
+                                <input type="number" min="0" [formControlName]="cash.name"
+                                    placeholder="{{ cash.placeholder }}" [readonly]="cash.name === 'TotalCash'"
+                                    (input)="updateDenominationTotal(cash.name, cash.multiplier)" />
+                            </div>
+                            <p *ngIf="cash.name !== 'TotalCash'" class="m-0">
+                                Total: <span class="total-box">{{ denominationTotals[cash.name] || 0 }}</span>
+                            </p>
+                        </div> -->
                         <!-- Total Cash -->
                         <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                             <mat-form-field class="full-width" appearance="outline">

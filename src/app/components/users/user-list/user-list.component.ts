@@ -25,13 +25,7 @@ import { UserDeleteComponent } from '../user-delete/user-delete.component';
 })
 export class UserListComponent implements OnInit, AfterViewInit {
   UserList: any[] = [];
-  displayedColumns: string[] = [
-    'id',
-    'name',
-    'phone',
-    'created_at',
-    'Action',
-  ];
+  displayedColumns: string[] = ['id', 'name', 'phone', 'main_balance', 'virtual_balance', 'created_at', 'Action'];
   dataSource = new MatTableDataSource<any>([]);
   dataForExcel: any[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
@@ -72,10 +66,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addCustomer(): void {
+  addVendor(): void {
     const dialogRef = this.dialog.open(UserAddEditComponent, {
       width: '400px',
-      height: '300px',
     });
 
     dialogRef.afterClosed().subscribe(() => {
@@ -83,10 +76,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
     })
   }
 
-  editUser(data: any): void {
+  editVendor(data: any): void {
     const dialogRef = this.dialog.open(UserAddEditComponent, {
       width: '400px',
-      height: '300px',
       data: data
     });
 
@@ -95,7 +87,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     })
   }
 
-  deleteItem(userId: any): void {
+  deleteVendor(userId: any): void {
     const dialogRef = this.dialog.open(UserDeleteComponent, {
       width: '400px',
       height: '170px',

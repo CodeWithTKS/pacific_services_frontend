@@ -8,16 +8,17 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import moment from 'moment';
 import { ExcelService } from '../../../services/excel.service';
 import { MoneyTransferService } from '../../../services/moneyTransfer.service';
+import { portalService } from '../../../services/portal.service';
+import { userService } from '../../../services/user.service';
 import { MoneyDeleteComponent } from '../money-delete/money-delete.component';
 import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
-import { portalService } from '../../../services/portal.service';
-import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-money-transfer-list',
@@ -32,10 +33,12 @@ import { MatSelectModule } from '@angular/material/select';
 export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   moneyList: any[] = [];
   portalList: any[] = [];
+  VendorList: any[] = [];
   displayedColumns: string[] = [
     'TransferID',
     'TransactionNo',
     'portalName',
+    'vendorName',
     'ACNo',
     'FullName',
     'Date',
@@ -57,18 +60,21 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   constructor(private moneyTransferService: MoneyTransferService,
     private portalService: portalService,
     private router: Router,
+    private userService: userService,
     private ExcelService: ExcelService,
     private dialog: MatDialog, private fb: FormBuilder) {
     this.range = this.fb.group({
       start: [null],
       end: [null],
       portalId: [null],
+      VendorID: [null],
     });
   }
 
   ngOnInit(): void {
     this.GetMoneyTransfers();
     this.GetPortals();
+    this.GetVendor();
   }
 
   ngAfterViewInit() {
@@ -95,6 +101,14 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         console.log('Response Data:', res);
         this.portalList = res;
+      }
+    })
+  }
+
+  GetVendor() {
+    this.userService.Getuser().subscribe({
+      next: (res: any) => {
+        this.VendorList = res;
       }
     })
   }
@@ -157,11 +171,13 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
       ? moment(this.range.value.end).format('YYYY-MM-DD')
       : null;
     const portalId = this.range.value.portalId
-    if (start && end || portalId) {
+    const VendorID = this.range.value.VendorID
+    if (start && end || portalId || VendorID) {
       this.filters = {
         fromDate: start,
         toDate: end,
-        portalId: portalId
+        portalId: portalId,
+        VendorID: VendorID
       };
       this.GetMoneyTransfers();
     }

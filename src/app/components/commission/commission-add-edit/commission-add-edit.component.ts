@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommissionService } from '../../../services/commission.service';
 import { portalService } from '../../../services/portal.service';
+import { userService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-commission-add-edit',
@@ -23,10 +24,14 @@ export class CommissionAddEditComponent implements OnInit {
   commissionData: any;
   portalList: any[] = [];
   commissionTypes: string[] = ['Fixed', 'Percentage'];
+  CommissionFor: string[] = ['self', 'vendor'];
   selectedType: any
+  VendorList: any
+
   constructor(private fb: FormBuilder,
     private commissionService: CommissionService,
     private portalService: portalService,
+    private userService: userService,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
   }
@@ -40,6 +45,7 @@ export class CommissionAddEditComponent implements OnInit {
       this.populateForm(this.commissionData);
     }
     this.GetPortals();
+    this.GetVendor();
   }
 
   // Creating the form group with validations
@@ -55,6 +61,8 @@ export class CommissionAddEditComponent implements OnInit {
       PacificAmount: [''],
       PacificExtraAmount: [''],
       CommissionType: ['', [Validators.required]],
+      CommissionFor: ['', [Validators.required]],
+      VendorID: [''],
     });
   }
 
@@ -70,9 +78,18 @@ export class CommissionAddEditComponent implements OnInit {
       PacificAmount: commission.PacificAmount || '0',
       PacificExtraAmount: commission.PacificExtraAmount || '0',
       CommissionType: commission.CommissionType || '',
+      CommissionFor: commission.CommissionFor || '',
+      VendorID: commission.VendorID || '',
     });
   }
 
+  GetVendor() {
+    this.userService.Getuser().subscribe({
+      next: (res: any) => {
+        this.VendorList = res;
+      }
+    })
+  }
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {

@@ -1,0 +1,24 @@
+.denomination-box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.denomination-box input {
+    width: 50px;
+    text-align: center;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.total-box {
+    background: yellow;
+    padding: 5px;
+    font-weight: bold;
+    width: 60px;
+    text-align: right;
+    display: inline-block;
+    border-radius: 4px;
+}

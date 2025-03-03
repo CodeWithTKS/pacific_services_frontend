@@ -1,6 +1,6 @@
 <div style=" padding: 20px;">
     <div class="">
-        <h3 class="m-0 font">Customer List</h3>
+        <h3 class="m-0 font">Vendor List</h3>
     </div>
     <div class="desktop phone justify-content-between align-content-center mt-3">
         <mat-form-field appearance="outline">
@@ -8,40 +8,56 @@
             <input matInput (keyup)="applyFilter($event)" placeholder="Search by Name, Code, or Contact">
         </mat-form-field>
         <div class="desktop phone gap-3">
-            <button mat-flat-button (click)="excelDownload('customer-list')">Export To Excel</button>
-            <button mat-flat-button (click)="addCustomer()">Add Customer</button>
+            <button mat-flat-button (click)="excelDownload('Vendor-list')">Export To Excel</button>
+            <button mat-flat-button (click)="addVendor()">Add Vendor</button>
         </div>
     </div>
     <div class="table-responsive" style="margin-top: 20px;">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8  sort"
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 sort"
             style="width: 100%; border-collapse: collapse;">
-            <!-- UserID Column -->
+
+            <!-- Vendor ID Column -->
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">ID</th>
-                <td mat-cell *matCellDef="let User" style="padding: 10px;">{{ User.id }}</td>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.id }}</td>
             </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Name</th>
-                <td mat-cell *matCellDef="let User" style="padding: 10px;">{{ User.name }}</td>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.name }}</td>
             </ng-container>
 
             <!-- Phone Column -->
             <ng-container matColumnDef="phone">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Phone</th>
-                <td mat-cell *matCellDef="let User" style="padding: 10px;">{{ User.phone }}</td>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.phone }}</td>
             </ng-container>
 
-            <!-- CreatedAt Column -->
+            <!-- Main Balance Column -->
+            <ng-container matColumnDef="main_balance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Main Balance</th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.main_balance | currency:'INR' }}</td>
+            </ng-container>
+
+            <!-- Virtual Balance Column -->
+            <ng-container matColumnDef="virtual_balance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Virtual Balance</th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.virtual_balance | currency:'INR' }}
+                </td>
+            </ng-container>
+
+            <!-- Created At Column -->
             <ng-container matColumnDef="created_at">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Created At</th>
-                <td mat-cell *matCellDef="let User" style="padding: 10px;">
-                    {{ User.created_at | date: 'dd/MM/yyyy, h:mm a' }}
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">
+                    {{ Vendor.created_at | date: 'dd/MM/yyyy, h:mm a' }}
                 </td>
             </ng-container>
 
@@ -49,10 +65,10 @@
             <ng-container matColumnDef="Action">
                 <th mat-header-cell *matHeaderCellDef style="background: #004d99; color: white; padding: 10px;">Actions
                 </th>
-                <td mat-cell *matCellDef="let User" style="padding: 10px;">
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">
                     <button mat-button color="primary" style="margin-right: 10px;"
-                        (click)="editUser(User)">Edit</button>
-                    <button mat-button color="warn" (click)="deleteItem(User.id)">Delete</button>
+                        (click)="editVendor(Vendor)">Edit</button>
+                    <button mat-button color="warn" (click)="deleteVendor(Vendor.id)">Delete</button>
                 </td>
             </ng-container>
 
