@@ -12,6 +12,9 @@ import { ExcelService } from '../../../services/excel.service';
 import { userService } from '../../../services/user.service';
 import { UserAddEditComponent } from '../user-add-edit/user-add-edit.component';
 import { UserDeleteComponent } from '../user-delete/user-delete.component';
+import { UpdateVendorBalanceComponent } from '../update-vendor-balance/update-vendor-balance.component';
+import { PortalTransferComponent } from '../portal-transfer/portal-transfer.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -33,7 +36,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   constructor(private userService: userService,
     private ExcelService: ExcelService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.Getuser();
@@ -114,6 +119,33 @@ export class UserListComponent implements OnInit, AfterViewInit {
         console.log('Delete cancelled');
       }
     });
+  }
+
+  updateBalance(portal: any): void {
+    const dialogRef = this.dialog.open(UpdateVendorBalanceComponent, {
+      width: '400px',
+      height: '300px',
+      data: portal
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.Getuser();
+    })
+  }
+
+  portalBalance(portal: any): void {
+    const dialogRef = this.dialog.open(PortalTransferComponent, {
+      width: '400px',
+      data: portal
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.Getuser();
+    })
+  }
+
+  view(data: any) {
+    this.router.navigate([`/admin/user/view/${data.id}`])
   }
 
   excelDownload(title: string) {

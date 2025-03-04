@@ -42,4 +42,29 @@ export class userService {
             .delete(environment.baseURL + `/user/${userId}`)
             .pipe(catchError(this.handleError));
     }
+
+    updateBalance(userId: any, userData: any): Observable<any> {
+        return this.httpClient
+            .put(environment.baseURL + `/user/updateBalance/${userId}`, userData)
+            .pipe(catchError(this.handleError));
+    }
+
+    transferBalance(userData: FormData): Observable<any> {
+        return this.httpClient
+            .post(environment.baseURL + `/user/transfer-balance`, userData)
+            .pipe(catchError(this.handleError));
+    }
+
+    // Add a Vendor logs
+    addVendorLog(Data: any): Observable<any> {
+        return this.httpClient
+            .post(environment.baseURL + `/user/create/logs`, Data)
+            .pipe(catchError(this.handleError));
+    }
+
+    getVendorLogsById(id: any): Observable<any> {
+        return this.httpClient
+            .get(environment.baseURL + `/user/${id}/logs`)
+            .pipe(catchError(this.handleError));
+    }
 }

@@ -55,6 +55,8 @@ export class UserAddEditComponent implements OnInit {
     this.vendorForm.patchValue({
       name: User.name || '',
       phone: User.phone || '',
+      virtual_balance: User.virtual_balance || '',
+      main_balance: User.main_balance || '',
     });
   }
   // Submit function
