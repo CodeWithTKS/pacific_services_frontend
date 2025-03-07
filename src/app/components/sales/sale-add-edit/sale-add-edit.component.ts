@@ -69,6 +69,7 @@ export class SaleAddEditComponent implements OnInit {
       portalId: [0],
       description: [null],
       price: [0],
+      discount: [0],
       commission_price: [0],
       subamount: [0],
       amount: [0]
@@ -110,7 +111,9 @@ export class SaleAddEditComponent implements OnInit {
       return sum + (control.get('amount')?.value || 0);
     }, 0);
     let subtotal = this.FormArray.controls.reduce((sum, control) => {
-      return sum + (control.get('subamount')?.value || 0);
+      let price = control.get('price')?.value || 0;
+      let discount = control.get('discount')?.value || 0;
+      return sum + (price - discount);
     }, 0);
     this.myForm.patchValue({ total_price: total });
     this.myForm.patchValue({ subtotal_price: subtotal });
@@ -119,14 +122,30 @@ export class SaleAddEditComponent implements OnInit {
   // Submit function
   onSubmit(): void {
     if (this.myForm.valid) {
-      console.log(this.myForm.value);
+      let formValue = this.myForm.value;
 
-      const formData = this.myForm.value;
-      console.log(formData);
+      formValue.services = formValue.services.map((service: any) => {
+        const updatedCommissionPrice = service.commission_price - service.discount; // Subtract discount from commission_price
+        const updatedAmount = service.amount + service.discount; // Add discount to amount
+
+        return {
+          ...service,
+          commission_price: updatedCommissionPrice, // Updated commission_price
+          amount: updatedAmount, // Updated amount
+        };
+      });
+
+      // Calculate total_price by summing up all updated amounts
+      formValue.total_price = formValue.services.reduce(
+        (total: number, service: any) => total + service.amount,
+        0
+      );
+
+      console.log(formValue);
 
       if (this.Data && this.Data.id) {
         // Update an existing Service
-        this.salesService.Updatesales(this.Data.id, formData).subscribe({
+        this.salesService.Updatesales(this.Data.id, formValue).subscribe({
           next: (response) => {
             console.log('sales updated successfully', response);
             this.router.navigate(['/admin/sales']); // Navigate back to the  list
@@ -137,7 +156,7 @@ export class SaleAddEditComponent implements OnInit {
         });
       } else {
         // Add a new Service
-        this.salesService.Addsales(formData).subscribe({
+        this.salesService.Addsales(formValue).subscribe({
           next: (response) => {
             console.log('sales added successfully', response);
             this.router.navigate(['/admin/sales']); // Navigate back to the list
