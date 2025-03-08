@@ -89,6 +89,7 @@ export class MoneyAddEditComponent implements OnInit {
       Cash5: ['', [Validators.pattern(/^\d+$/)]],
       TotalCash: [{ value: '0' }], // Calculated field
       CollectionAmt: ['', Validators.required],
+      Discount: ['0'],
       FixedAmt: ['', Validators.required],
       BankCharge: ['', Validators.required],
       Extra: ['', Validators.required],
@@ -115,6 +116,7 @@ export class MoneyAddEditComponent implements OnInit {
       Cash5: money.Cash5,
       TotalCash: money.TotalCash,
       CollectionAmt: money.CollectionAmt,
+      Discount: money.Discount,
       FixedAmt: money.FixedAmt,
       BankCharge: money.BankCharge,
       Extra: money.Extra,
@@ -232,6 +234,16 @@ export class MoneyAddEditComponent implements OnInit {
       ExtraControl?.setValue(0, { emitEvent: false });
       bankDepositControl?.setValue(0, { emitEvent: false });
       custDepositControl?.setValue(0, { emitEvent: false });
+    }
+  }
+
+  updateExtra() {
+    const discountValue = this.transactionForm.get('Discount')?.value || 0;
+    const extraControl = this.transactionForm.get('Extra');
+    const extraValue = extraControl?.value || 0;
+
+    if (!isNaN(discountValue) && extraControl) {
+      extraControl.setValue(Math.max(extraValue - discountValue, 0), { emitEvent: false });
     }
   }
 
