@@ -181,59 +181,90 @@ export class MoneyAddEditComponent implements OnInit {
       { field: 'Cash1', multiplier: 1 }
     ];
 
-    let totalCash = cashFields.reduce((sum, cash) => {
+    let totalCash = 0;
+
+    // Calculate the total cash based on the fields and their multipliers
+    cashFields.forEach(cash => {
       const value = this.transactionForm.get(cash.field)?.value || 0;
-      return sum + value * cash.multiplier;
-    }, 0);
+      totalCash += value * cash.multiplier;
+    });
 
-    // Get selected portal
-    const portal = this.portalList?.find(
-      c => String(c.PortalID) === String(this.selectedPortalId)
-    );
+    if (this.selectedPortalId && this.portalList?.length) {
+      // Filter portalList by selectedPortalId
+      const portal = this.portalList.filter(
+        c => String(c.PortalID) === String(this.selectedPortalId) // Convert both to strings for comparison
+      );
 
-    if (portal) {
       // Ensure total cash does not exceed the limit
-      if (totalCash > portal.TransactionLimit) {
-        totalCash = portal.TransactionLimit;
-        alert(`Total cash exceeds the limit of ${portal.TransactionLimit}. It has been set to the maximum limit.`);
+      const cashLimit = portal[0].TransactionLimit;
+      if (totalCash > cashLimit) {
+        totalCash = cashLimit;
+        alert(`Total cash exceeds the limit of ${cashLimit}. It has been set to the maximum limit.`);
       }
-    }
 
-    // Update TotalCash and CollectionAmt fields
-    this.transactionForm.get('TotalCash')?.setValue(totalCash, { emitEvent: false });
-    this.transactionForm.get('CollectionAmt')?.setValue(totalCash, { emitEvent: false });
+      const totalCashControl = this.transactionForm.get('TotalCash');
+      const collectionAmtControl = this.transactionForm.get('CollectionAmt');
+      const FixedAmtControl = this.transactionForm.get('FixedAmt');
+      const bankChargeControl = this.transactionForm.get('BankCharge');
+      const ExtraControl = this.transactionForm.get('Extra');
+      const bankDepositControl = this.transactionForm.get('BankDeposit');
+      const custDepositControl = this.transactionForm.get('CustDeposit');
 
-    // Determine if it's a vendor or self transaction
-    const isVendorTransaction = this.transactionForm.value?.VendorID ? true : false;
+      // Update TotalCash and CollectionAmt
+      totalCashControl?.setValue(totalCash, { emitEvent: false });
+      collectionAmtControl?.setValue(totalCash, { emitEvent: false });
 
-    // Get the applicable commission based on whether it's self or vendor
-    const commission = this.commissionList?.find(
-      c => String(c.portalId) === String(this.selectedPortalId) &&
-        totalCash >= c.FromAmount &&
-        totalCash <= c.ToAmount &&
-        (isVendorTransaction ? c.CommissionFor === "vendor" : c.CommissionFor === "self")
-    );
+      // Determine FixedAmt based on CollectionAmt and commissionList
+      const collectionAmt = totalCash; // Assuming CollectionAmt equals TotalCash
+      if (this.selectedPortalId && this.commissionList?.length) {
+        // Filter commissionList by selectedPortalId
+        const portalCommissions = this.commissionList.filter(
+          c => String(c.portalId) === String(this.selectedPortalId) // Convert both to strings for comparison
+        );
+        console.log("Filtered Commissions:", portalCommissions);
 
-    // Form controls
-    const FixedAmtControl = this.transactionForm.get('FixedAmt');
-    const bankChargeControl = this.transactionForm.get('BankCharge');
-    const ExtraControl = this.transactionForm.get('Extra');
-    const bankDepositControl = this.transactionForm.get('BankDeposit');
-    const custDepositControl = this.transactionForm.get('CustDeposit');
+        // Separate vendor commissions and self commissions
+        const vendorCommissions = portalCommissions.filter(c => c.VendorID > 0);
+        const selfCommissions = portalCommissions.filter(c => c.VendorID === 0);
 
-    if (commission) {
-      FixedAmtControl?.setValue(commission.PacificFixedAmount, { emitEvent: false });
-      bankChargeControl?.setValue(commission.PacificAmount, { emitEvent: false });
-      ExtraControl?.setValue(commission.PacificExtraAmount, { emitEvent: false });
-      bankDepositControl?.setValue(totalCash - commission.PacificExtraAmount, { emitEvent: false });
-      custDepositControl?.setValue(totalCash - commission.PacificFixedAmount, { emitEvent: false });
-    } else {
-      // Default values when no commission is found
-      FixedAmtControl?.setValue(0, { emitEvent: false });
-      bankChargeControl?.setValue(0, { emitEvent: false });
-      ExtraControl?.setValue(0, { emitEvent: false });
-      bankDepositControl?.setValue(0, { emitEvent: false });
-      custDepositControl?.setValue(0, { emitEvent: false });
+        let commission;
+
+        if (vendorCommissions.length) {
+          // Find the applicable vendor commission range
+          commission = vendorCommissions.find(
+            c => collectionAmt >= c.FromAmount && collectionAmt <= c.ToAmount
+          );
+        } else {
+          // Find the applicable self commission range
+          commission = selfCommissions.find(
+            c => collectionAmt >= c.FromAmount && collectionAmt <= c.ToAmount
+          );
+        }
+        console.log("Selected Commission:", commission);
+
+        if (commission.VendorID === this.transactionForm.value?.VendorID) {
+          FixedAmtControl?.setValue(0, { emitEvent: false });
+          bankChargeControl?.setValue(0, { emitEvent: false });
+          ExtraControl?.setValue((totalCash * commission.Percentage / 100), { emitEvent: false });
+          bankDepositControl?.setValue(totalCash, { emitEvent: false });
+          custDepositControl?.setValue(totalCash, { emitEvent: false });
+        }
+        else {
+          if (commission) {
+            FixedAmtControl?.setValue(commission.PacificFixedAmount, { emitEvent: false });
+            bankChargeControl?.setValue(commission.PacificAmount, { emitEvent: false });
+            ExtraControl?.setValue(commission.PacificExtraAmount, { emitEvent: false });
+            bankDepositControl?.setValue(totalCash - commission.PacificExtraAmount, { emitEvent: false });
+            custDepositControl?.setValue(totalCash - commission.PacificFixedAmount, { emitEvent: false });
+          } else {
+            FixedAmtControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+            bankChargeControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+            ExtraControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+            bankDepositControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+            custDepositControl?.setValue(0, { emitEvent: false }); // Default value if no commission is found
+          }
+        }
+      }
     }
   }
 

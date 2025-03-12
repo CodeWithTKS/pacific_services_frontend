@@ -72,17 +72,8 @@
                 </mat-form-field>
             </div>
 
-            <!-- Amount Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="outline">
-                    <mat-label>Amount</mat-label>
-                    <input matInput formControlName="Amount" placeholder="Enter amount" aria-label="Amount">
-                    <mat-error *ngIf="myForm.get('Amount')?.hasError('required')">Amount is required</mat-error>
-                </mat-form-field>
-            </div>
-
             <!-- Percentage Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-4" *ngIf="myForm.value?.CommissionType == 'Percentage'">
                 <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Percentage</mat-label>
                     <input matInput formControlName="Percentage" placeholder="Enter percentage" aria-label="Percentage"

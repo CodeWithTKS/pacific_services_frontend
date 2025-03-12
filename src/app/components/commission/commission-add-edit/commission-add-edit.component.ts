@@ -55,7 +55,7 @@ export class CommissionAddEditComponent implements OnInit {
       FromAmount: ['', [Validators.required]],
       ToAmount: ['', [Validators.required]],
       BankType: ['no',],
-      Amount: [''],
+      Amount: ['0'],
       Percentage: [''],
       PacificFixedAmount: [''],
       PacificAmount: [''],
