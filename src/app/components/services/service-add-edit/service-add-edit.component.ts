@@ -66,17 +66,20 @@ export class ServiceAddEditComponent implements OnInit {
       portalId: data.portalId || '',
       service_name: data.service_name || '',
       price: data.price || '',
-      commission_price: data.commission_price || '',
+      commission_price: (data.price - data.commission_price) || '',
     });
   }
   // Submit function
   onSubmit(): void {
     if (this.myForm.valid) {
-      const formData = this.myForm.value;
+      const obj = {
+        ...this.myForm.value,
+        commission_price: +this.myForm.value?.price - +this.myForm.value?.commission_price
+      }
 
       if (this.Data && this.Data.id) {
         // Update an existing Service
-        this.serviceService.Updateservices(this.Data.id, formData).subscribe({
+        this.serviceService.Updateservices(this.Data.id, obj).subscribe({
           next: (response) => {
             console.log('Service updated successfully', response);
             this.dialogRef.close(true);
@@ -87,7 +90,7 @@ export class ServiceAddEditComponent implements OnInit {
         });
       } else {
         // Add a new Service
-        this.serviceService.Addservices(formData).subscribe({
+        this.serviceService.Addservices(obj).subscribe({
           next: (response) => {
             console.log('Service added successfully', response);
             this.dialogRef.close(true);

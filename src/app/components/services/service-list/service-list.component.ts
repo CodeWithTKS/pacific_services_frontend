@@ -28,7 +28,8 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'id',
     'service_name',
-    'price',
+    'sales_price',
+    'purchase_price',
     'commission_price',
     'created_at',
     'Action',
