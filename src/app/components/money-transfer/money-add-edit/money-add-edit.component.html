@@ -1,7 +1,6 @@
 <div class="container mt-3">
     <!-- Dynamic Title -->
     <h3>{{ isEditMode ? 'Edit Transaction' : 'Add Transaction' }}</h3>
-    {{transactionForm.value |json}}
 
     <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
         <div class="row">
