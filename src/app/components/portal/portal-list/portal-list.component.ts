@@ -78,6 +78,12 @@ export class PortalListComponent implements OnInit, AfterViewInit {
     }
   }
 
+  getTotalBalance() {
+    return this.dataSource.data
+      .map((transfer: any) => transfer.Balance)
+      .reduce((acc, value) => acc + (value || 0), 0);
+  }
+  
   editPortal(portal: any) {
     this.router.navigate([`/admin/portal/editportal/${portal.PortalID}`], {
       state: { portalData: portal } // Pass portal data using state
