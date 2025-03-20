@@ -37,6 +37,11 @@ export class salesService {
             .pipe(catchError(this.handleError));
     }
 
+    AddManualSales(salesData: FormData): Observable<any> {
+        return this.httpClient
+            .post(environment.baseURL + `/sales/manual/`, salesData)
+            .pipe(catchError(this.handleError));
+    }
 
     // Update a sales
     Updatesales(salesId: any, salesData: any): Observable<any> {

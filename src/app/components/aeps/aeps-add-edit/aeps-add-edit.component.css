@@ -1,0 +1,30 @@
+.cash-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.denomination-input {
+    width: 60px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.action-btn {
+    background: #f1f1f1;
+    border-radius: 50%;
+}
+
+.total-box {
+    background: yellow;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.total-label {
+    font-size: 18px;
+    font-weight: bold;
+}

@@ -37,6 +37,7 @@ export class SalesListComponent implements OnInit, AfterViewInit {
     'total_commission_price',
     'total_price',
     'created_at',
+    'action'
   ];
   dataSource = new MatTableDataSource<any>([]);
   dataForExcel: any[] = [];
@@ -131,6 +132,12 @@ export class SalesListComponent implements OnInit, AfterViewInit {
       .map((transfer: any) => transfer.total_price)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
+
+  isEditable(Sale: any): boolean {
+    const noServiceId = !Sale.services?.some((service: { serviceId: any }) => service.serviceId);
+    const hasCommissionPrice = Sale.services?.some((service: { commission_price: number }) => service.commission_price > 0);
+    return noServiceId && !hasCommissionPrice;
+  }  
 
   excelDownload(title: string) {
     if (!this.SaleList || this.SaleList.length === 0) {

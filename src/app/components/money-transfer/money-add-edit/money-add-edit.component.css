@@ -1,24 +1,30 @@
-.denomination-box {
+.cash-row {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
-.denomination-box input {
-    width: 50px;
+.denomination-input {
+    width: 60px;
     text-align: center;
-    margin: 0 5px;
     border: 1px solid #ccc;
+    border-radius: 5px;
     padding: 5px;
-    border-radius: 4px;
+}
+
+.action-btn {
+    background: #f1f1f1;
+    border-radius: 50%;
 }
 
 .total-box {
     background: yellow;
-    padding: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
     font-weight: bold;
-    width: 60px;
-    text-align: right;
-    display: inline-block;
-    border-radius: 4px;
+}
+
+.total-label {
+    font-size: 18px;
+    font-weight: bold;
 }

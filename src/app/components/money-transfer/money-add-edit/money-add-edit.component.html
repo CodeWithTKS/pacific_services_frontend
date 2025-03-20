@@ -98,35 +98,21 @@
                 <mat-card appearance="outlined" class="p-3">
                     <p class="text-danger fw-bold">Cash Details</p>
                     <div class="row">
-                        <!-- Cash Denominations -->
-                        <div class="col-12 col-sm-6 col-md-4 col-xl-4" *ngFor="let cash of cashDenominations">
-                            <mat-form-field class="full-width" appearance="outline">
-                                <mat-label>{{ cash.label }}</mat-label>
+                        <div class="col-12 col-md-6" *ngFor="let cash of cashDenominations">
+                            <div class="d-flex align-items-center cash-row">
+                                <span class="fw-bold me-2">{{ cash.label }} X</span>
+
                                 <input matInput type="number" min="0" [formControlName]="cash.name"
-                                    placeholder="{{ cash.placeholder }}" [readonly]="cash.name === 'TotalCash'"
+                                    class="denomination-input mx-2"
                                     (input)="updateDenominationTotal(cash.name, cash.multiplier)" />
-                                <mat-error *ngIf="transactionForm.get(cash.name)?.hasError('pattern')">
-                                    Enter a valid number
-                                </mat-error>
-                            </mat-form-field>
-                            <p *ngIf="cash.name !== 'TotalCash'" class="m-0">
-                                Total: <span class="text-danger" style="font-size: 18px; font-weight: 600;">{{
-                                    denominationTotals[cash.name] || 0 }}</span>
-                            </p>
-                        </div>
-                        <!-- <div class="col-12 col-sm-6 col-md-4 col-xl-4" *ngFor="let cash of cashDenominations">
-                            <div class="denomination-box">
-                                <span>{{ cash.label }} X</span>
-                                <input type="number" min="0" [formControlName]="cash.name"
-                                    placeholder="{{ cash.placeholder }}" [readonly]="cash.name === 'TotalCash'"
-                                    (input)="updateDenominationTotal(cash.name, cash.multiplier)" />
+
+                                <span class="ms-2 total-box">= {{ denominationTotals[cash.name] || 0 }}</span>
                             </div>
-                            <p *ngIf="cash.name !== 'TotalCash'" class="m-0">
-                                Total: <span class="total-box">{{ denominationTotals[cash.name] || 0 }}</span>
-                            </p>
-                        </div> -->
+                        </div>
+                    </div>
+                    <div class="row">
                         <!-- Total Cash -->
-                        <div class="col-12 col-sm-6 col-md-4 col-xl-4">
+                        <div class="col-12 col-sm-6 col-md-12 col-xl-6">
                             <mat-form-field class="full-width" appearance="outline">
                                 <mat-label>TotalCash</mat-label>
                                 <input matInput formControlName="TotalCash" placeholder="Enter TotalCash" readonly>

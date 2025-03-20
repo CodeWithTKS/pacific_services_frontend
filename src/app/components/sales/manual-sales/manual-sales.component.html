@@ -49,11 +49,12 @@
                         <thead class="bg-primary text-white">
                             <tr>
                                 <th>Service</th>
+                                <th>Protal</th>
                                 <th>Price</th>
-                                <th>Discount</th>
+                                <th style="width: 100px;">Discount</th>
                                 <th>Description</th>
-                                <!-- <th>Commission</th>
-                                <th>Amount</th> -->
+                                <th *ngIf="isEditMode">Commission</th>
+                                <!--  <th>Amount</th> -->
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -61,24 +62,30 @@
                             <tr *ngFor="let service of FormArray.controls; let i = index" [formGroupName]="i">
                                 <td>
                                     <mat-form-field appearance="fill" class="full-width">
-                                        <mat-select formControlName="serviceId"
-                                            (selectionChange)="onServiceSelect($event, i)">
-                                            <mat-option value="" disabled>Select Service</mat-option>
-                                            <mat-option *ngFor="let service of ServiceList" [value]="service.id">
-                                                {{ service.service_name }}
+                                        <input matInput type="text" formControlName="service_name"
+                                            placeholder="Enter Service Name">
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field class="full-width" appearance="fill">
+                                        <mat-label>Portal</mat-label>
+                                        <mat-select formControlName="portalId">
+                                            <mat-option *ngFor="let portal of portalList" [value]="portal.PortalID">
+                                                {{ portal.Name }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </td>
                                 <td>
                                     <mat-form-field appearance="fill" class="full-width">
-                                        <input matInput type="number" formControlName="price">
+                                        <input matInput type="number" formControlName="price"
+                                            (input)="calculateTotalPrice()" min="0">
                                     </mat-form-field>
                                 </td>
                                 <td>
-                                    <mat-form-field appearance="fill" class="full-width">
+                                    <mat-form-field appearance="fill" style="width: 80px;">
                                         <input matInput type="number" formControlName="discount"
-                                            (input)="calculateTotalPrice()">
+                                            (input)="calculateTotalPrice()" min="0">
                                     </mat-form-field>
                                 </td>
                                 <td>
@@ -86,12 +93,12 @@
                                         <input matInput type="text" formControlName="description">
                                     </mat-form-field>
                                 </td>
-                                <!-- <td>
-                                    <mat-form-field appearance="fill" class="full-width">
+                                <td *ngIf="isEditMode">
+                                    <mat-form-field appearance="fill" style="width: 80px;">
                                         <input matInput type="number" formControlName="commission_price">
                                     </mat-form-field>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <mat-form-field appearance="fill" class="full-width">
                                         <input matInput type="number" formControlName="amount">
                                     </mat-form-field>
