@@ -16,7 +16,7 @@ import moment from 'moment';
 import { AepsService } from '../../../services/aeps.service';
 import { ExcelService } from '../../../services/excel.service';
 import { portalService } from '../../../services/portal.service';
-import { AepsDeleteComponent } from '../aeps-delete/aeps-delete.component';
+import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
 import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
 
 @Component({
@@ -36,6 +36,7 @@ export class AepsListComponent implements OnInit, AfterViewInit {
     'TransferID',
     'TransactionNo',
     'portalName',
+    'vendorName',
     'ACNo',
     'FullName',
     'Date',
@@ -183,7 +184,7 @@ export class AepsListComponent implements OnInit, AfterViewInit {
   }
 
   deleteItem(TransferID: any): void {
-    const dialogRef = this.dialog.open(AepsDeleteComponent, {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       height: '170px',
       data: {

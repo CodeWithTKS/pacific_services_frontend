@@ -11,7 +11,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { CommissionService } from '../../../services/commission.service';
 import { ExcelService } from '../../../services/excel.service';
-import { CommissionDeleteComponent } from '../commission-delete/commission-delete.component';
+import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-commission-list',
@@ -86,7 +86,7 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
   }
 
   deleteItem(CommissionID: any): void {
-    const dialogRef = this.dialog.open(CommissionDeleteComponent, {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       height: '170px',
       data: {

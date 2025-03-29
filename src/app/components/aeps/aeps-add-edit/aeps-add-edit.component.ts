@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,12 +13,14 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AepsService } from '../../../services/aeps.service';
 import { CommissionService } from '../../../services/commission.service';
 import { portalService } from '../../../services/portal.service';
+import { userService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-aeps-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatSelectModule, MatFormFieldModule, MatInputModule,
+    MatCheckboxModule,
     MatButtonModule, RouterModule, MatCardModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +31,7 @@ export class AepsAddEditComponent implements OnInit {
   transactionForm!: FormGroup;
   isEditMode: boolean = false; // Default to 'false' for adding a portal
   portalList: any[] = [];
+  VendorList: any[] = [];
   commissionList: any[] = [];
   moneyData: any;
   cashDenominations = [
@@ -43,19 +47,26 @@ export class AepsAddEditComponent implements OnInit {
   transactionTypeList = [
     { value: 'aeps_withdrawal', label: 'AEPS Withdrawal' },
     { value: 'aeps_deposit', label: 'AEPS Deposit' },
+    { value: 'cif_ac_wid', label: 'CIF/AC Withdrawal' },
+    { value: 'cif_ac_dip', label: 'CIF/AC Deposit' },
+    { value: 'atm_ac_wid', label: 'ATM Withdrawal' },
+    { value: 'atm_ac_dip', label: 'ATM Deposit' },
     { value: 'account_opening', label: 'A/C Opening' },
     { value: 'other', label: 'Other' }
   ];
   isOtherSelected = false;
+  isAccOpen = false;
   otherTypeList = [
     { value: 'debit', label: 'Debit' },
     { value: 'credit', label: 'Credit' }
   ];
+  passbookIssue: string[] = ['Pending', 'Done'];
 
   constructor(private fb: FormBuilder,
     private portalService: portalService,
     private AepsService: AepsService,
     private commissionService: CommissionService,
+    private userService: userService,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
   }
@@ -69,6 +80,7 @@ export class AepsAddEditComponent implements OnInit {
       this.populateForm(this.moneyData);
     }
     this.GetPortals();
+    this.GetVendor();
     this.GetCommissions();
     // Subscribe to valueChanges for cash denomination fields
     this.transactionForm.valueChanges.subscribe(() => {
@@ -79,6 +91,7 @@ export class AepsAddEditComponent implements OnInit {
   createForm(): void {
     this.transactionForm = this.fb.group({
       portalId: ['', Validators.required],
+      VendorID: [''],
       ACNo: ['', Validators.required],
       FirstName: ['', Validators.required],
       LastName: ['', Validators.required],
@@ -98,12 +111,18 @@ export class AepsAddEditComponent implements OnInit {
       TransactionType: ['', Validators.required],
       OtherType: [''],
       OtherName: [''],
+      passbookIssue: [''],
+      HighlightEntry: [false],
+      PendingAmount: [],
+      ReceivedAmount: [],
+      AOB: []
     });
   }
 
   populateForm(money: any): void {
     this.transactionForm.patchValue({
       portalId: money.portalId,
+      VendorID: money.VendorID,
       ACNo: money.ACNo,
       FirstName: money.FirstName,
       LastName: money.LastName,
@@ -123,6 +142,11 @@ export class AepsAddEditComponent implements OnInit {
       TransactionType: money.TransactionType,
       OtherType: money.OtherType,
       OtherName: money.OtherName,
+      passbookIssue: money.passbookIssue,
+      PendingAmount: money.PendingAmount,
+      ReceivedAmount: money.ReceivedAmount,
+      HighlightEntry: money.HighlightEntry,
+      AOB: money.AOB,
     });
     this.GetCommissions();
     this.updateTotalCash();
@@ -145,6 +169,14 @@ export class AepsAddEditComponent implements OnInit {
     });
   }
 
+  GetVendor() {
+    this.userService.Getuser().subscribe({
+      next: (res: any) => {
+        this.VendorList = res;
+      }
+    })
+  }
+
   GetCommissions() {
     this.commissionService.GetCommissions().subscribe({
       next: (res: any) => {
@@ -162,7 +194,18 @@ export class AepsAddEditComponent implements OnInit {
 
   onTransactionTypeChange(selectedValue: string) {
     this.isOtherSelected = selectedValue === 'other';
+    this.isAccOpen = selectedValue === 'account_opening';
 
+    if (this.isAccOpen) {
+      this.transactionForm.get('passbookIssue')?.setValidators(Validators.required);
+      this.transactionForm.get('PendingAmount')?.setValidators(Validators.required);
+      this.transactionForm.get('ReceivedAmount')?.setValidators(Validators.required);
+    }
+    else {
+      this.transactionForm.get('passbookIssue')?.clearValidators();
+      this.transactionForm.get('PendingAmount')?.clearValidators();
+      this.transactionForm.get('ReceivedAmount')?.clearValidators();
+    }
     if (this.isOtherSelected) {
       // Add required validators when "Other" is selected
       this.transactionForm.get('OtherType')?.setValidators(Validators.required);
@@ -174,6 +217,9 @@ export class AepsAddEditComponent implements OnInit {
     }
 
     // Update form validation
+    this.transactionForm.get('passbookIssue')?.updateValueAndValidity();
+    this.transactionForm.get('PendingAmount')?.updateValueAndValidity();
+    this.transactionForm.get('ReceivedAmount')?.updateValueAndValidity();
     this.transactionForm.get('OtherType')?.updateValueAndValidity();
     this.transactionForm.get('OtherName')?.updateValueAndValidity();
   }

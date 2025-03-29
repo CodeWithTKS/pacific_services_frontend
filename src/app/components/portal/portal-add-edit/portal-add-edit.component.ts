@@ -51,8 +51,8 @@ export class PortalAddEditComponent implements OnInit {
       acNo: [''],
       balance: [''],
       transactionLimit: [''],
-      serviceTax: [''],
-      tdsRate: [''],
+      serviceTax: ['0'],
+      tdsRate: ['0'],
       openingBalanceDate: [new Date(), [Validators.required]]
     });
   }

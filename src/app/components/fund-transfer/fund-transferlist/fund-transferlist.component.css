@@ -1,0 +1,13 @@
+::ng-deep .sort .mat-sort-header-arrow,
+[dir=rtl] .mat-sort-header-position-before .mat-sort-header-arrow {
+    margin: 0 0 0 6px;
+    color: white !important;
+}
+
+tr.mat-mdc-footer-row {
+    font-weight: 500 !important;
+}
+
+.mat-mdc-table-sticky {
+    border-top: 1px solid #e0e0e0;
+}

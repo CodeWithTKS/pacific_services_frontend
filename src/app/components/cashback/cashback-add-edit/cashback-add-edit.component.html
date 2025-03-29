@@ -1,0 +1,51 @@
+<div class="p-3">
+    <h3 class="text-center">Add Cashback</h3>
+    <form [formGroup]="transactionForm" (ngSubmit)="onConfirm()" class="transaction-form">
+        <div class="balance-section">
+
+            <!-- Portal -->
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>Portal</mat-label>
+                <mat-select formControlName="portalId">
+                    <mat-option *ngFor="let portal of portalList" [value]="portal.PortalID">
+                        {{ portal.Name }} ({{ portal.Code }})
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="transactionForm.get('portalId')?.hasError('required')">Portal is
+                    required</mat-error>
+            </mat-form-field>
+
+            <!-- New Balance -->
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>Balance</mat-label>
+                <input matInput formControlName="balance" placeholder="Enter Balance">
+                <mat-error *ngIf="transactionForm.get('balance')?.hasError('required')">Balance is
+                    required</mat-error>
+            </mat-form-field>
+
+            <!-- Payement Type -->
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>Payment Type</mat-label>
+                <mat-select formControlName="type">
+                    <mat-option *ngFor="let type of paymentTypes" [value]="type">
+                        {{ type }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>Remark</mat-label>
+                <input matInput formControlName="remark" placeholder="Enter remark">
+                <mat-error *ngIf="transactionForm.get('remark')?.hasError('required')">remark is
+                    required</mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <!-- Submit Button -->
+        <div class="button-group">
+            <button mat-button class="cancel-btn" (click)="onCancel()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="transactionForm.invalid">Submit</button>
+        </div>
+    </form>
+</div>

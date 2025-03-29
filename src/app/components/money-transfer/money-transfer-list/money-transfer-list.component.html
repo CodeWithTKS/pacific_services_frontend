@@ -211,7 +211,8 @@
                         Trans.</button>
                     <button mat-button color="primary" style="margin-right: 10px;" (click)="editTransfer(commission)"
                         *ngIf="commission.TransactionNo === null">Edit</button>
-                    <button mat-button color="warn" (click)="deleteItem(commission.TransferID)">Delete</button>
+                        <p *ngIf="commission.TransactionNo">N/A</p>
+                    <!-- <button mat-button color="warn" (click)="deleteItem(commission.TransferID)">Delete</button> -->
                 </td>
                 <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;"> </td>
                 <!-- Empty footer -->

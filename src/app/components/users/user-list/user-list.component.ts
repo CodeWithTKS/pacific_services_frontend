@@ -11,10 +11,10 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ExcelService } from '../../../services/excel.service';
 import { userService } from '../../../services/user.service';
 import { UserAddEditComponent } from '../user-add-edit/user-add-edit.component';
-import { UserDeleteComponent } from '../user-delete/user-delete.component';
 import { UpdateVendorBalanceComponent } from '../update-vendor-balance/update-vendor-balance.component';
 import { PortalTransferComponent } from '../portal-transfer/portal-transfer.component';
 import { Router } from '@angular/router';
+import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-user-list',
@@ -93,7 +93,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
   }
 
   deleteVendor(userId: any): void {
-    const dialogRef = this.dialog.open(UserDeleteComponent, {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       height: '170px',
       data: {

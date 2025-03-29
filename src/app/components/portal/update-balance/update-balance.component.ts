@@ -66,6 +66,7 @@ export class UpdateBalanceComponent implements OnInit {
       portalId: this.portalData.PortalID,
       beforeBalance: this.data?.Balance,
       balance: this.transactionForm.value?.Balance,
+      transactionType:'Update Balance',
       type: 'Add Balance',
       afterBalance: this.afterBalance,
       createdAt: new Date()

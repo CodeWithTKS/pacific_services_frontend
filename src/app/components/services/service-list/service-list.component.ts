@@ -10,8 +10,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ExcelService } from '../../../services/excel.service';
 import { ServiceAddEditComponent } from '../service-add-edit/service-add-edit.component';
-import { ServiceDeleteComponent } from '../service-delete/service-delete.component';
 import { serviceService } from '../../../services/service.service';
+import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-service-list',
@@ -96,7 +96,7 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
   }
 
   deleteItem(ServiceId: any): void {
-    const dialogRef = this.dialog.open(ServiceDeleteComponent, {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       height: '170px',
       data: {

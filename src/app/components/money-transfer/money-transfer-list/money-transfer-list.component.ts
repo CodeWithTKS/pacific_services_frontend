@@ -17,8 +17,8 @@ import { ExcelService } from '../../../services/excel.service';
 import { MoneyTransferService } from '../../../services/moneyTransfer.service';
 import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
-import { MoneyDeleteComponent } from '../money-delete/money-delete.component';
 import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
+import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-money-transfer-list',
@@ -137,26 +137,32 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
       .map((transfer: any) => transfer.Extra)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
+  
   getTotalCollectionAmt() {
     return this.dataSource.data
+      .filter((transfer: any) => transfer.self !== 1)
       .map((transfer: any) => transfer.CollectionAmt)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
+  
   getTotalFixedAmt() {
     return this.dataSource.data
       .map((transfer: any) => transfer.FixedAmt)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
+  
   getTotalBankCharge() {
     return this.dataSource.data
       .map((transfer: any) => transfer.BankCharge)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
+  
   getTotalBankDeposit() {
     return this.dataSource.data
       .map((transfer: any) => transfer.BankDeposit)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
+  
   getTotalCustDeposit() {
     return this.dataSource.data
       .map((transfer: any) => transfer.CustDeposit)
@@ -207,7 +213,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   }
 
   deleteItem(TransferID: any): void {
-    const dialogRef = this.dialog.open(MoneyDeleteComponent, {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       height: '170px',
       data: {

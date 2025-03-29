@@ -11,8 +11,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { ExcelService } from '../../../services/excel.service';
 import { portalService } from '../../../services/portal.service';
-import { PortalDeleteComponent } from '../portal-delete/portal-delete.component';
 import { UpdateBalanceComponent } from '../update-balance/update-balance.component';
+import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-portal-list',
@@ -107,7 +107,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
   }
 
   deleteItem(portalId: any): void {
-    const dialogRef = this.dialog.open(PortalDeleteComponent, {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       height: '170px',
       data: {

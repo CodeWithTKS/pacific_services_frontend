@@ -85,26 +85,6 @@
                 </mat-form-field>
             </div>
 
-            <!-- Service Tax Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="outline">
-                    <mat-label>Service Tax</mat-label>
-                    <input matInput formControlName="serviceTax" placeholder="Enter service tax"
-                        aria-label="Service Tax">
-                    <mat-error *ngIf="myForm.get('serviceTax')?.hasError('required')">Service Tax is
-                        required</mat-error>
-                </mat-form-field>
-            </div>
-
-            <!-- TDS Rate Section -->
-            <div class="col-12 col-sm-6 col-md-4 col-xl-4">
-                <mat-form-field class="full-width" appearance="outline">
-                    <mat-label>TDS Rate</mat-label>
-                    <input matInput formControlName="tdsRate" placeholder="Enter TDS rate" aria-label="TDS Rate">
-                    <mat-error *ngIf="myForm.get('tdsRate')?.hasError('required')">TDS Rate is required</mat-error>
-                </mat-form-field>
-            </div>
-
             <!-- Opening Balance Date Section -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-4">
                 <mat-form-field class="full-width" appearance="outline">

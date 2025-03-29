@@ -14,12 +14,14 @@ import { CommissionService } from '../../../services/commission.service';
 import { MoneyTransferService } from '../../../services/moneyTransfer.service';
 import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-money-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule,
+    MatCheckboxModule,
     MatButtonModule, RouterModule, MatCardModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,11 +77,11 @@ export class MoneyAddEditComponent implements OnInit {
     this.transactionForm = this.fb.group({
       portalId: ['', Validators.required],
       VendorID: [''],
-      ACNo: ['', Validators.required],
+      ACNo: [''],
       FirstName: ['', Validators.required],
       LastName: ['', Validators.required],
       ContactNo: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      IFSCNo: ['', Validators.required],
+      IFSCNo: [''],
       TransactionDate: [new Date()],
       Cash1: ['', [Validators.pattern(/^\d+$/)]],
       Cash500: ['', [Validators.pattern(/^\d+$/)]],
@@ -89,6 +91,9 @@ export class MoneyAddEditComponent implements OnInit {
       Cash10: ['', [Validators.pattern(/^\d+$/)]],
       Cash5: ['', [Validators.pattern(/^\d+$/)]],
       TotalCash: [{ value: '0' }], // Calculated field
+      self: [false],
+      HighlightEntry: [false],
+      comments: [''],
       CollectionAmt: ['', Validators.required],
       Discount: ['0'],
       FixedAmt: ['', Validators.required],
@@ -102,7 +107,11 @@ export class MoneyAddEditComponent implements OnInit {
   populateForm(money: any): void {
     this.transactionForm.patchValue({
       portalId: money.portalId,
+      VendorID: money.VendorID,
       ACNo: money.ACNo,
+      self: money.self,
+      HighlightEntry: money.HighlightEntry,
+      comments: money.comments,
       FirstName: money.FirstName,
       LastName: money.LastName,
       ContactNo: money.ContactNo,

@@ -124,6 +124,12 @@
                                     {{ transactionForm.value?.TotalCash || 0 }}</span>
                             </p>
                         </div>
+                        <div class="col-12 col-sm-6 col-md-12 col-xl-6">
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Comments</mat-label>
+                                <input matInput formControlName="comments" placeholder="Enter Comment">
+                            </mat-form-field>
+                        </div>
                     </div>
                 </mat-card>
             </div>
@@ -204,6 +210,10 @@
                                     Customer Deposit is required
                                 </mat-error>
                             </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-6">
+                            <mat-checkbox formControlName='self'>Self Account</mat-checkbox>
+                            <mat-checkbox formControlName='HighlightEntry'>Highlight Entry</mat-checkbox>
                         </div>
                     </div>
                 </mat-card>

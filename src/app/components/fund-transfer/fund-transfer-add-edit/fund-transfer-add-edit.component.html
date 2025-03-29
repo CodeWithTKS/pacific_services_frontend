@@ -1,0 +1,188 @@
+<div class="container mt-3">
+    <!-- Dynamic Title -->
+    <h3>{{ isEditMode ? 'Edit Transaction' : 'Add Transaction' }}</h3>
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Portal</mat-label>
+                    <mat-select formControlName="portalId">
+                        <mat-option *ngFor="let portal of portalList" [value]="portal.PortalID">
+                            {{ portal.Name }} ({{ portal.Code }})
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="transactionForm.get('portalId')?.hasError('required')">Portal is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>First Name</mat-label>
+                    <input matInput formControlName="FirstName" required>
+                    <mat-error
+                        *ngIf="transactionForm.controls['FirstName'].invalid && transactionForm.controls['FirstName'].touched">First
+                        Name is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput formControlName="LastName">
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Transaction Date</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="TransactionDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error
+                        *ngIf="transactionForm.controls['TransactionDate'].invalid && transactionForm.controls['TransactionDate'].touched">Transaction
+                        Date is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Contact No</mat-label>
+                    <input matInput formControlName="ContactNo" required pattern="^[0-9]{10}$">
+                    <mat-error
+                        *ngIf="transactionForm.controls['ContactNo'].invalid && transactionForm.controls['ContactNo'].touched">Enter
+                        a valid 10-digit number</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>IFSC No</mat-label>
+                    <input matInput formControlName="IFSCNo">
+                    <mat-error
+                        *ngIf="transactionForm.controls['IFSCNo'].invalid && transactionForm.controls['IFSCNo'].touched">IFSCNo
+                        is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Customer UID</mat-label>
+                    <input matInput formControlName="customerUID">
+                    <mat-error
+                        *ngIf="transactionForm.controls['customerUID'].invalid && transactionForm.controls['customerUID'].touched">Customer
+                        is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Beneficiary UID</mat-label>
+                    <mat-select formControlName="beneficiaryUID" required>
+                        <mat-option *ngFor="let portal of portalList" [value]="portal.PortalID">
+                            {{ portal.Name }} ({{ portal.Code }})
+                        </mat-option>
+                    </mat-select>
+                    <mat-error
+                        *ngIf="transactionForm.controls['beneficiaryUID'].invalid && transactionForm.controls['beneficiaryUID'].touched">Benificery
+                        is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Transaction Type</mat-label>
+                    <mat-select formControlName="TransactionType" required>
+                        <mat-option value="AEPS">AEPS</mat-option>
+                        <mat-option value="CIF_AC">CIF/AC</mat-option>
+                        <mat-option value="ATM">ATM</mat-option>
+                    </mat-select>
+                    <mat-error
+                        *ngIf="transactionForm.controls['TransactionType'].invalid && transactionForm.controls['TransactionType'].touched">Transaction
+                        Type is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Transaction Category</mat-label>
+                    <mat-select formControlName="TransactionCategory" required>
+                        <mat-option value="Credit">Credit</mat-option>
+                        <mat-option value="Debit">Debit</mat-option>
+                    </mat-select>
+                    <mat-error
+                        *ngIf="transactionForm.controls['TransactionCategory'].invalid && transactionForm.controls['TransactionCategory'].touched">Transaction
+                        Category is required</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6">
+                <mat-card appearance="outlined" class="p-3">
+                    <p class="text-danger fw-bold">Cash Details</p>
+                    <div class="row">
+                        <div class="col-12 col-md-6" *ngFor="let cash of cashDenominations">
+                            <div class="d-flex align-items-center cash-row">
+                                <span class="fw-bold me-2">{{ cash.label }} X</span>
+
+                                <input matInput type="number" min="0" [formControlName]="cash.name"
+                                    class="denomination-input mx-2"
+                                    (input)="updateDenominationTotal(cash.name, cash.multiplier)" />
+
+                                <span class="ms-2 total-box">= {{ denominationTotals[cash.name] || 0 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Total Cash -->
+                        <div class="col-12 col-sm-6 col-md-12 col-xl-6">
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>TotalCash</mat-label>
+                                <input matInput formControlName="TotalCash" placeholder="Enter TotalCash" readonly>
+                                <mat-error *ngIf="transactionForm.get('TotalCash')?.hasError('required')">TotalCash is
+                                    required</mat-error>
+                            </mat-form-field>
+                            <p class="m-0">
+                                Total: <span class="text-danger" style="font-size: 18px; font-weight: 600;">
+                                    {{ transactionForm.value?.TotalCash || 0 }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+
+            <div class="col-xl-6">
+                <mat-card appearance="outlined" class="p-3">
+                    <p class="text-danger fw-bold">Deposite</p>
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-6">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Collection Amount</mat-label>
+                                <input matInput formControlName="CollectionAmt" required>
+                                <mat-error
+                                    *ngIf="transactionForm.controls['CollectionAmt'].invalid && transactionForm.controls['CollectionAmt'].touched">Collection
+                                    Amount is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-6">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Extra</mat-label>
+                                <input matInput formControlName="Extra" required>
+                                <mat-error
+                                    *ngIf="transactionForm.controls['Extra'].invalid && transactionForm.controls['Extra'].touched">Extra
+                                    amount is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <mat-checkbox formControlName='HighlightEntry'>Highlight Entry</mat-checkbox>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-12 mt-3">
+            <button mat-raised-button color="primary" type="submit" [disabled]="transactionForm.invalid">Submit</button>
+        </div>
+    </form>
+</div>

@@ -17,7 +17,16 @@
                         required</mat-error>
                 </mat-form-field>
             </div>
-
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Vendor</mat-label>
+                    <mat-select formControlName="VendorID" placeholder="Select Vendor">
+                        <mat-option *ngFor="let vendor of VendorList" [value]="vendor.id">
+                            {{ vendor.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
             <!-- Aadhar No -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-3">
                 <mat-form-field class="full-width" appearance="outline">
@@ -99,6 +108,23 @@
                     </mat-error>
                 </mat-form-field>
             </div>
+            <!-- Passbook Issue -->
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngIf="isAccOpen">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Passbook Issue</mat-label>
+                    <mat-select formControlName="passbookIssue">
+                        <mat-option *ngFor="let type of passbookIssue" [value]="type">
+                            {{ type }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngIf="isAccOpen">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>AOB</mat-label>
+                    <input matInput formControlName="AOB" placeholder="Enter AOB">
+                </mat-form-field>
+            </div>
             <!-- OtherType Dropdown (Shows only when 'Other' is selected) -->
             <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngIf="isOtherSelected">
                 <mat-form-field class="full-width" appearance="outline">
@@ -125,6 +151,8 @@
             </div>
             <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngIf="isOtherSelected"></div>
             <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngIf="isOtherSelected"></div>
+        </div>
+        <div class="row">
             <div class="col-xl-6">
                 <mat-card appearance="outlined" class="p-3">
                     <p class="text-danger fw-bold">Cash Details</p>
@@ -182,6 +210,21 @@
                                     Extra is required
                                 </mat-error>
                             </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-6" *ngIf="isAccOpen">
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label> Pending Amount</mat-label>
+                                <input matInput formControlName="PendingAmount" placeholder="Enter  Pending Amount">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-6" *ngIf="isAccOpen">
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label> Received Amount</mat-label>
+                                <input matInput formControlName="ReceivedAmount" placeholder="Enter Received Amount">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-6">
+                            <mat-checkbox formControlName='HighlightEntry'>Highlight Entry</mat-checkbox>
                         </div>
                     </div>
                 </mat-card>

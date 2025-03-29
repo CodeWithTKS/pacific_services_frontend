@@ -13,12 +13,24 @@ export const AdminRoutingModule: Routes = [{
       loadChildren: () => import('./money-transfer/money-transfer-routing.module').then(m => m.MoneyTransferRoutingModule),
     },
     {
+      path: 'mobile-transfer',
+      loadChildren: () => import('./mobile-transfer/mobile-transfer-routing.module').then(m => m.MobileTransferRoutingModule),
+    },
+    {
+      path: 'fund-transfer',
+      loadChildren: () => import('./fund-transfer/fund-transfer-routing.module').then(m => m.FundTransferRoutingModule),
+    },
+    {
       path: 'portal',
       loadChildren: () => import('./portal/portal-routing.module').then(m => m.PortalRoutingModule),
     },
     {
       path: 'commission',
       loadChildren: () => import('./commission/commission-routing.module').then(m => m.CommissionRoutingModule),
+    },
+    {
+      path: 'cashback',
+      loadChildren: () => import('./cashback/cashback-routing.module').then(m => m.CashbackRoutingModule),
     },
     {
       path: 'aeps',
