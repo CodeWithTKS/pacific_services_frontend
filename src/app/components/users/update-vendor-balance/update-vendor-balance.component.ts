@@ -73,7 +73,6 @@ export class UpdateVendorBalanceComponent implements OnInit {
     }
     this.userService.addVendorLog(logs).subscribe({
       next: (response) => {
-        console.log('Portal updated successfully', response);
         this.dialogRef.close(true);
       },
       error: (error) => {

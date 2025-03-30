@@ -40,7 +40,6 @@ export class CommissionAddEditComponent implements OnInit {
     // If editing an existing portal, set isEditMode to true and load the data
     this.commissionData = history.state.commissionData;
     if (this.commissionData?.CommissionID) {
-      console.log(this.commissionData);
       this.isEditMode = true;
       this.populateForm(this.commissionData);
     }
@@ -93,7 +92,7 @@ export class CommissionAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.portalList = res;
         if (this.commissionData?.CommissionID) {
           this.myForm.patchValue({
@@ -139,7 +138,6 @@ export class CommissionAddEditComponent implements OnInit {
         // Update an existing commission
         this.commissionService.UpdateCommission(this.commissionData.CommissionID, formData).subscribe({
           next: (response) => {
-            console.log('commission updated successfully', response);
             this.router.navigate(['/admin/commission']); // Navigate back to the commission list
           },
           error: (error) => {
@@ -150,7 +148,6 @@ export class CommissionAddEditComponent implements OnInit {
         // Add a new commission
         this.commissionService.AddCommission(formData).subscribe({
           next: (response) => {
-            console.log('commission added successfully', response);
             this.router.navigate(['/admin/commission']); // Navigate back to the commission list
           },
           error: (error) => {
@@ -159,7 +156,7 @@ export class CommissionAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 

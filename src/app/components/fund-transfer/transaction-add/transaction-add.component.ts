@@ -27,7 +27,7 @@ export class TransactionAddComponent implements OnInit {
     public dialogRef: MatDialogRef<TransactionAddComponent>,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-    console.log(data);
+    
     this.moneyData = data
   }
 
@@ -43,7 +43,6 @@ export class TransactionAddComponent implements OnInit {
         const formData = this.transactionForm.value;
         this.fundTransferService.UpdatefundTransferNo(this.moneyData.TransferID, formData).subscribe({
           next: (response) => {
-            console.log('money-transfer updated successfully', response);
             this.onCancel();
           },
           error: (error) => {

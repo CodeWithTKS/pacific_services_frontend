@@ -54,7 +54,7 @@ export class VendorLogsComponent implements OnInit, AfterViewInit {
   getVendorLogsById(id: any) {
     this.userService.getVendorLogsById(id).subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.dataSource.data = res;
         this.vendorList = res;
       },

@@ -30,7 +30,7 @@ export class PortalTransferComponent implements OnInit {
     public dialogRef: MatDialogRef<PortalTransferComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log(data);
+    
 
     this.transferForm = this.fb.group({
       vendorId: [this.data.id, Validators.required],
@@ -47,7 +47,7 @@ export class PortalTransferComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.portals = res;
       }
     });
@@ -91,7 +91,6 @@ export class PortalTransferComponent implements OnInit {
     }
     this.userService.addVendorLog(logs).subscribe({
       next: (response) => {
-        console.log('Portal updated successfully', response);
         this.dialogRef.close(true);
       },
       error: (error) => {

@@ -53,7 +53,7 @@ export class SaleAddEditComponent implements OnInit {
   Getservices() {
     this.serviceService.Getservices().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.ServiceList = res;
       },
     });
@@ -88,7 +88,6 @@ export class SaleAddEditComponent implements OnInit {
     const selectedService = this.ServiceList.find(service => service.id == selectedId);
 
     if (selectedService) {
-      console.log("Selected Service Object:", selectedService);
 
       // Patch values into the form array
       this.FormArray.at(index).patchValue({
@@ -101,8 +100,6 @@ export class SaleAddEditComponent implements OnInit {
 
       // Recalculate total price
       this.calculateTotalPrice();
-    } else {
-      console.log("Service not found.");
     }
   }
 
@@ -141,13 +138,10 @@ export class SaleAddEditComponent implements OnInit {
         0
       );
 
-      console.log(formValue);
-
       if (this.Data && this.Data.id) {
         // Update an existing Service
         this.salesService.Updatesales(this.Data.id, formValue).subscribe({
           next: (response) => {
-            console.log('sales updated successfully', response);
             this.router.navigate(['/admin/sales']); // Navigate back to the  list
           },
           error: (error) => {
@@ -158,7 +152,6 @@ export class SaleAddEditComponent implements OnInit {
         // Add a new Service
         this.salesService.Addsales(formValue).subscribe({
           next: (response) => {
-            console.log('sales added successfully', response);
             this.router.navigate(['/admin/sales']); // Navigate back to the list
           },
           error: (error) => {
@@ -167,7 +160,7 @@ export class SaleAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 

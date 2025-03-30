@@ -21,6 +21,12 @@ export class portalService {
             .pipe(catchError(this.handleError));
     }
 
+    GethighlightEntry(): Observable<any> {
+        return this.httpClient
+            .get(environment.baseURL + `/portal/highlightEntry/all`)
+            .pipe(catchError(this.handleError));
+    }
+
     getPortalStats(): Observable<any> {
         return this.httpClient
             .get(environment.baseURL + `/portal/total/stats`)

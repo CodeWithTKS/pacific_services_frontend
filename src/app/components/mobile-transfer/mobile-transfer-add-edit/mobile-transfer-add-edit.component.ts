@@ -56,7 +56,6 @@ export class MobileTransferAddEditComponent implements OnInit {
     // If editing an existing portal, set isEditMode to true and load the data
     this.mobileData = history.state.mobileData;
     if (this.mobileData?.TransferID) {
-      console.log(this.mobileData);
       this.isEditMode = true;
       this.populateForm(this.mobileData);
     }
@@ -122,7 +121,7 @@ export class MobileTransferAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.portalList = res;
         if (this.mobileData?.TransferID) {
           this.transactionForm.patchValue({
@@ -193,7 +192,6 @@ export class MobileTransferAddEditComponent implements OnInit {
         // Update an existing mobile-transfer
         this.MobileTransferService.UpdatemobileTransfer(this.mobileData.TransferID, formData).subscribe({
           next: (response) => {
-            console.log('mobile-transfer updated successfully', response);
             this.router.navigate(['/admin/mobile-transfer']); // Navigate back to the mobile-transfer list
           },
           error: (error) => {
@@ -204,7 +202,6 @@ export class MobileTransferAddEditComponent implements OnInit {
         // Add a new mobile-transfer
         this.MobileTransferService.AddmobileTransfer(formData).subscribe({
           next: (response) => {
-            console.log('mobile-transfer added successfully', response);
             this.router.navigate(['/admin/mobile-transfer']); // Navigate back to the mobile-transfer list
           },
           error: (error) => {
@@ -213,7 +210,7 @@ export class MobileTransferAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 

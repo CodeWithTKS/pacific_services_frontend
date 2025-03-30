@@ -31,7 +31,6 @@ export class SidebarDialogComponent implements OnInit {
       try {
         const parsedData = JSON.parse(userData);
         const user = parsedData?.data?.user;
-        console.log(user?.user);
       } catch (error) {
         console.error('Failed to parse user data from localStorage:', error);
       }

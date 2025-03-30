@@ -78,7 +78,7 @@ export class MobileTransferListComponent implements OnInit, AfterViewInit {
     const filters = this.filters || {}; // Default to an empty object if no filters provided
     this.mobileTransferService.GetmobileTransfers(filters).subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.dataSource.data = res;
         this.mobileList = res;
       },
@@ -91,7 +91,7 @@ export class MobileTransferListComponent implements OnInit, AfterViewInit {
   GetPortals(): void {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.portalList = res;
       }
     })
@@ -184,11 +184,10 @@ export class MobileTransferListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Delete confirmed');
+        
         this.mobileTransferService.DeletemobileTransfer(TransferID).subscribe({
           next: (response) => {
             this.GetmobileTransfers();
-            console.log('Commission deleted successfully:', response);
             // Optionally refresh the list or navigate
           },
           error: (error) => {
@@ -196,7 +195,7 @@ export class MobileTransferListComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        console.log('Delete cancelled');
+        
       }
     });
   }
@@ -239,7 +238,7 @@ export class MobileTransferListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    console.log(this.dataForExcel);
+    
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

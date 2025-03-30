@@ -74,7 +74,6 @@ export class SalesListComponent implements OnInit, AfterViewInit {
           service_names: item.services.map((service: any) => service.service_name).join(', ') // Combine service names in one line
         }));
         this.SaleList = this.dataSource.data;
-        console.log(this.SaleList);
       },
       error: (err: any) => console.error('Error fetching Services:', err),
     });
@@ -166,7 +165,6 @@ export class SalesListComponent implements OnInit, AfterViewInit {
     // Prepare data array for Excel
     let dataForExcel = dataToExport.map(row => Object.values(row));
 
-    console.log("Exporting Data:", dataForExcel);
 
     // Prepare report data
     let reportData = {

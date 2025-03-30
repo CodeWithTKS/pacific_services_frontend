@@ -55,7 +55,7 @@ export class ViewPortalComponent implements OnInit, AfterViewInit {
   getPortalLogsById(id: any) {
     this.portalService.getPortalLogsById(id).subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.dataSource.data = res;
         this.portalList = res;
       },

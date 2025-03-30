@@ -68,7 +68,6 @@ export class UserAddEditComponent implements OnInit {
         // Update an existing User
         this.userService.Updateuser(this.UserData.id, formData).subscribe({
           next: (response) => {
-            console.log('User updated successfully', response);
             this.dialogRef.close(true);
           },
           error: (error) => {
@@ -79,7 +78,6 @@ export class UserAddEditComponent implements OnInit {
         // Add a new User
         this.userService.Adduser(formData).subscribe({
           next: (response) => {
-            console.log('User added successfully', response);
             this.dialogRef.close(true);
           },
           error: (error) => {
@@ -88,7 +86,7 @@ export class UserAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 

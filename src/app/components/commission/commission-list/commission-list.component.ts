@@ -60,7 +60,7 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
   GetCommissions() {
     this.commissionService.GetCommissions().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.dataSource.data = res;
         this.commissionList = res;
       },
@@ -97,11 +97,10 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Delete confirmed');
+        
         this.commissionService.DeleteCommission(CommissionID).subscribe({
           next: (response) => {
             this.GetCommissions();
-            console.log('Commission deleted successfully:', response);
             // Optionally refresh the list or navigate
           },
           error: (error) => {
@@ -109,7 +108,7 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        console.log('Delete cancelled');
+        
       }
     });
   }
@@ -138,7 +137,7 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    console.log(this.dataForExcel);
+    
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

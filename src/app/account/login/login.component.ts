@@ -1,14 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterModule, CommonModule, ReactiveFormsModule, FormsModule, MatSnackBarModule],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule, FormsModule,
+    MatSnackBarModule, MatInputModule, MatIconModule, MatButtonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -34,11 +38,9 @@ export class LoginComponent {
     }
 
     const data = this.loginForm.value;
-    console.log('Login data:', data);  // Debugging line
 
     this.AuthService.userLogin(data).subscribe({
       next: (response) => {
-        console.log('Login successful:', response);
         this.router.navigate(['/admin/dashboard']);
         this.openSnackBar('Login successful!', 'Close');
       },

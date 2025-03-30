@@ -55,7 +55,7 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
   Getservices() {
     this.serviceService.Getservices().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.dataSource.data = res;
         this.ServiceList = res;
       },
@@ -107,11 +107,10 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Delete confirmed');
+        
         this.serviceService.Deleteservices(ServiceId).subscribe({
           next: (response) => {
             this.Getservices();
-            console.log('Service deleted successfully:', response);
             // Optionally refresh the list or navigate
           },
           error: (error) => {
@@ -119,7 +118,7 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        console.log('Delete cancelled');
+        
       }
     });
   }
@@ -140,7 +139,7 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    console.log(this.dataForExcel);
+    
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

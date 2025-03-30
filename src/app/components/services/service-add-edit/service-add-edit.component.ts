@@ -46,7 +46,7 @@ export class ServiceAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.PortalList = res;
       }
     })
@@ -81,7 +81,6 @@ export class ServiceAddEditComponent implements OnInit {
         // Update an existing Service
         this.serviceService.Updateservices(this.Data.id, obj).subscribe({
           next: (response) => {
-            console.log('Service updated successfully', response);
             this.dialogRef.close(true);
           },
           error: (error) => {
@@ -92,7 +91,6 @@ export class ServiceAddEditComponent implements OnInit {
         // Add a new Service
         this.serviceService.Addservices(obj).subscribe({
           next: (response) => {
-            console.log('Service added successfully', response);
             this.dialogRef.close(true);
           },
           error: (error) => {
@@ -101,7 +99,7 @@ export class ServiceAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 

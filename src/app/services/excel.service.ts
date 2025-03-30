@@ -9,7 +9,6 @@ export class ExcelService {
     constructor() { }
 
     async generateExcel(excelData: any) {
-        console.log(excelData);
 
         // Excel Title, Header, Data
         const title = excelData.title;

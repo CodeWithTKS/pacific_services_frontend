@@ -75,7 +75,6 @@ export class AepsAddEditComponent implements OnInit {
     // If editing an existing portal, set isEditMode to true and load the data
     this.moneyData = history.state.moneyData;
     if (this.moneyData?.TransferID) {
-      console.log(this.moneyData);
       this.isEditMode = true;
       this.populateForm(this.moneyData);
     }
@@ -155,7 +154,6 @@ export class AepsAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
         this.portalList = res;
         if (this.moneyData?.TransferID) {
           this.transactionForm.patchValue({
@@ -180,7 +178,7 @@ export class AepsAddEditComponent implements OnInit {
   GetCommissions() {
     this.commissionService.GetCommissions().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.commissionList = res;
       }
     })
@@ -259,7 +257,6 @@ export class AepsAddEditComponent implements OnInit {
         // Update an existing money-transfer
         this.AepsService.UpdateMoneyTransfer(this.moneyData.TransferID, formData).subscribe({
           next: (response) => {
-            console.log('money-transfer updated successfully', response);
             this.router.navigate(['/admin/aeps']); // Navigate back to the money-transfer list
           },
           error: (error) => {
@@ -270,7 +267,6 @@ export class AepsAddEditComponent implements OnInit {
         // Add a new money-transfer
         this.AepsService.AddMoneyTransfer(formData).subscribe({
           next: (response) => {
-            console.log('money-transfer added successfully', response);
             this.router.navigate(['/admin/aeps']); // Navigate back to the money-transfer list
           },
           error: (error) => {
@@ -279,7 +275,6 @@ export class AepsAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
     }
   }
 

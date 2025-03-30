@@ -87,7 +87,6 @@ export class PortalAddEditComponent implements OnInit {
         // Update an existing portal
         this.portalService.UpdatePortal(this.portalData.PortalID, formData).subscribe({
           next: (response) => {
-            console.log('Portal updated successfully', response);
             this.router.navigate(['/admin/portal']); // Navigate back to the portal list
           },
           error: (error) => {
@@ -98,7 +97,6 @@ export class PortalAddEditComponent implements OnInit {
         // Add a new portal
         this.portalService.AddPortal(formData).subscribe({
           next: (response) => {
-            console.log('Portal added successfully', response);
             this.router.navigate(['/admin/portal']); // Navigate back to the portal list
           },
           error: (error) => {
@@ -107,7 +105,7 @@ export class PortalAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 

@@ -54,7 +54,6 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
   GetCashbacks() {
     this.cashBackService.Getcashback().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
         this.dataSource.data = res;
         this.CashbackList = res;
       },
@@ -106,11 +105,9 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Delete confirmed');
         this.cashBackService.Deletecashback(CashbackId).subscribe({
           next: (response) => {
             this.GetCashbacks();
-            console.log('Cashback deleted successfully:', response);
             // Optionally refresh the list or navigate
           },
           error: (error) => {
@@ -118,7 +115,6 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        console.log('Delete cancelled');
       }
     });
   }
@@ -139,7 +135,7 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    console.log(this.dataForExcel);
+    
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

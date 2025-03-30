@@ -47,7 +47,7 @@ export class CashbackAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.portalList = res;
       }
     })

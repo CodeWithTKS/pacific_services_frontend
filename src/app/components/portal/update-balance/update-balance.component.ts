@@ -73,7 +73,6 @@ export class UpdateBalanceComponent implements OnInit {
     }
     this.portalService.addPortalLog(logs).subscribe({
       next: (response) => {
-        console.log('Portal updated successfully', response);
         this.dialogRef.close(true);
       },
       error: (error) => {

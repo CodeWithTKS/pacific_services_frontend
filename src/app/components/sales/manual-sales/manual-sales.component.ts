@@ -40,11 +40,8 @@ export class ManualSalesComponent implements OnInit {
 
     if (stateData && stateData['saleData']) {
       this.saleData = stateData['saleData'];  // Access property correctly
-      console.log(this.saleData);
       this.patchForm();
       this.isEditMode = true; // Set edit mode to true if data is present
-    } else {
-      console.log("No sale data found, consider fetching from API.");
     }
   }
 
@@ -90,7 +87,7 @@ export class ManualSalesComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.portalList = res;
       }
     });
@@ -144,12 +141,10 @@ export class ManualSalesComponent implements OnInit {
         };
       });
 
-      console.log(formValue);
       if (this.saleData && this.saleData.id) {
         // Update an existing Sales
         this.salesService.Updatesales(this.saleData.id, formValue).subscribe({
           next: (response) => {
-            console.log('sales updated successfully', response);
             this.router.navigate(['/admin/sales']); // Navigate back to the  list
           },
           error: (error) => {
@@ -160,7 +155,6 @@ export class ManualSalesComponent implements OnInit {
         // Add a new Sales
         this.salesService.AddManualSales(formValue).subscribe({
           next: (response) => {
-            console.log('sales added successfully', response);
             this.router.navigate(['/admin/sales']); // Navigate back to the list
           },
           error: (error) => {
@@ -169,7 +163,7 @@ export class ManualSalesComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 

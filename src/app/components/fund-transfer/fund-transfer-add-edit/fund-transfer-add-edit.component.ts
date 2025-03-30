@@ -56,7 +56,6 @@ export class FundTransferAddEditComponent implements OnInit {
     // If editing an existing portal, set isEditMode to true and load the data
     this.fundData = history.state.fundData;
     if (this.fundData?.TransferID) {
-      console.log(this.fundData);
       this.isEditMode = true;
       this.populateForm(this.fundData);
     }
@@ -126,7 +125,7 @@ export class FundTransferAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.portalList = res;
         if (this.fundData?.TransferID) {
           this.transactionForm.patchValue({
@@ -196,7 +195,6 @@ export class FundTransferAddEditComponent implements OnInit {
         // Update an existing fund-transfer
         this.fundtransferService.UpdatefundTransfer(this.fundData.TransferID, formData).subscribe({
           next: (response) => {
-            console.log('fund-transfer updated successfully', response);
             this.router.navigate(['/admin/fund-transfer']); // Navigate back to the fund-transfer list
           },
           error: (error) => {
@@ -207,7 +205,6 @@ export class FundTransferAddEditComponent implements OnInit {
         // Add a new fund-transfer
         this.fundtransferService.AddfundTransfer(formData).subscribe({
           next: (response) => {
-            console.log('fund-transfer added successfully', response);
             this.router.navigate(['/admin/fund-transfer']); // Navigate back to the fund-transfer list
           },
           error: (error) => {
@@ -216,7 +213,7 @@ export class FundTransferAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 

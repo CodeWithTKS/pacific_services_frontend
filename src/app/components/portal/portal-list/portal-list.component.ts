@@ -59,7 +59,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.dataSource.data = res;
         this.portalList = res;
       },
@@ -118,11 +118,10 @@ export class PortalListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Delete confirmed');
+        
         this.portalService.DeletePortal(portalId).subscribe({
           next: (response) => {
             this.GetPortals();
-            console.log('Portal deleted successfully:', response);
             // Optionally refresh the list or navigate
           },
           error: (error) => {
@@ -130,7 +129,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        console.log('Delete cancelled');
+        
       }
     });
   }
@@ -160,7 +159,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    console.log(this.dataForExcel);
+    
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

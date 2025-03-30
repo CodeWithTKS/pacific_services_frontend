@@ -60,7 +60,6 @@ export class MoneyAddEditComponent implements OnInit {
     // If editing an existing portal, set isEditMode to true and load the data
     this.moneyData = history.state.moneyData;
     if (this.moneyData?.TransferID) {
-      console.log(this.moneyData);
       this.isEditMode = true;
       this.populateForm(this.moneyData);
     }
@@ -140,7 +139,7 @@ export class MoneyAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.portalList = res;
         if (this.moneyData?.TransferID) {
           this.transactionForm.patchValue({
@@ -162,7 +161,7 @@ export class MoneyAddEditComponent implements OnInit {
   GetCommissions() {
     this.commissionService.GetCommissions().subscribe({
       next: (res: any) => {
-        console.log('Response Data:', res);
+       
         this.commissionList = res;
       }
     })
@@ -176,7 +175,6 @@ export class MoneyAddEditComponent implements OnInit {
 
   onPortalSelect(event: MatSelectChange): void {
     this.selectedPortalId = event.value;
-    console.log("selectedPortalId", this.selectedPortalId);
   }
 
   // Method to calculate and update TotalCash
@@ -231,19 +229,16 @@ export class MoneyAddEditComponent implements OnInit {
         const portalCommissions = this.commissionList.filter(
           c => String(c.portalId) === String(this.selectedPortalId) // Convert both to strings for comparison
         );
-        console.log("Filtered Commissions:", portalCommissions);
 
         let vendorCommissions: any[] = [];
         let selfCommissions: any[] = [];
         let commission: any | undefined;
 
         const vendorID = +this.transactionForm.value?.VendorID;
-        console.log("Selected Vendor ID:", vendorID);
 
         if (vendorID > 0) {
           // Vendor mode
           vendorCommissions = portalCommissions.filter(c => c.VendorID == vendorID);
-          console.log("Vendor Commissions:", vendorCommissions);
 
           if (vendorCommissions.length) {
             commission = vendorCommissions.find(
@@ -253,7 +248,6 @@ export class MoneyAddEditComponent implements OnInit {
         } else {
           // Self mode
           selfCommissions = portalCommissions.filter(c => c.VendorID === 0);
-          console.log("Self Commissions:", selfCommissions);
 
           if (selfCommissions.length) {
             commission = selfCommissions.find(
@@ -261,8 +255,6 @@ export class MoneyAddEditComponent implements OnInit {
             );
           }
         }
-
-        console.log("Selected Commission:", commission);
 
         if (commission) {
           if (commission.VendorID === vendorID) {
@@ -305,7 +297,6 @@ export class MoneyAddEditComponent implements OnInit {
         // Update an existing money-transfer
         this.moneyTransferService.UpdateMoneyTransfer(this.moneyData.TransferID, formData).subscribe({
           next: (response) => {
-            console.log('money-transfer updated successfully', response);
             this.router.navigate(['/admin/money-transfer']); // Navigate back to the money-transfer list
           },
           error: (error) => {
@@ -316,7 +307,6 @@ export class MoneyAddEditComponent implements OnInit {
         // Add a new money-transfer
         this.moneyTransferService.AddMoneyTransfer(formData).subscribe({
           next: (response) => {
-            console.log('money-transfer added successfully', response);
             this.router.navigate(['/admin/money-transfer']); // Navigate back to the money-transfer list
           },
           error: (error) => {
@@ -325,7 +315,7 @@ export class MoneyAddEditComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid');
+      
     }
   }
 
