@@ -46,7 +46,7 @@ export class ServiceAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
+
         this.PortalList = res;
       }
     })
@@ -56,8 +56,7 @@ export class ServiceAddEditComponent implements OnInit {
     this.myForm = this.fb.group({
       portalId: ['', [Validators.required]],
       service_name: ['', [Validators.required]],
-      price: ['', [Validators.required]],
-      commission_price: ['', [Validators.required]],
+      purchase_price: ['', [Validators.required]],
     });
   }
 
@@ -65,16 +64,14 @@ export class ServiceAddEditComponent implements OnInit {
     this.myForm.patchValue({
       portalId: data.portalId || '',
       service_name: data.service_name || '',
-      price: data.price || '',
-      commission_price: (data.price - data.commission_price) || '',
+      purchase_price: data.purchase_price || '',
     });
   }
   // Submit function
   onSubmit(): void {
     if (this.myForm.valid) {
       const obj = {
-        ...this.myForm.value,
-        commission_price: +this.myForm.value?.price - +this.myForm.value?.commission_price
+        ...this.myForm.value
       }
 
       if (this.Data && this.Data.id) {
@@ -99,7 +96,7 @@ export class ServiceAddEditComponent implements OnInit {
         });
       }
     } else {
-      
+
     }
   }
 

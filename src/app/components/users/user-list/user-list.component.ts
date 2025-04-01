@@ -8,13 +8,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { ExcelService } from '../../../services/excel.service';
 import { userService } from '../../../services/user.service';
-import { UserAddEditComponent } from '../user-add-edit/user-add-edit.component';
-import { UpdateVendorBalanceComponent } from '../update-vendor-balance/update-vendor-balance.component';
-import { PortalTransferComponent } from '../portal-transfer/portal-transfer.component';
-import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
+import { UserAddEditComponent } from '../user-add-edit/user-add-edit.component';
+import { RazorpayService } from '../../../services/razorpay.service';
 
 @Component({
   selector: 'app-user-list',
@@ -28,7 +27,7 @@ import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.
 })
 export class UserListComponent implements OnInit, AfterViewInit {
   UserList: any[] = [];
-  displayedColumns: string[] = ['id', 'name', 'phone', 'main_balance', 'virtual_balance', 'created_at', 'Action'];
+  displayedColumns: string[] = ['id', 'email', 'subscription_expiry', 'created_at', 'action'];
   dataSource = new MatTableDataSource<any>([]);
   dataForExcel: any[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
@@ -38,10 +37,11 @@ export class UserListComponent implements OnInit, AfterViewInit {
     private ExcelService: ExcelService,
     private dialog: MatDialog,
     private router: Router,
+    private razorpayService: RazorpayService,
   ) { }
 
   ngOnInit(): void {
-    this.Getuser();
+    this.GetOperator();
   }
 
   ngAfterViewInit() {
@@ -49,10 +49,9 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  Getuser() {
-    this.userService.Getuser().subscribe({
+  GetOperator() {
+    this.userService.GetOperator().subscribe({
       next: (res: any) => {
-       
         this.dataSource.data = res;
         this.UserList = res;
       },
@@ -71,28 +70,17 @@ export class UserListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addVendor(): void {
+  addoperator(): void {
     const dialogRef = this.dialog.open(UserAddEditComponent, {
       width: '400px',
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.Getuser();
+      this.GetOperator();
     })
   }
 
-  editVendor(data: any): void {
-    const dialogRef = this.dialog.open(UserAddEditComponent, {
-      width: '400px',
-      data: data
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.Getuser();
-    })
-  }
-
-  deleteVendor(userId: any): void {
+  deleteoperator(userId: any): void {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       height: '170px',
@@ -104,10 +92,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        
+
         this.userService.Deleteuser(userId).subscribe({
           next: (response) => {
-            this.Getuser();
+            this.GetOperator();
             // Optionally refresh the list or navigate
           },
           error: (error) => {
@@ -115,36 +103,32 @@ export class UserListComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        
+
       }
     });
   }
 
-  updateBalance(portal: any): void {
-    const dialogRef = this.dialog.open(UpdateVendorBalanceComponent, {
-      width: '400px',
-      height: '300px',
-      data: portal
+  Renew(id: any): void {
+    const role = 'User'; // Get user role
+    const userId = id; // Extract userId
+    // Step 1: Create Razorpay Order
+    this.razorpayService.createOrder(role).subscribe({
+      next: (order) => {
+        // Step 2: Open Razorpay Payment UI
+        this.razorpayService.openPayment(order, role, userId,
+          (paymentResponse: any) => {
+            console.log('Payment Success:', paymentResponse);
+            this.GetOperator();
+          },
+          (paymentError: any) => {
+            console.error('Payment failed', paymentError);
+          }
+        );
+      },
+      error: (error) => {
+        console.error('Error creating Razorpay order', error);
+      }
     });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.Getuser();
-    })
-  }
-
-  portalBalance(portal: any): void {
-    const dialogRef = this.dialog.open(PortalTransferComponent, {
-      width: '400px',
-      data: portal
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.Getuser();
-    })
-  }
-
-  view(data: any) {
-    this.router.navigate([`/admin/user/view/${data.id}`])
   }
 
   excelDownload(title: string) {
@@ -162,7 +146,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    
+
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

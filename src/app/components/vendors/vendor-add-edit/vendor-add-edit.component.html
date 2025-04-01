@@ -1,0 +1,58 @@
+<div class="container p-3">
+    <!-- Dynamic Title -->
+    <h3>{{ isEditMode ? 'Edit Vendor' : 'Add Vendor' }}</h3>
+
+    <form [formGroup]="vendorForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <!-- Name Section -->
+            <div class="col-sm-12">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter name">
+                    <mat-error *ngIf="vendorForm.get('name')?.hasError('required')">Name is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Phone Section -->
+            <div class="col-sm-12">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Phone</mat-label>
+                    <input matInput formControlName="phone" placeholder="Enter phone">
+                    <mat-error *ngIf="vendorForm.get('phone')?.hasError('required')">Phone is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Main Balance Section -->
+            <div class="col-sm-12">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Main Balance</mat-label>
+                    <input matInput formControlName="main_balance" placeholder="Enter main balance"
+                        [readonly]="isEditMode">
+                    <mat-error *ngIf="vendorForm.get('main_balance')?.hasError('required')">Main balance is
+                        required</mat-error>
+                    <mat-error *ngIf="vendorForm.get('main_balance')?.hasError('pattern')">Enter a valid
+                        number</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Virtual Balance Section -->
+            <div class="col-sm-12">
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Virtual Balance</mat-label>
+                    <input matInput formControlName="virtual_balance" placeholder="Enter virtual balance"
+                        [readonly]="isEditMode">
+                    <mat-error *ngIf="vendorForm.get('virtual_balance')?.hasError('required')">Virtual balance is
+                        required</mat-error>
+                    <mat-error *ngIf="vendorForm.get('virtual_balance')?.hasError('pattern')">Enter a valid
+                        number</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12">
+                <button mat-raised-button color="primary" type="submit" [disabled]="vendorForm.invalid">Submit</button>
+            </div>
+        </div>
+    </form>
+
+</div>

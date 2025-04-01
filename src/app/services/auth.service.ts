@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -12,15 +13,25 @@ export class AuthService {
     private currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<any>;
 
-    constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: any) {
+    constructor(private http: HttpClient,
+        private router: Router,
+        @Inject(PLATFORM_ID) private platformId: any) {
         // Check if the code is running in the browser
         const currentUserData = isPlatformBrowser(this.platformId) ? localStorage.getItem('currentUser') : null;
         this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(currentUserData || '{}'));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public get currentUserValue(): any {
-        return this.currentUserSubject.value;
+    get currentUserValue() {
+        if (typeof window !== 'undefined') {
+            return JSON.parse(localStorage.getItem('currentUser') || 'null');
+        }
+        return null;
+    }
+
+    logout() {
+        localStorage.removeItem('currentUser');
+        this.router.navigate(['/auth/login']);
     }
 
     private handleError(error: HttpErrorResponse) {

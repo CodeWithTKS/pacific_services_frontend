@@ -41,6 +41,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
   dataForExcel: any[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort!: MatSort;
+  Role: any
 
   constructor(private portalService: portalService,
     private ExcelService: ExcelService,
@@ -49,6 +50,15 @@ export class PortalListComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.GetPortals();
+    const userData = localStorage.getItem('currentUser');
+    if (userData) {
+      try {
+        const parsedData = JSON.parse(userData);
+        this.Role = parsedData?.user?.role;
+      } catch (error) {
+        console.error('Failed to parse user data from localStorage:', error);
+      }
+    }
   }
 
   ngAfterViewInit() {
@@ -59,7 +69,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
+
         this.dataSource.data = res;
         this.portalList = res;
       },
@@ -83,7 +93,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
       .map((transfer: any) => transfer.Balance)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
-  
+
   editPortal(portal: any) {
     this.router.navigate([`/admin/portal/editportal/${portal.PortalID}`], {
       state: { portalData: portal } // Pass portal data using state
@@ -118,7 +128,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        
+
         this.portalService.DeletePortal(portalId).subscribe({
           next: (response) => {
             this.GetPortals();
@@ -129,7 +139,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        
+
       }
     });
   }
@@ -159,7 +169,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    
+
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

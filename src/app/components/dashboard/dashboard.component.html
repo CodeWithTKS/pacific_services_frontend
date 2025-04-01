@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="col-xl-6 col-lg-12 ">
-            <h3 class="m-0">HighLight Table</h3>
+            <h3 class="m-0">Pending Payments</h3>
             <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8  sort"
                 style="width: 100%; border-collapse: collapse;">
 
@@ -19,28 +19,28 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header
                         style="background: #004d99; color: white; padding: 10px;">Full name</th>
                     <td mat-cell *matCellDef="let Service" style="padding: 10px;">
-                        {{ Service.FirstName ||'' }} {{ Service.LastName || '' }} </td>
+                        {{ Service.FirstName || Service.name || '' }} {{ Service.LastName || '' }} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="ContactNo">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header
                         style="background: #004d99; color: white; padding: 10px;">Contact No</th>
                     <td mat-cell *matCellDef="let Service" style="padding: 10px;">
-                        {{ Service.ContactNo }} </td>
+                        {{ Service.ContactNo || Service.phone || ''}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="CollectionAmt">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header
                         style="background: #004d99; color: white; padding: 10px;">Collection Amount</th>
                     <td mat-cell *matCellDef="let Service" style="padding: 10px;">
-                        {{ Service.CollectionAmt | currency:'INR'}} </td>
+                        {{ (Service.CollectionAmt || Service.total_price) | currency:'INR'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="created_at">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header
                         style="background: #004d99; color: white; padding: 10px;">Created At</th>
                     <td mat-cell *matCellDef="let Service" style="padding: 10px;">
-                        {{ Service.CreatedAt | date: 'dd/MM/yyyy' }}
+                        {{ (Service.CreatedAt || Service.created_at) | date: 'dd/MM/yyyy' }}
                     </td>
                 </ng-container>
                 <!-- Header and Row Declarations -->

@@ -13,11 +13,16 @@
         </a>
     </li>
     <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/admin/user">
-            <i class="bi bi-person me-2"></i> Vendor
+        <a class="nav-link" routerLink="/admin/vendor">
+            <i class="bi bi-people me-2"></i> Vendor
         </a>
     </li>
-    <li class="nav-item" routerLinkActive="active">
+    <li class="nav-item" routerLinkActive="active" *ngIf="Role === 'Admin'">
+        <a class="nav-link" routerLink="/admin/user">
+            <i class="bi bi-person me-2"></i> Operator
+        </a>
+    </li>
+    <li class="nav-item" routerLinkActive="active" *ngIf="Role === 'Admin'">
         <a class="nav-link" routerLink="/admin/commission">
             <i class="bi bi-cash me-2"></i> Charges Setting
         </a>
@@ -47,7 +52,7 @@
             <i class="bi bi-phone me-2"></i> Mobile Transfer
         </a>
     </li>
-    <li class="nav-item" routerLinkActive="active">
+    <li class="nav-item" routerLinkActive="active" *ngIf="Role === 'Admin'">
         <a class="nav-link" routerLink="/admin/service">
             <i class="bi bi-tools me-2"></i> Services
         </a>

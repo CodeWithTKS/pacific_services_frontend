@@ -29,27 +29,11 @@
                 <td mat-cell *matCellDef="let Service" style="padding: 10px;">{{ Service.service_name }}</td>
             </ng-container>
 
-            <!-- price Column -->
-            <ng-container matColumnDef="sales_price">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Sales Price</th>
-                <td mat-cell *matCellDef="let Service" style="padding: 10px;">{{ Service.price | currency:'INR' }}</td>
-            </ng-container>
-
             <!-- purchase_price Column -->
             <ng-container matColumnDef="purchase_price">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Purchase Price</th>
-                <td mat-cell *matCellDef="let Service" style="padding: 10px;">{{ (Service.price -
-                    Service.commission_price) |
-                    currency:'INR'}}</td>
-            </ng-container>
-
-            <!-- commission_price Column -->
-            <ng-container matColumnDef="commission_price">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Commission Price</th>
-                <td mat-cell *matCellDef="let Service" style="padding: 10px;">{{ Service.commission_price |
+                <td mat-cell *matCellDef="let Service" style="padding: 10px;">{{ Service.purchase_price |
                     currency:'INR'}}</td>
             </ng-container>
 
@@ -68,8 +52,8 @@
                 </th>
                 <td mat-cell *matCellDef="let Service" style="padding: 10px;">
                     <button mat-button color="primary" style="margin-right: 10px;"
-                        (click)="editService(Service)">Edit</button>
-                    <button mat-button color="warn" (click)="deleteItem(Service.id)">Delete</button>
+                        (click)="editService(Service)" *ngIf="Role === 'Admin'">Edit</button>
+                    <button mat-button color="warn" (click)="deleteItem(Service.id)" *ngIf="Role === 'Admin'">Delete</button>
                 </td>
             </ng-container>
 

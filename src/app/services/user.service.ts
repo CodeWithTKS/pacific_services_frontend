@@ -15,6 +15,18 @@ export class userService {
     }
 
     // Get all user
+    GetOperator(): Observable<any> {
+        return this.httpClient
+            .get(environment.baseURL + `/auth/all`)
+            .pipe(catchError(this.handleError));
+    }
+
+    CreateUser(userData: FormData): Observable<any> {
+        return this.httpClient
+            .post(environment.baseURL + `/auth/CreateUser`, userData)
+            .pipe(catchError(this.handleError));
+    }
+    // Get all user
     Getuser(): Observable<any> {
         return this.httpClient
             .get(environment.baseURL + `/user`)

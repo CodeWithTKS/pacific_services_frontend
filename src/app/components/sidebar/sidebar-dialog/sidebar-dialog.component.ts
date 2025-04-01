@@ -11,7 +11,8 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
   styleUrl: './sidebar-dialog.component.css'
 })
 export class SidebarDialogComponent implements OnInit {
-
+  Role: any
+  
   constructor(
     private router: Router, private dialog: MatDialog,
     private dialogRef: MatDialogRef<SidebarDialogComponent> // Inject MatDialogRef to close dialog
@@ -25,18 +26,16 @@ export class SidebarDialogComponent implements OnInit {
       }
     });
 
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem('currentUser');
 
     if (userData) {
       try {
         const parsedData = JSON.parse(userData);
-        const user = parsedData?.data?.user;
+        this.Role = parsedData?.user?.role;
       } catch (error) {
         console.error('Failed to parse user data from localStorage:', error);
       }
-    } else {
-      console.error('User data not found in localStorage.');
-    }
+    } 
   }
 
   logout() {

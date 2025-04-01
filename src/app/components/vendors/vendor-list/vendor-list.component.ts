@@ -8,42 +8,41 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { ExcelService } from '../../../services/excel.service';
-import { ServiceAddEditComponent } from '../service-add-edit/service-add-edit.component';
-import { serviceService } from '../../../services/service.service';
+import { userService } from '../../../services/user.service';
 import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
+import { PortalTransferComponent } from '../portal-transfer/portal-transfer.component';
+import { UpdateVendorBalanceComponent } from '../update-vendor-balance/update-vendor-balance.component';
+import { VendorAddEditComponent } from '../vendor-add-edit/vendor-add-edit.component';
 
 @Component({
-  selector: 'app-service-list',
+  selector: 'app-vendor-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule,
     MatInputModule, MatButtonModule,
     MatSortModule, MatDialogModule],
-  templateUrl: './service-list.component.html',
-  styleUrl: './service-list.component.css'
+  templateUrl: './vendor-list.component.html',
+  styleUrl: './vendor-list.component.css'
 })
-export class ServiceListComponent implements OnInit, AfterViewInit {
-  ServiceList: any[] = [];
-  displayedColumns: string[] = [
-    'id',
-    'service_name',
-    'purchase_price',
-    'created_at',
-    'Action',
-  ];
+export class VendorListComponent implements OnInit, AfterViewInit {
+  UserList: any[] = [];
+  displayedColumns: string[] = ['id', 'name', 'phone', 'main_balance', 'virtual_balance', 'created_at', 'Action'];
   dataSource = new MatTableDataSource<any>([]);
   dataForExcel: any[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort!: MatSort;
   Role: any
 
-  constructor(private serviceService: serviceService,
+  constructor(private userService: userService,
     private ExcelService: ExcelService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
-    this.Getservices();
+    this.Getuser();
     const userData = localStorage.getItem('currentUser');
     if (userData) {
       try {
@@ -60,15 +59,15 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  Getservices() {
-    this.serviceService.Getservices().subscribe({
+  Getuser() {
+    this.userService.Getuser().subscribe({
       next: (res: any) => {
 
         this.dataSource.data = res;
-        this.ServiceList = res;
+        this.UserList = res;
       },
       error: (err: any) => {
-        console.error('Error fetching Services:', err);
+        console.error('Error fetching users:', err);
       },
     });
   }
@@ -82,28 +81,28 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addService(): void {
-    const dialogRef = this.dialog.open(ServiceAddEditComponent, {
+  addVendor(): void {
+    const dialogRef = this.dialog.open(VendorAddEditComponent, {
       width: '400px',
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.Getservices();
+      this.Getuser();
     })
   }
 
-  editService(data: any): void {
-    const dialogRef = this.dialog.open(ServiceAddEditComponent, {
+  editVendor(data: any): void {
+    const dialogRef = this.dialog.open(VendorAddEditComponent, {
       width: '400px',
       data: data
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.Getservices();
+      this.Getuser();
     })
   }
 
-  deleteItem(ServiceId: any): void {
+  deleteVendor(userId: any): void {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       height: '170px',
@@ -116,13 +115,13 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
 
-        this.serviceService.Deleteservices(ServiceId).subscribe({
+        this.userService.Deleteuser(userId).subscribe({
           next: (response) => {
-            this.Getservices();
+            this.Getuser();
             // Optionally refresh the list or navigate
           },
           error: (error) => {
-            console.error('Error deleting Service:', error);
+            console.error('Error deleting user:', error);
           }
         });
       } else {
@@ -131,13 +130,39 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
     });
   }
 
+  updateBalance(portal: any): void {
+    const dialogRef = this.dialog.open(UpdateVendorBalanceComponent, {
+      width: '400px',
+      height: '300px',
+      data: portal
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.Getuser();
+    })
+  }
+
+  portalBalance(portal: any): void {
+    const dialogRef = this.dialog.open(PortalTransferComponent, {
+      width: '400px',
+      data: portal
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.Getuser();
+    })
+  }
+
+  view(data: any) {
+    this.router.navigate([`/admin/vendor/view/${data.id}`])
+  }
+
   excelDownload(title: string) {
-    // Assuming ServiceList contains the list of Services
-    let dataToExport = this.ServiceList.map((x: any) => ({
+    // Assuming UserList contains the list of users
+    let dataToExport = this.UserList.map((x: any) => ({
       id: x.id,
-      Name: x.service_name,
-      Price: x.price,
-      CommissionPrice: x.commission_price,
+      Name: x.name,
+      Phone: x.phone,
       CreatedAt: x.created_at
     }));
 

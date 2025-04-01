@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,12 +11,13 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Router, RouterModule } from '@angular/router';
 import { salesService } from '../../../services/sales.service';
 import { serviceService } from '../../../services/service.service';
+import { portalService } from '../../../services/portal.service';
 
 @Component({
   selector: 'app-sale-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
-    MatFormFieldModule, MatInputModule, MatButtonModule,
+    MatFormFieldModule, MatInputModule, MatButtonModule, MatCheckboxModule,
     RouterModule, MatSelectModule, MatIconModule, MatDialogModule],
   templateUrl: './sale-add-edit.component.html',
   styleUrl: './sale-add-edit.component.css'
@@ -26,35 +28,94 @@ export class SaleAddEditComponent implements OnInit {
   Data: any;
   ServiceList: any[] = [];
   paymentTypes: string[] = ['Cash', 'Online'];
+  workStatus: string[] = ['Pending', 'Completed', 'Rejected'];
+  salesData: any;
+  portalList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private serviceService: serviceService,
     private salesService: salesService,
+    private portalService: portalService,
     private router: Router) {
     this.createForm();
   }
 
   ngOnInit(): void {
+    this.salesData = history.state.salesData;
+    if (this.salesData?.id) {
+      this.isEditMode = true;
+      this.populateForm(this.salesData);
+    }
     this.Getservices();
+    this.GetPortals();
   }
 
   createForm(): void {
     this.myForm = this.fb.group({
       name: ['', [Validators.required]],
       phone: [''],
+      UID: [''],
       paymentType: [''],
+      portalId: [],
       services: this.fb.array([]), // FormArray for the table rows
-      subtotal_price: ['', [Validators.required]],
+      TransferType: [],
+      comments: [],
+      workStatus: [],
+      HighlightEntry: [false],
+      PendingAmount: [],
+      ReceivedAmount: [],
       total_price: ['', [Validators.required]]
     })
+  }
+
+  populateForm(data: any): void {
+    this.myForm.patchValue({
+      name: data.name || '',
+      phone: data.phone || '',
+      UID: data.UID || '',
+      paymentType: data.paymentType || '',
+      portalId: data.portalId || '',
+      TransferType: data.TransferType || '',
+      comments: data.comments || '',
+      workStatus: data.workStatus || '',
+      HighlightEntry: data.HighlightEntry || false,
+      PendingAmount: data.PendingAmount || 0,
+      ReceivedAmount: data.ReceivedAmount || 0,
+      total_price: data.total_price || 0,
+    });
+
+    // Populate services if available and set them as disabled
+    if (data.services && Array.isArray(data.services)) {
+      this.FormArray.clear();
+      data.services.forEach((service: any) => {
+        this.FormArray.push(this.fb.group({
+          serviceId: [{ value: service.serviceId || null, disabled: true }],
+          portalId: [{ value: service.portalId || 0, disabled: true }],
+          qty: [{ value: service.qty || 1, disabled: true }],
+          price: [{ value: service.price || 0, disabled: true }],
+          purchase_price: [{ value: service.purchase_price || 0, disabled: true }],
+          discount: [{ value: service.discount || 0, disabled: true }],
+          description: [{ value: service.description || null, disabled: true }],
+        }));
+      });
+    }
+
+    this.calculateTotalPrice(); // Ensure total price is updated
   }
 
   Getservices() {
     this.serviceService.Getservices().subscribe({
       next: (res: any) => {
-       
         this.ServiceList = res;
+      },
+    });
+  }
+
+  GetPortals() {
+    this.portalService.GetPortals().subscribe({
+      next: (res: any) => {
+        this.portalList = res;
       },
     });
   }
@@ -67,12 +128,11 @@ export class SaleAddEditComponent implements OnInit {
     const newRow = this.fb.group({
       serviceId: [null],
       portalId: [0],
-      description: [null],
+      qty: [1],
       price: [0],
+      purchase_price: [0],
       discount: [0],
-      commission_price: [0],
-      subamount: [0],
-      amount: [0]
+      description: [null],
     });
     this.FormArray.push(newRow);
     this.calculateTotalPrice(); // Update total when adding a row
@@ -88,16 +148,11 @@ export class SaleAddEditComponent implements OnInit {
     const selectedService = this.ServiceList.find(service => service.id == selectedId);
 
     if (selectedService) {
-
       // Patch values into the form array
       this.FormArray.at(index).patchValue({
         portalId: selectedService.portalId,
-        price: selectedService.price,
-        commission_price: selectedService.commission_price,
-        subamount: selectedService.price,
-        amount: selectedService.price - selectedService.commission_price
+        purchase_price: selectedService.purchase_price,
       });
-
       // Recalculate total price
       this.calculateTotalPrice();
     }
@@ -105,15 +160,14 @@ export class SaleAddEditComponent implements OnInit {
 
   calculateTotalPrice() {
     let total = this.FormArray.controls.reduce((sum, control) => {
-      return sum + (control.get('amount')?.value || 0);
-    }, 0);
-    let subtotal = this.FormArray.controls.reduce((sum, control) => {
       let price = control.get('price')?.value || 0;
       let discount = control.get('discount')?.value || 0;
-      return sum + (price - discount);
+      let qty = control.get('qty')?.value || 1; // Default qty to 1 if not provided
+
+      return sum + (price - discount) * qty;
     }, 0);
+
     this.myForm.patchValue({ total_price: total });
-    this.myForm.patchValue({ subtotal_price: subtotal });
   }
 
   // Submit function
@@ -122,26 +176,27 @@ export class SaleAddEditComponent implements OnInit {
       let formValue = this.myForm.value;
 
       formValue.services = formValue.services.map((service: any) => {
-        const updatedCommissionPrice = service.commission_price - service.discount; // Subtract discount from commission_price
-        const updatedAmount = service.amount + service.discount; // Add discount to amount
+        const updatedCommissionPrice = service.price - service.discount; // Price after discount
+        const commissionAmount = service.price - service.purchase_price - service.discount; // Commission calculation
 
         return {
           ...service,
-          commission_price: updatedCommissionPrice, // Updated commission_price
-          amount: updatedAmount, // Updated amount
+          price: updatedCommissionPrice, // Updated price after discount
+          commission_amount: commissionAmount // Store commission amount
         };
       });
 
       // Calculate total_price by summing up all updated amounts
       formValue.total_price = formValue.services.reduce(
-        (total: number, service: any) => total + service.amount,
+        (total: number, service: any) => total + service.price,
         0
       );
 
-      if (this.Data && this.Data.id) {
+      if (this.salesData && this.salesData?.id) {
         // Update an existing Service
-        this.salesService.Updatesales(this.Data.id, formValue).subscribe({
+        this.salesService.Updatesales(this.salesData?.id, formValue).subscribe({
           next: (response) => {
+            console.log('sales updated successfully', response);
             this.router.navigate(['/admin/sales']); // Navigate back to the  list
           },
           error: (error) => {
@@ -152,6 +207,7 @@ export class SaleAddEditComponent implements OnInit {
         // Add a new Service
         this.salesService.Addsales(formValue).subscribe({
           next: (response) => {
+            console.log('sales added successfully', response);
             this.router.navigate(['/admin/sales']); // Navigate back to the list
           },
           error: (error) => {
@@ -160,7 +216,7 @@ export class SaleAddEditComponent implements OnInit {
         });
       }
     } else {
-      
+      console.log("Form is invalid");
     }
   }
 

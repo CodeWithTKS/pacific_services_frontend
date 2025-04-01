@@ -13,6 +13,10 @@ export const SalesRoutingModule: Routes = [
     component: SaleAddEditComponent // Set the default component for this module
   },
   {
+    path: 'edit/:id',
+    component: SaleAddEditComponent // Set the default component for this module
+  },
+  {
     path: 'manual/add',
     component: ManualSalesComponent // Set the default component for this module
   },

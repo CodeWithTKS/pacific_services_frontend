@@ -99,9 +99,10 @@
                         (click)="updateBalancePortal(portal)">Update Balance</button>
                     <button mat-button color="primary" style="margin-right: 10px;"
                         (click)="viewPortal(portal)">view</button>
-                    <button mat-button color="primary" style="margin-right: 10px;"
-                        (click)="editPortal(portal)">Edit</button>
-                    <button mat-button color="warn" (click)="deleteItem(portal.PortalID)">Delete</button>
+                    <button mat-button color="primary" style="margin-right: 10px;" (click)="editPortal(portal)"
+                        *ngIf="Role === 'Admin'">Edit</button>
+                    <button mat-button color="warn" (click)="deleteItem(portal.PortalID)"
+                        *ngIf="Role === 'Admin'">Delete</button>
                 </td>
                 <td mat-footer-cell *matFooterCellDef style="background: #004d99; color: white; padding: 10px;">
                 </td>

@@ -1,0 +1,92 @@
+<div style=" padding: 20px;">
+    <div class="">
+        <h3 class="m-0 font">Vendor List</h3>
+    </div>
+    <div class="desktop phone justify-content-between align-content-center mt-3">
+        <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search by Name, Code, or Contact">
+        </mat-form-field>
+        <div class="desktop phone gap-3">
+            <button mat-flat-button (click)="excelDownload('Vendor-list')">Export To Excel</button>
+            <button mat-flat-button (click)="addVendor()">Add Vendor</button>
+        </div>
+    </div>
+    <div class="table-responsive" style="margin-top: 20px;">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 sort"
+            style="width: 100%; border-collapse: collapse;">
+
+            <!-- Vendor ID Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">ID</th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.id }}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Name</th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.name }}</td>
+            </ng-container>
+
+            <!-- Phone Column -->
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Phone</th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.phone }}</td>
+            </ng-container>
+
+            <!-- Main Balance Column -->
+            <ng-container matColumnDef="main_balance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Main Balance</th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.main_balance | currency:'INR' }}
+                </td>
+            </ng-container>
+
+            <!-- Virtual Balance Column -->
+            <ng-container matColumnDef="virtual_balance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Virtual Balance</th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">{{ Vendor.virtual_balance | currency:'INR'
+                    }}
+                </td>
+            </ng-container>
+
+            <!-- Created At Column -->
+            <ng-container matColumnDef="created_at">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    style="background: #004d99; color: white; padding: 10px;">Created At</th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">
+                    {{ Vendor.created_at | date: 'dd/MM/yyyy, h:mm a' }}
+                </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef style="background: #004d99; color: white; padding: 10px;">Actions
+                </th>
+                <td mat-cell *matCellDef="let Vendor" style="padding: 10px;">
+                    <button mat-button color="primary" style="margin-right: 10px;"
+                        (click)="portalBalance(Vendor)">Portal Transfer</button>
+                    <button mat-button color="primary" style="margin-right: 10px;"
+                        (click)="updateBalance(Vendor)">Update Balance</button>
+                    <button mat-button color="primary" style="margin-right: 10px;" (click)="view(Vendor)">view</button>
+                    <button mat-button color="primary" style="margin-right: 10px;" (click)="editVendor(Vendor)"
+                        *ngIf="Role === 'Admin'">Edit</button>
+                    <button mat-button color="warn" (click)="deleteVendor(Vendor.id)"
+                        *ngIf="Role === 'Admin'">Delete</button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #004d99;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #ddd;"></tr>
+        </table>
+
+        <!-- Pagination -->
+        <mat-paginator [length]="UserList.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons></mat-paginator>
+    </div>
+</div>

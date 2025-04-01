@@ -4,14 +4,13 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { MatButtonModule } from '@angular/material/button';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import moment from 'moment';
 import { ExcelService } from '../../../services/excel.service';
 import { salesService } from '../../../services/sales.service';
@@ -21,7 +20,7 @@ import { salesService } from '../../../services/sales.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDatepickerModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule, RouterModule,
-    MatInputModule, MatButtonModule, MatSortModule, MatDialogModule, MatSelectModule],
+    MatInputModule, MatButtonModule, MatSortModule, MatSelectModule],
   providers: [provideNativeDateAdapter()],
   templateUrl: './sales-list.component.html',
   styleUrl: './sales-list.component.css'
@@ -48,7 +47,7 @@ export class SalesListComponent implements OnInit, AfterViewInit {
 
   constructor(private salesService: salesService,
     private ExcelService: ExcelService,
-    private dialog: MatDialog, private fb: FormBuilder) {
+    private router: Router, private fb: FormBuilder) {
     this.range = this.fb.group({
       start: [null],
       end: [null],
@@ -70,7 +69,7 @@ export class SalesListComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.dataSource.data = res.map((item: any) => ({
           ...item,
-          total_commission_price: item.services.reduce((sum: number, service: any) => sum + service.commission_price, 0),
+          total_commission_price: item.services.reduce((sum: number, service: any) => sum + service.commission_amount, 0),
           service_names: item.services.map((service: any) => service.service_name).join(', ') // Combine service names in one line
         }));
         this.SaleList = this.dataSource.data;
@@ -136,7 +135,13 @@ export class SalesListComponent implements OnInit, AfterViewInit {
     const noServiceId = !Sale.services?.some((service: { serviceId: any }) => service.serviceId);
     const hasCommissionPrice = Sale.services?.some((service: { commission_price: number }) => service.commission_price > 0);
     return noServiceId && !hasCommissionPrice;
-  }  
+  }
+
+  editSales(sales: any): void {
+    this.router.navigate([`/admin/sales/edit/${sales.id}`], {
+      state: { salesData: sales } // Pass portal data using state
+    });
+  }
 
   excelDownload(title: string) {
     if (!this.SaleList || this.SaleList.length === 0) {
