@@ -9,51 +9,56 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Router, RouterModule } from '@angular/router';
-import { salesService } from '../../../services/sales.service';
 import { serviceService } from '../../../services/service.service';
 import { portalService } from '../../../services/portal.service';
+import { pancardService } from '../../../services/panCard.service';
+import { userService } from '../../../services/user.service';
 
 @Component({
-  selector: 'app-sale-add-edit',
+  selector: 'app-pan-card-service-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatFormFieldModule, MatInputModule, MatButtonModule, MatCheckboxModule,
     RouterModule, MatSelectModule, MatIconModule, MatDialogModule],
-  templateUrl: './sale-add-edit.component.html',
-  styleUrl: './sale-add-edit.component.css'
+  templateUrl: './pan-card-service-add-edit.component.html',
+  styleUrl: './pan-card-service-add-edit.component.css'
 })
-export class SaleAddEditComponent implements OnInit {
+export class PanCardServiceAddEditComponent implements OnInit {
   myForm!: FormGroup;
   isEditMode: boolean = false; // Default to 'false' for adding a Service
   Data: any;
   ServiceList: any[] = [];
   paymentTypes: string[] = ['Cash', 'Online'];
   workStatus: string[] = ['Pending', 'Completed', 'Rejected'];
-  salesData: any;
+  panCardData: any;
   portalList: any[] = [];
+  VendorList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private serviceService: serviceService,
-    private salesService: salesService,
+    private pancardService: pancardService,
     private portalService: portalService,
+    private userService: userService,
     private router: Router) {
     this.createForm();
   }
 
   ngOnInit(): void {
-    this.salesData = history.state.salesData;
-    if (this.salesData?.id) {
+    this.panCardData = history.state.panCardData;
+    if (this.panCardData?.id) {
       this.isEditMode = true;
-      this.populateForm(this.salesData);
+      this.populateForm(this.panCardData);
     }
     this.Getservices();
     this.GetPortals();
+    this.GetVendor();
   }
 
   createForm(): void {
     this.myForm = this.fb.group({
       name: ['', [Validators.required]],
+      VendorID: [''],
       phone: [''],
       UID: [''],
       paymentType: [''],
@@ -63,15 +68,16 @@ export class SaleAddEditComponent implements OnInit {
       comments: [],
       workStatus: [],
       HighlightEntry: [false],
-      PendingAmount: [],
-      ReceivedAmount: [],
-      total_price: ['', [Validators.required]]
+      PendingAmount: [0],
+      ReceivedAmount: [0],
+      total_price: ['0', [Validators.required]]
     })
   }
 
   populateForm(data: any): void {
     this.myForm.patchValue({
       name: data.name || '',
+      VendorID: data.VendorID,
       phone: data.phone || '',
       UID: data.UID || '',
       paymentType: data.paymentType || '',
@@ -108,12 +114,19 @@ export class SaleAddEditComponent implements OnInit {
     this.serviceService.Getservices().subscribe({
       next: (res: any) => {
         // Filter services where portalId > 0
-        this.ServiceList = res.filter((service: any) => service.portalId > 0);
+        this.ServiceList = res.filter((service: any) => service.portalId == 0);
         console.log("Filtered Response:", this.ServiceList);
       },
     });
   }
 
+  GetVendor() {
+    this.userService.Getuser().subscribe({
+      next: (res: any) => {
+        this.VendorList = res;
+      }
+    })
+  }
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
@@ -152,7 +165,6 @@ export class SaleAddEditComponent implements OnInit {
     if (selectedService) {
       // Patch values into the form array
       this.FormArray.at(index).patchValue({
-        portalId: selectedService.portalId,
         purchase_price: selectedService.purchase_price,
       });
       // Recalculate total price
@@ -194,26 +206,26 @@ export class SaleAddEditComponent implements OnInit {
         0
       );
 
-      if (this.salesData && this.salesData?.id) {
+      if (this.panCardData && this.panCardData?.id) {
         // Update an existing Service
-        this.salesService.Updatesales(this.salesData?.id, formValue).subscribe({
+        this.pancardService.Updatepancard(this.panCardData?.id, formValue).subscribe({
           next: (response) => {
-            console.log('sales updated successfully', response);
-            this.router.navigate(['/admin/sales']); // Navigate back to the  list
+            console.log('pancard updated successfully', response);
+            this.router.navigate(['/admin/panCard']); // Navigate back to the  list
           },
           error: (error) => {
-            console.error('Error updating sales', error);
+            console.error('Error updating pancard', error);
           }
         });
       } else {
         // Add a new Service
-        this.salesService.Addsales(formValue).subscribe({
+        this.pancardService.Addpancard(formValue).subscribe({
           next: (response) => {
-            console.log('sales added successfully', response);
-            this.router.navigate(['/admin/sales']); // Navigate back to the list
+            console.log('pancard added successfully', response);
+            this.router.navigate(['/admin/panCard']); // Navigate back to the list
           },
           error: (error) => {
-            console.error('Error adding sales', error);
+            console.error('Error adding pancard', error);
           }
         });
       }
@@ -227,3 +239,4 @@ export class SaleAddEditComponent implements OnInit {
     return this.myForm.controls;
   }
 }
+

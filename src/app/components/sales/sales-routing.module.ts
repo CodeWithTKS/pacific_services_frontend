@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
-import { SalesListComponent } from './sales-list/sales-list.component';
 import { SaleAddEditComponent } from './sale-add-edit/sale-add-edit.component';
-import { ManualSalesComponent } from './manual-sales/manual-sales.component';
+import { SalesListComponent } from './sales-list/sales-list.component';
 
 export const SalesRoutingModule: Routes = [
   {
@@ -15,13 +14,5 @@ export const SalesRoutingModule: Routes = [
   {
     path: 'edit/:id',
     component: SaleAddEditComponent // Set the default component for this module
-  },
-  {
-    path: 'manual/add',
-    component: ManualSalesComponent // Set the default component for this module
-  },
-  {
-    path: 'manual/edit/:id',
-    component: ManualSalesComponent // Set the default component for this module
   },
 ]

@@ -54,7 +54,7 @@ export class ServiceAddEditComponent implements OnInit {
   // Creating the form group with validations
   createForm(): void {
     this.myForm = this.fb.group({
-      portalId: ['', [Validators.required]],
+      portalId: ['0'],
       service_name: ['', [Validators.required]],
       purchase_price: ['', [Validators.required]],
     });

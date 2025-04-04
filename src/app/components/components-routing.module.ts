@@ -65,5 +65,10 @@ export const AdminRoutingModule: Routes = [{
       loadChildren: () => import('./sales/sales-routing.module').then(m => m.SalesRoutingModule),
       canActivate: [AuthGuard]
     },
+    {
+      path: 'panCard',
+      loadChildren: () => import('./pan-card-service/pan-card-service-routing.module').then(m => m.PanCardServiceRoutingModule),
+      canActivate: [AuthGuard]
+    },
   ]
 }];
