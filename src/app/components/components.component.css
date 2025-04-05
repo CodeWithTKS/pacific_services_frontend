@@ -1,0 +1,24 @@
+.layout-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Full height */
+}
+
+.main-content {
+    flex: 1;
+    /* Pushes footer down */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    /* Adds spacing */
+}
+
+.footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #f1f1f1;
+    font-size: 14px;
+    color: #555;
+    width: 100%;
+}
