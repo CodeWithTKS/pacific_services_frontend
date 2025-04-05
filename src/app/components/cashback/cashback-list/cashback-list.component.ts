@@ -122,11 +122,13 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
   excelDownload(title: string) {
     // Assuming CashbackList contains the list of Cashbacks
     let dataToExport = this.CashbackList.map((x: any) => ({
-      id: x.id,
-      Name: x.Cashback_name,
-      Price: x.price,
-      CommissionPrice: x.commission_price,
-      CreatedAt: x.created_at
+      ID: x.id,
+      Portal_Name: x.portalName,
+      Portal_ID: x.portalId,
+      Balance: x.balance,
+      Remark: x.remark,
+      Type: x.type,
+      Date: new Date(x.date).toLocaleString()
     }));
 
     // Prepare the data to export by converting each row to its values

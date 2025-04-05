@@ -134,10 +134,15 @@ export class UserListComponent implements OnInit, AfterViewInit {
   excelDownload(title: string) {
     // Assuming UserList contains the list of users
     let dataToExport = this.UserList.map((x: any) => ({
-      id: x.id,
-      Name: x.name,
-      Phone: x.phone,
-      CreatedAt: x.created_at
+      ID: x.login_id,
+      Email: x.email,
+      Role: x.role,
+      Subscription_Status: x.subscription_status,
+      Subscription_Expiry: x.subscription_expiry
+        ? new Date(x.subscription_expiry).toLocaleDateString()
+        : 'N/A',
+      Created_At: new Date(x.created_at).toLocaleString(),
+      Updated_At: new Date(x.updated_at).toLocaleString()
     }));
 
     // Prepare the data to export by converting each row to its values

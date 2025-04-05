@@ -78,7 +78,7 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
     const filters = this.filters || {}; // Default to an empty object if no filters provided
     this.fundTransferService.GetfundTransfers(filters).subscribe({
       next: (res: any) => {
-       
+
         this.dataSource.data = res;
         this.fundList = res;
       },
@@ -91,7 +91,7 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
   GetPortals(): void {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
+
         this.portalList = res;
       }
     })
@@ -184,7 +184,7 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        
+
         this.fundTransferService.DeletefundTransfer(TransferID).subscribe({
           next: (response) => {
             this.GetfundTransfers();
@@ -195,7 +195,7 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        
+
       }
     });
   }
@@ -203,34 +203,32 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
   excelDownload(title: string): void {
     // Assuming contains the list of portals
     let dataToExport = this.fundList.map((x: any) => ({
-      TransferID: x.TransferID,
-      TransactionNo: x.TransactionNo,
-      portalName: x.portalName,
-      ACNo: x.ACNo,
-      LastName: x.LastName,
-      Date: x.Date,
-      Block: x.Block,
-      FirstName: x.FirstName,
-      ContactNo: x.ContactNo,
-      IFSCNo: x.IFSCNo,
-      HighlightEntry: x.HighlightEntry,
-      Cash500: x.Cash500,
-      Cash100: x.Cash100,
-      Cash50: x.Cash50,
-      Cash20: x.Cash20,
-      Cash10: x.Cash10,
-      Cash5: x.Cash5,
-      Cash1: x.Cash1,
-      TotalCash: x.TotalCash,
-      CollectionAmt: x.CollectionAmt,
-      FixedAmt: x.FixedAmt,
-      BankCharge: x.BankCharge,
+      ID: x.TransferID,
+      Portal_Name: x.portalName,
+      Portal_ID: x.portalId,
+      Transaction_No: x.TransactionNo,
+      First_Name: x.FirstName,
+      Last_Name: x.LastName,
+      Contact_No: x.ContactNo,
+      IFSC_No: x.IFSCNo,
+      Customer_UID: x.customerUID,
+      Beneficiary_UID: x.beneficiaryUID,
+      Transaction_Type: x.TransactionType,
+      Transaction_Category: x.TransactionCategory,
+      Cash_500: x.Cash500,
+      Cash_100: x.Cash100,
+      Cash_50: x.Cash50,
+      Cash_20: x.Cash20,
+      Cash_10: x.Cash10,
+      Cash_5: x.Cash5,
+      Cash_1: x.Cash1,
+      Total_Cash: x.TotalCash,
+      Collection_Amount: x.CollectionAmt,
       Extra: x.Extra,
-      BankDeposit: x.BankDeposit,
-      CustDeposit: x.CustDeposit,
-      CreatedAt: x.CreatedAt
+      Transaction_Date: new Date(x.TransactionDate).toLocaleString(),
+      Created_At: new Date(x.CreatedAt).toLocaleString(),
+      Highlight_Entry: x.HighlightEntry
     }));
-
 
     // Prepare the data to export by converting each row to its values
     this.dataForExcel = []; // Clear previous data
@@ -238,7 +236,7 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    
+
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

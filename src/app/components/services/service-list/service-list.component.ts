@@ -134,12 +134,12 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
   excelDownload(title: string) {
     // Assuming ServiceList contains the list of Services
     let dataToExport = this.ServiceList.map((x: any) => ({
-      id: x.id,
-      Name: x.service_name,
-      Price: x.price,
-      CommissionPrice: x.commission_price,
-      CreatedAt: x.created_at
-    }));
+      ID: x.id,
+      Portal_ID: x.portalId === 0 ? 'N/A' : x.portalId,
+      Service_Name: x.service_name,
+      Purchase_Price: x.purchase_price,
+      Created_At: new Date(x.created_at).toLocaleString()
+    }));    
 
     // Prepare the data to export by converting each row to its values
     this.dataForExcel = []; // Clear previous data

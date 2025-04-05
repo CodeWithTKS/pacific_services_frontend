@@ -86,7 +86,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
     const filters = this.filters || {}; // Default to an empty object if no filters provided
     this.moneyTransferService.GetMoneyTransfers(filters).subscribe({
       next: (res: any) => {
-       
+
         this.dataSource.data = res;
         this.moneyList = res;
       },
@@ -99,7 +99,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   GetPortals(): void {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
+
         this.portalList = res;
       }
     })
@@ -137,32 +137,32 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
       .map((transfer: any) => transfer.Extra)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
-  
+
   getTotalCollectionAmt() {
     return this.dataSource.data
       .filter((transfer: any) => transfer.self !== 1)
       .map((transfer: any) => transfer.CollectionAmt)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
-  
+
   getTotalFixedAmt() {
     return this.dataSource.data
       .map((transfer: any) => transfer.FixedAmt)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
-  
+
   getTotalBankCharge() {
     return this.dataSource.data
       .map((transfer: any) => transfer.BankCharge)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
-  
+
   getTotalBankDeposit() {
     return this.dataSource.data
       .map((transfer: any) => transfer.BankDeposit)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
-  
+
   getTotalCustDeposit() {
     return this.dataSource.data
       .map((transfer: any) => transfer.CustDeposit)
@@ -224,7 +224,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        
+
         this.moneyTransferService.DeleteMoneyTransfer(TransferID).subscribe({
           next: (response) => {
             this.GetMoneyTransfers();
@@ -235,7 +235,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
           }
         });
       } else {
-        
+
       }
     });
   }
@@ -243,34 +243,35 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   excelDownload(title: string): void {
     // Assuming contains the list of portals
     let dataToExport = this.moneyList.map((x: any) => ({
-      TransferID: x.TransferID,
-      TransactionNo: x.TransactionNo,
-      portalName: x.portalName,
-      ACNo: x.ACNo,
-      LastName: x.LastName,
-      Date: x.Date,
-      Block: x.Block,
-      FirstName: x.FirstName,
-      ContactNo: x.ContactNo,
-      IFSCNo: x.IFSCNo,
-      HighlightEntry: x.HighlightEntry,
-      Cash500: x.Cash500,
-      Cash100: x.Cash100,
-      Cash50: x.Cash50,
-      Cash20: x.Cash20,
-      Cash10: x.Cash10,
-      Cash5: x.Cash5,
-      Cash1: x.Cash1,
-      TotalCash: x.TotalCash,
-      CollectionAmt: x.CollectionAmt,
-      FixedAmt: x.FixedAmt,
-      BankCharge: x.BankCharge,
+      Transfer_ID: x.TransferID,
+      Transaction_No: x.TransactionNo,
+      Portal_Name: x.portalName,
+      Vendor_Name: x.vendorName,
+      Account_No: x.ACNo,
+      IFSC_Code: x.IFSCNo,
+      First_Name: x.FirstName,
+      Last_Name: x.LastName,
+      Contact_No: x.ContactNo,
+      Transaction_Date: new Date(x.TransactionDate).toLocaleString(),
+      Cash_500: x.Cash500,
+      Cash_100: x.Cash100,
+      Cash_50: x.Cash50,
+      Cash_20: x.Cash20,
+      Cash_10: x.Cash10,
+      Cash_5: x.Cash5,
+      Cash_1: x.Cash1,
+      Total_Cash: x.TotalCash,
+      Collection_Amount: x.CollectionAmt,
+      Discount: x.Discount,
+      Fixed_Amount: x.FixedAmt,
+      Bank_Charge: x.BankCharge,
       Extra: x.Extra,
-      BankDeposit: x.BankDeposit,
-      CustDeposit: x.CustDeposit,
-      CreatedAt: x.CreatedAt
+      Bank_Deposit: x.BankDeposit,
+      Customer_Deposit: x.CustDeposit,
+      Comments: x.comments || 'N/A',
+      Created_At: new Date(x.CreatedAt).toLocaleString(),
+      Highlight_Entry: x.HighlightEntry ? 'Yes' : 'No'
     }));
-
 
     // Prepare the data to export by converting each row to its values
     this.dataForExcel = []; // Clear previous data
@@ -278,7 +279,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    
+
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);

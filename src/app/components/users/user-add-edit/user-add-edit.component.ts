@@ -48,28 +48,29 @@ export class UserAddEditComponent implements OnInit {
       // Step 1: Create User First
       this.userService.CreateUser(formData).subscribe({
         next: (userResponse) => {
-          if (userResponse && userResponse.data && userResponse.data.userId) {
-            const userId = userResponse.data.userId; // Extract userId
+          // if (userResponse && userResponse.data && userResponse.data.userId) {
+          //   const userId = userResponse.data.userId; // Extract userId
 
-            // Step 2: Create Razorpay Order
-            this.razorpayService.createOrder(role).subscribe({
-              next: (order) => {
-                // Step 3: Open Razorpay Payment UI
-                this.razorpayService.openPayment(order, role, userId,
-                  (paymentResponse: any) => {
-                    console.log('Payment Success:', paymentResponse);
-                    this.dialogRef.close(true);
-                  },
-                  (paymentError: any) => {
-                    console.error('Payment failed', paymentError);
-                  }
-                );
-              },
-              error: (error) => {
-                console.error('Error creating Razorpay order', error);
-              }
-            });
-          }
+          //   // Step 2: Create Razorpay Order
+          //   this.razorpayService.createOrder(role).subscribe({
+          //     next: (order) => {
+          //       // Step 3: Open Razorpay Payment UI
+          //       this.razorpayService.openPayment(order, role, userId,
+          //         (paymentResponse: any) => {
+          //           console.log('Payment Success:', paymentResponse);
+          //           this.dialogRef.close(true);
+          //         },
+          //         (paymentError: any) => {
+          //           console.error('Payment failed', paymentError);
+          //         }
+          //       );
+          //     },
+          //     error: (error) => {
+          //       console.error('Error creating Razorpay order', error);
+          //     }
+          //   });
+          // }
+          this.dialogRef.close(true);
         },
         error: (error) => {
           console.error('Error adding User', error);

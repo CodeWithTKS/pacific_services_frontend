@@ -78,7 +78,7 @@ export class AepsListComponent implements OnInit, AfterViewInit {
     const filters = this.filters || {}; // Default to an empty object if no filters provided
     this.AepsService.GetMoneyTransfers(filters).subscribe({
       next: (res: any) => {
-       
+
         this.dataSource.data = res;
         this.moneyList = res;
       },
@@ -91,7 +91,7 @@ export class AepsListComponent implements OnInit, AfterViewInit {
   GetPortals(): void {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
+
         this.portalList = res;
       }
     })
@@ -212,32 +212,38 @@ export class AepsListComponent implements OnInit, AfterViewInit {
   excelDownload(title: string): void {
     // Assuming contains the list of portals
     let dataToExport = this.moneyList.map((x: any) => ({
-      TransferID: x.TransferID,
-      TransactionNo: x.TransactionNo,
-      portalName: x.portalName,
-      ACNo: x.ACNo,
-      LastName: x.LastName,
-      Date: x.Date,
-      Block: x.Block,
-      FirstName: x.FirstName,
-      ContactNo: x.ContactNo,
-      IFSCNo: x.IFSCNo,
-      HighlightEntry: x.HighlightEntry,
-      Cash500: x.Cash500,
-      Cash100: x.Cash100,
-      Cash50: x.Cash50,
-      Cash20: x.Cash20,
-      Cash10: x.Cash10,
-      Cash5: x.Cash5,
-      Cash1: x.Cash1,
-      TotalCash: x.TotalCash,
-      CollectionAmt: x.CollectionAmt,
-      FixedAmt: x.FixedAmt,
-      BankCharge: x.BankCharge,
+      Transfer_ID: x.TransferID,
+      Transaction_No: x.TransactionNo,
+      Portal_Name: x.portalName,
+      Portal_ID: x.portalId,
+      Vendor_Name: x.vendorName,
+      Account_No: x.ACNo,
+      IFSC_No: x.IFSCNo,
+      First_Name: x.FirstName,
+      Last_Name: x.LastName,
+      Contact_No: x.ContactNo,
+      Transaction_Date: new Date(x.TransactionDate).toLocaleString(),
+      Transaction_Type: x.TransactionType,
+      Passbook_Issue: x.passbookIssue,
+      Cash_500: x.Cash500,
+      Cash_100: x.Cash100,
+      Cash_50: x.Cash50,
+      Cash_20: x.Cash20,
+      Cash_10: x.Cash10,
+      Cash_5: x.Cash5,
+      Cash_1: x.Cash1,
+      Total_Cash: x.TotalCash,
+      Collection_Amount: x.CollectionAmt,
+      Fixed_Amount: x.FixedAmt,
+      Bank_Charge: x.BankCharge,
       Extra: x.Extra,
-      BankDeposit: x.BankDeposit,
-      CustDeposit: x.CustDeposit,
-      CreatedAt: x.CreatedAt
+      Bank_Deposit: x.BankDeposit,
+      Customer_Deposit: x.CustDeposit,
+      AOB: x.AOB,
+      Pending_Amount: x.PendingAmount,
+      Received_Amount: x.ReceivedAmount,
+      Highlight_Entry: x.HighlightEntry ? 'Yes' : 'No',
+      Created_At: new Date(x.CreatedAt).toLocaleString()
     }));
 
 

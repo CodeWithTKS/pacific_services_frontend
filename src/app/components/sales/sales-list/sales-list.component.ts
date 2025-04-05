@@ -152,11 +152,19 @@ export class SalesListComponent implements OnInit, AfterViewInit {
     // Map SaleList to extract relevant fields
     let dataToExport = this.SaleList.map((x: any) => ({
       ID: x.id,
-      Name: x.user_name, // Adjusted to match your JSON
-      Created_At: x.created_at,
+      Name: x.name,
+      Phone: x.phone,
+      UID: x.UID || 'N/A',
+      Payment_Type: x.paymentType || 'N/A',
+      Transfer_Type: x.TransferType || 'N/A',
+      Portal_ID: x.portalId ?? 'N/A',
+      Services: x.services.map((s: any) => s.service_name).join(', ') || 'N/A',
       Total_Price: x.total_price,
-      Total_Commission: x.total_commission_price,
-      Services: x.service_names
+      Comments: x.comments || 'N/A',
+      Work_Status: x.workStatus || 'N/A',
+      Pending_Amount: x.PendingAmount,
+      Received_Amount: x.ReceivedAmount,
+      Created_At: new Date(x.created_at).toLocaleString()
     }));
 
     if (dataToExport.length === 0) {

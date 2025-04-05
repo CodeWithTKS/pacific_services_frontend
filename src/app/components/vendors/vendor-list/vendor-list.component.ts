@@ -160,10 +160,12 @@ export class VendorListComponent implements OnInit, AfterViewInit {
   excelDownload(title: string) {
     // Assuming UserList contains the list of users
     let dataToExport = this.UserList.map((x: any) => ({
-      id: x.id,
+      ID: x.id,
       Name: x.name,
       Phone: x.phone,
-      CreatedAt: x.created_at
+      Main_Balance: x.main_balance,
+      Virtual_Balance: x.virtual_balance,
+      Created_At: new Date(x.created_at).toLocaleString()
     }));
 
     // Prepare the data to export by converting each row to its values
