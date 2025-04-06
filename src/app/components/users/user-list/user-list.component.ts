@@ -14,13 +14,14 @@ import { userService } from '../../../services/user.service';
 import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
 import { UserAddEditComponent } from '../user-add-edit/user-add-edit.component';
 import { RazorpayService } from '../../../services/razorpay.service';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule,
-    MatInputModule, MatButtonModule,
+    MatInputModule, MatButtonModule, MatSnackBarModule,
     MatSortModule, MatDialogModule],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css'
@@ -37,6 +38,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     private ExcelService: ExcelService,
     private dialog: MatDialog,
     private router: Router,
+    private snackBar: MatSnackBar,
     private razorpayService: RazorpayService,
   ) { }
 
@@ -96,9 +98,11 @@ export class UserListComponent implements OnInit, AfterViewInit {
         this.userService.Deleteuser(userId).subscribe({
           next: (response) => {
             this.GetOperator();
+            this.openSnackBar('Deleted successfully!', 'Close');
             // Optionally refresh the list or navigate
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error deleting user:', error);
           }
         });
@@ -165,8 +169,15 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the excel file
     this.ExcelService.generateExcel(reportData);
-
+    this.openSnackBar('Excel Download successfully!', 'Close');
     // Clear data after export
     this.dataForExcel = [];
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

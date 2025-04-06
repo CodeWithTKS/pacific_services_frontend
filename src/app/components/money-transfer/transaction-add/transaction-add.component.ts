@@ -27,7 +27,7 @@ export class TransactionAddComponent implements OnInit {
     public dialogRef: MatDialogRef<TransactionAddComponent>,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-    
+
     this.moneyData = data
   }
 
@@ -44,6 +44,7 @@ export class TransactionAddComponent implements OnInit {
         this.moneyTransferService.UpdateMoneyTransferNo(this.moneyData.TransferID, formData).subscribe({
           next: (response) => {
             this.onCancel();
+            this.openSnackBar('Updated successfully!', 'Close');
           },
           error: (error) => {
             console.error('Error updating money-transfer', error);
@@ -61,5 +62,13 @@ export class TransactionAddComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close(false);
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

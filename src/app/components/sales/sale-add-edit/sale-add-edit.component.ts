@@ -8,15 +8,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
+import { portalService } from '../../../services/portal.service';
 import { salesService } from '../../../services/sales.service';
 import { serviceService } from '../../../services/service.service';
-import { portalService } from '../../../services/portal.service';
 
 @Component({
   selector: 'app-sale-add-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatSnackBarModule,
     MatFormFieldModule, MatInputModule, MatButtonModule, MatCheckboxModule,
     RouterModule, MatSelectModule, MatIconModule, MatDialogModule],
   templateUrl: './sale-add-edit.component.html',
@@ -36,6 +37,7 @@ export class SaleAddEditComponent implements OnInit {
     private fb: FormBuilder,
     private serviceService: serviceService,
     private salesService: salesService,
+    private snackBar: MatSnackBar,
     private portalService: portalService,
     private router: Router) {
     this.createForm();
@@ -198,22 +200,24 @@ export class SaleAddEditComponent implements OnInit {
         // Update an existing Service
         this.salesService.Updatesales(this.salesData?.id, formValue).subscribe({
           next: (response) => {
-            console.log('sales updated successfully', response);
+            this.openSnackBar('Updated successfully!', 'Close');
             this.router.navigate(['/admin/sales']); // Navigate back to the  list
           },
           error: (error) => {
             console.error('Error updating sales', error);
+            this.openSnackBar(`${error}`, 'Close');
           }
         });
       } else {
         // Add a new Service
         this.salesService.Addsales(formValue).subscribe({
           next: (response) => {
-            console.log('sales added successfully', response);
+            this.openSnackBar('Added successfully!', 'Close');
             this.router.navigate(['/admin/sales']); // Navigate back to the list
           },
           error: (error) => {
             console.error('Error adding sales', error);
+            this.openSnackBar(`${error}`, 'Close');
           }
         });
       }
@@ -225,5 +229,12 @@ export class SaleAddEditComponent implements OnInit {
   // Getter for easy access to form controls in the template
   get formControls() {
     return this.myForm.controls;
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

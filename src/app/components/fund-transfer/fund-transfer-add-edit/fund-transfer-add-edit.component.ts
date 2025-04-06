@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { fundTransferService } from '../../../services/fundTransfer.service';
 import { portalService } from '../../../services/portal.service';
@@ -20,7 +21,7 @@ import { userService } from '../../../services/user.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule,
-    MatCheckboxModule,
+    MatCheckboxModule, MatSnackBarModule,
     MatButtonModule, RouterModule, MatCardModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,6 +48,7 @@ export class FundTransferAddEditComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private portalService: portalService,
     private userService: userService,
+    private snackBar: MatSnackBar,
     private fundtransferService: fundTransferService,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
@@ -125,7 +127,6 @@ export class FundTransferAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
         this.portalList = res;
         if (this.fundData?.TransferID) {
           this.transactionForm.patchValue({
@@ -196,9 +197,11 @@ export class FundTransferAddEditComponent implements OnInit {
         this.fundtransferService.UpdatefundTransfer(this.fundData.TransferID, formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/fund-transfer']); // Navigate back to the fund-transfer list
+            this.openSnackBar('Updated successfully!', 'Close');
           },
           error: (error) => {
             console.error('Error updating fund-transfer', error);
+            this.openSnackBar(`${error}`, 'Close');
           }
         });
       } else {
@@ -206,18 +209,27 @@ export class FundTransferAddEditComponent implements OnInit {
         this.fundtransferService.AddfundTransfer(formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/fund-transfer']); // Navigate back to the fund-transfer list
+            this.openSnackBar('Added successfully!', 'Close');
           },
           error: (error) => {
             console.error('Error adding fund-transfer', error);
+            this.openSnackBar(`${error}`, 'Close');
           }
         });
       }
     } else {
-      
+
     }
   }
 
   get formControls() {
     return this.transactionForm.controls;
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

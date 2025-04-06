@@ -9,22 +9,23 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import moment from 'moment';
 import { ExcelService } from '../../../services/excel.service';
+import { fundTransferService } from '../../../services/fundTransfer.service';
 import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
 import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
-import { fundTransferService } from '../../../services/fundTransfer.service';
 import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
 
 @Component({
   selector: 'app-fund-transferlist',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDatepickerModule,
-    MatPaginatorModule, MatTableModule, MatFormFieldModule, RouterModule,
+    MatPaginatorModule, MatTableModule, MatFormFieldModule, RouterModule, MatSnackBarModule,
     MatInputModule, MatButtonModule, MatSortModule, MatDialogModule, MatSelectModule],
   providers: [provideNativeDateAdapter()],
   templateUrl: './fund-transferlist.component.html',
@@ -55,6 +56,7 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
     private router: Router,
     private userService: userService,
     private ExcelService: ExcelService,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog, private fb: FormBuilder) {
     this.range = this.fb.group({
       start: [null],
@@ -188,9 +190,11 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
         this.fundTransferService.DeletefundTransfer(TransferID).subscribe({
           next: (response) => {
             this.GetfundTransfers();
+            this.openSnackBar('Deleted successfully!', 'Close');
             // Optionally refresh the list or navigate
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error deleting Commission:', error);
           }
         });
@@ -236,8 +240,6 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-
-
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);
 
@@ -250,8 +252,16 @@ export class FundTransferlistComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the excel file
     this.ExcelService.generateExcel(reportData);
+    this.openSnackBar('Excel Download successfully!', 'Close');
 
     // Clear data after export
     this.dataForExcel = [];
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

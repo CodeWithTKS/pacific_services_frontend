@@ -15,13 +15,14 @@ import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.
 import { PortalTransferComponent } from '../portal-transfer/portal-transfer.component';
 import { UpdateVendorBalanceComponent } from '../update-vendor-balance/update-vendor-balance.component';
 import { VendorAddEditComponent } from '../vendor-add-edit/vendor-add-edit.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-vendor-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule,
-    MatInputModule, MatButtonModule,
+    MatInputModule, MatButtonModule, MatSnackBarModule,
     MatSortModule, MatDialogModule],
   templateUrl: './vendor-list.component.html',
   styleUrl: './vendor-list.component.css'
@@ -37,6 +38,7 @@ export class VendorListComponent implements OnInit, AfterViewInit {
 
   constructor(private userService: userService,
     private ExcelService: ExcelService,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private router: Router,
   ) { }
@@ -62,7 +64,6 @@ export class VendorListComponent implements OnInit, AfterViewInit {
   Getuser() {
     this.userService.Getuser().subscribe({
       next: (res: any) => {
-
         this.dataSource.data = res;
         this.UserList = res;
       },
@@ -75,7 +76,6 @@ export class VendorListComponent implements OnInit, AfterViewInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.dataSource.filter = filterValue;
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage(); // Reset to the first page after applying the filter
     }
@@ -118,10 +118,12 @@ export class VendorListComponent implements OnInit, AfterViewInit {
         this.userService.Deleteuser(userId).subscribe({
           next: (response) => {
             this.Getuser();
+            this.openSnackBar('Deleted successfully!', 'Close');
             // Optionally refresh the list or navigate
           },
           error: (error) => {
             console.error('Error deleting user:', error);
+            this.openSnackBar(`${error}`, 'Close');
           }
         });
       } else {
@@ -188,8 +190,15 @@ export class VendorListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the excel file
     this.ExcelService.generateExcel(reportData);
-
+    this.openSnackBar('Excel Download successfully!', 'Close');
     // Clear data after export
     this.dataForExcel = [];
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

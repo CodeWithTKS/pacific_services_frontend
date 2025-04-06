@@ -6,6 +6,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { cashBackService } from '../../../services/cashBack.service';
@@ -18,7 +19,7 @@ import { CashbackAddEditComponent } from '../cashback-add-edit/cashback-add-edit
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule,
-    MatInputModule, MatButtonModule,
+    MatInputModule, MatButtonModule, MatSnackBarModule,
     MatSortModule, MatDialogModule],
   templateUrl: './cashback-list.component.html',
   styleUrl: './cashback-list.component.css'
@@ -40,6 +41,7 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
 
   constructor(private cashBackService: cashBackService,
     private ExcelCashback: ExcelService,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -108,9 +110,11 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
         this.cashBackService.Deletecashback(CashbackId).subscribe({
           next: (response) => {
             this.GetCashbacks();
+            this.openSnackBar('Deleted successfully!', 'Close');
             // Optionally refresh the list or navigate
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error deleting Cashback:', error);
           }
         });
@@ -137,7 +141,7 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    
+
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);
@@ -151,8 +155,15 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel Cashback to generate the excel file
     this.ExcelCashback.generateExcel(reportData);
-
+    this.openSnackBar('Excel Download successfully!', 'Close');
     // Clear data after export
     this.dataForExcel = [];
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

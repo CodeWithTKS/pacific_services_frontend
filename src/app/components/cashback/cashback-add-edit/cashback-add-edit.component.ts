@@ -8,12 +8,13 @@ import { MatInputModule } from '@angular/material/input';
 import { portalService } from '../../../services/portal.service';
 import { MatSelectModule } from '@angular/material/select';
 import { cashBackService } from '../../../services/cashBack.service';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cashback-add-edit',
   standalone: true,
   imports: [MatButtonModule, CommonModule, ReactiveFormsModule,
-    FormsModule, MatFormFieldModule, MatInputModule,
+    FormsModule, MatFormFieldModule, MatInputModule, MatSnackBarModule,
     MatSelectModule],
   templateUrl: './cashback-add-edit.component.html',
   styleUrl: './cashback-add-edit.component.css'
@@ -27,6 +28,7 @@ export class CashbackAddEditComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private portalService: portalService,
     private cashBackService: cashBackService,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<CashbackAddEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -41,13 +43,12 @@ export class CashbackAddEditComponent implements OnInit {
       remark: ['', Validators.required],
     });
     this.GetPortals();
-   
+
   }
 
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
         this.portalList = res;
       }
     })
@@ -61,14 +62,23 @@ export class CashbackAddEditComponent implements OnInit {
     this.cashBackService.Addcashback(obj).subscribe({
       next: (response) => {
         this.dialogRef.close(true);
+        this.openSnackBar('Updated successfully!', 'Close');
       },
       error: (error) => {
         console.error('Error updating portal', error);
+        this.openSnackBar(`${error}`, 'Close');
       }
     });
   }
 
   onCancel(): void {
     this.dialogRef.close(false);
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

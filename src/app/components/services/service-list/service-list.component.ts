@@ -12,13 +12,14 @@ import { ExcelService } from '../../../services/excel.service';
 import { ServiceAddEditComponent } from '../service-add-edit/service-add-edit.component';
 import { serviceService } from '../../../services/service.service';
 import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-service-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule,
-    MatInputModule, MatButtonModule,
+    MatInputModule, MatButtonModule, MatSnackBarModule,
     MatSortModule, MatDialogModule],
   templateUrl: './service-list.component.html',
   styleUrl: './service-list.component.css'
@@ -40,6 +41,7 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
 
   constructor(private serviceService: serviceService,
     private ExcelService: ExcelService,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -63,7 +65,6 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
   Getservices() {
     this.serviceService.Getservices().subscribe({
       next: (res: any) => {
-
         this.dataSource.data = res;
         this.ServiceList = res;
       },
@@ -119,9 +120,11 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
         this.serviceService.Deleteservices(ServiceId).subscribe({
           next: (response) => {
             this.Getservices();
+            this.openSnackBar('Deleted successfully!', 'Close');
             // Optionally refresh the list or navigate
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error deleting Service:', error);
           }
         });
@@ -139,7 +142,7 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
       Service_Name: x.service_name,
       Purchase_Price: x.purchase_price,
       Created_At: new Date(x.created_at).toLocaleString()
-    }));    
+    }));
 
     // Prepare the data to export by converting each row to its values
     this.dataForExcel = []; // Clear previous data
@@ -161,8 +164,15 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the excel file
     this.ExcelService.generateExcel(reportData);
-
+    this.openSnackBar('Excel Download successfully!', 'Close');
     // Clear data after export
     this.dataForExcel = [];
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

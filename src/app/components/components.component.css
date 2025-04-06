@@ -10,8 +10,6 @@
     /* Pushes footer down */
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    /* Adds spacing */
 }
 
 .footer {

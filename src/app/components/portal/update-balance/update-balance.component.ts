@@ -6,11 +6,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { portalService } from '../../../services/portal.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-update-balance',
   standalone: true,
   imports: [MatButtonModule, CommonModule, ReactiveFormsModule,
+    MatSnackBarModule,
     FormsModule, MatFormFieldModule, MatInputModule,],
   templateUrl: './update-balance.component.html',
   styleUrl: './update-balance.component.css'
@@ -22,6 +24,7 @@ export class UpdateBalanceComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private portalService: portalService,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<UpdateBalanceComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -66,7 +69,7 @@ export class UpdateBalanceComponent implements OnInit {
       portalId: this.portalData.PortalID,
       beforeBalance: this.data?.Balance,
       balance: this.transactionForm.value?.Balance,
-      transactionType:'Update Balance',
+      transactionType: 'Update Balance',
       type: 'Add Balance',
       afterBalance: this.afterBalance,
       createdAt: new Date()
@@ -74,13 +77,22 @@ export class UpdateBalanceComponent implements OnInit {
     this.portalService.addPortalLog(logs).subscribe({
       next: (response) => {
         this.dialogRef.close(true);
+        this.openSnackBar('Updated successfully!', 'Close');
       },
       error: (error) => {
         console.error('Error updating portal', error);
+        this.openSnackBar(`${error}`, 'Close');
       }
     });
   }
   onCancel(): void {
     this.dialogRef.close(false);
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

@@ -13,11 +13,12 @@ import { serviceService } from '../../../services/service.service';
 import { portalService } from '../../../services/portal.service';
 import { pancardService } from '../../../services/panCard.service';
 import { userService } from '../../../services/user.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-pan-card-service-add-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatSnackBarModule,
     MatFormFieldModule, MatInputModule, MatButtonModule, MatCheckboxModule,
     RouterModule, MatSelectModule, MatIconModule, MatDialogModule],
   templateUrl: './pan-card-service-add-edit.component.html',
@@ -40,6 +41,7 @@ export class PanCardServiceAddEditComponent implements OnInit {
     private pancardService: pancardService,
     private portalService: portalService,
     private userService: userService,
+    private snackBar: MatSnackBar,
     private router: Router) {
     this.createForm();
   }
@@ -210,10 +212,11 @@ export class PanCardServiceAddEditComponent implements OnInit {
         // Update an existing Service
         this.pancardService.Updatepancard(this.panCardData?.id, formValue).subscribe({
           next: (response) => {
-            console.log('pancard updated successfully', response);
+            this.openSnackBar('Updated successfully!', 'Close');
             this.router.navigate(['/admin/panCard']); // Navigate back to the  list
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error updating pancard', error);
           }
         });
@@ -221,10 +224,11 @@ export class PanCardServiceAddEditComponent implements OnInit {
         // Add a new Service
         this.pancardService.Addpancard(formValue).subscribe({
           next: (response) => {
-            console.log('pancard added successfully', response);
+            this.openSnackBar('Added successfully!', 'Close');
             this.router.navigate(['/admin/panCard']); // Navigate back to the list
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error adding pancard', error);
           }
         });
@@ -237,6 +241,14 @@ export class PanCardServiceAddEditComponent implements OnInit {
   // Getter for easy access to form controls in the template
   get formControls() {
     return this.myForm.controls;
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }
 

@@ -5,11 +5,13 @@ import { Color, LegendPosition, NgxChartsModule, ScaleType } from '@swimlane/ngx
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { ExcelService } from '../../services/excel.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, NgxChartsModule,
+  imports: [CommonModule, NgxChartsModule, MatButtonModule,
     MatPaginatorModule, MatTableModule, MatSortModule
   ],
   templateUrl: './dashboard.component.html',
@@ -18,6 +20,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 export class DashboardComponent implements OnInit, AfterViewInit {
   salesData: any[] = [];
   portalList: any[] = [];
+  PaymentList: any[] = [];
   // Chart options
   showLegend = true;
   showLabels = true;
@@ -41,11 +44,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     'created_at',
   ];
   dataSource = new MatTableDataSource<any>([]);
+  dataForExcel: any[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private portalService: portalService,) { }
+  constructor(private portalService: portalService,
+    private ExcelService: ExcelService,
+  ) { }
 
   ngOnInit(): void {
     this.GetPortals();
@@ -92,8 +98,44 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   GethighlightEntry() {
     this.portalService.GethighlightEntry().subscribe({
       next: (res: any) => {
+        this.PaymentList = res;
         this.dataSource.data = res;
       }
     })
+  }
+
+  excelDownload(title: string) {
+    // Assuming ServiceList contains the list of Services
+    let dataToExport = this.PaymentList.map((x: any) => ({
+      ID: x.id,
+      Portal_ID: x.portalId === 0 ? 'N/A' : x.portalId,
+      Service_Name: x.service_name,
+      Purchase_Price: x.purchase_price,
+      Created_At: new Date(x.created_at).toLocaleString()
+    }));
+
+    // Prepare the data to export by converting each row to its values
+    this.dataForExcel = []; // Clear previous data
+    dataToExport.forEach((row: any) => {
+      this.dataForExcel.push(Object.values(row));
+    });
+
+
+
+    // Extract header names dynamically from the keys of the first object
+    let headers = Object.keys(dataToExport[0]);
+
+    // Define the report data with headers and data
+    let reportData = {
+      data: this.dataForExcel,
+      headers: headers, // Use keys as headers
+      title: title
+    };
+
+    // Call the Excel service to generate the excel file
+    this.ExcelService.generateExcel(reportData);
+
+    // Clear data after export
+    this.dataForExcel = [];
   }
 }

@@ -14,13 +14,14 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MobileTransferService } from '../../../services/mobileTransfer.service';
 import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-mobile-transfer-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule,
-    MatCheckboxModule,
+    MatCheckboxModule, MatSnackBarModule,
     MatButtonModule, RouterModule, MatCardModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,6 +48,7 @@ export class MobileTransferAddEditComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private portalService: portalService,
     private userService: userService,
+    private snackBar: MatSnackBar,
     private MobileTransferService: MobileTransferService,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
@@ -121,7 +123,6 @@ export class MobileTransferAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
         this.portalList = res;
         if (this.mobileData?.TransferID) {
           this.transactionForm.patchValue({
@@ -193,8 +194,10 @@ export class MobileTransferAddEditComponent implements OnInit {
         this.MobileTransferService.UpdatemobileTransfer(this.mobileData.TransferID, formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/mobile-transfer']); // Navigate back to the mobile-transfer list
+            this.openSnackBar('Updated successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error updating mobile-transfer', error);
           }
         });
@@ -203,18 +206,28 @@ export class MobileTransferAddEditComponent implements OnInit {
         this.MobileTransferService.AddmobileTransfer(formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/mobile-transfer']); // Navigate back to the mobile-transfer list
+            this.openSnackBar('Added successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error adding mobile-transfer', error);
           }
         });
       }
     } else {
-      
+
     }
   }
 
   get formControls() {
     return this.transactionForm.controls;
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

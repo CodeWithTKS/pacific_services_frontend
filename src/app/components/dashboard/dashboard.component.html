@@ -11,7 +11,10 @@
             </div>
         </div>
         <div class="col-xl-6 col-lg-12 ">
-            <h3 class="m-0">Pending Payments</h3>
+            <div class="desktop phone justify-content-between align-content-center">
+                <h3 class="m-0">Pending Payments</h3>
+                <button mat-flat-button (click)="excelDownload('Pending-payment-list')">Export To Excel</button>
+            </div>
             <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8  sort"
                 style="width: 100%; border-collapse: collapse;">
 

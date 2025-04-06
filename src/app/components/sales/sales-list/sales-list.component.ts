@@ -14,12 +14,14 @@ import { Router, RouterModule } from '@angular/router';
 import moment from 'moment';
 import { ExcelService } from '../../../services/excel.service';
 import { salesService } from '../../../services/sales.service';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-sales-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDatepickerModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule, RouterModule,
+    MatSnackBarModule,
     MatInputModule, MatButtonModule, MatSortModule, MatSelectModule],
   providers: [provideNativeDateAdapter()],
   templateUrl: './sales-list.component.html',
@@ -47,6 +49,7 @@ export class SalesListComponent implements OnInit, AfterViewInit {
 
   constructor(private salesService: salesService,
     private ExcelService: ExcelService,
+    private snackBar: MatSnackBar,
     private router: Router, private fb: FormBuilder) {
     this.range = this.fb.group({
       start: [null],
@@ -188,6 +191,17 @@ export class SalesListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the file
     this.ExcelService.generateExcel(reportData);
+
+    this.openSnackBar('Excel Download successfully!', 'Close');
+    // Clear data after export
+    this.dataForExcel = [];
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }
 

@@ -6,6 +6,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
@@ -16,7 +17,7 @@ import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.
 @Component({
   selector: 'app-commission-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatSnackBarModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule, RouterModule,
     MatInputModule, MatButtonModule, MatSortModule, MatDialogModule],
   templateUrl: './commission-list.component.html',
@@ -44,7 +45,7 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private commissionService: CommissionService,
-    private router: Router,
+    private router: Router, private snackBar: MatSnackBar,
     private ExcelService: ExcelService,
     private dialog: MatDialog) { }
 
@@ -60,7 +61,7 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
   GetCommissions() {
     this.commissionService.GetCommissions().subscribe({
       next: (res: any) => {
-       
+
         this.dataSource.data = res;
         this.commissionList = res;
       },
@@ -97,18 +98,20 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        
+
         this.commissionService.DeleteCommission(CommissionID).subscribe({
           next: (response) => {
             this.GetCommissions();
+            this.openSnackBar('Deleted successfully!', 'Close');
             // Optionally refresh the list or navigate
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error deleting Commission:', error);
           }
         });
       } else {
-        
+
       }
     });
   }
@@ -137,7 +140,7 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
       this.dataForExcel.push(Object.values(row));
     });
 
-    
+
 
     // Extract header names dynamically from the keys of the first object
     let headers = Object.keys(dataToExport[0]);
@@ -151,9 +154,16 @@ export class CommissionListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the excel file
     this.ExcelService.generateExcel(reportData);
+    this.openSnackBar('Excel Download successfully!', 'Close');
 
     // Clear data after export
     this.dataForExcel = [];
   }
-
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
+  }
 }

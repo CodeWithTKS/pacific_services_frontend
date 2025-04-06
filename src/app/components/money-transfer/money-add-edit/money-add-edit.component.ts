@@ -15,13 +15,14 @@ import { MoneyTransferService } from '../../../services/moneyTransfer.service';
 import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-money-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule,
-    MatCheckboxModule,
+    MatCheckboxModule, MatSnackBarModule,
     MatButtonModule, RouterModule, MatCardModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,6 +51,7 @@ export class MoneyAddEditComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private portalService: portalService,
     private userService: userService,
+    private snackBar: MatSnackBar,
     private moneyTransferService: MoneyTransferService,
     private commissionService: CommissionService,
     private router: Router, private route: ActivatedRoute) {
@@ -139,7 +141,6 @@ export class MoneyAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
         this.portalList = res;
         if (this.moneyData?.TransferID) {
           this.transactionForm.patchValue({
@@ -161,7 +162,6 @@ export class MoneyAddEditComponent implements OnInit {
   GetCommissions() {
     this.commissionService.GetCommissions().subscribe({
       next: (res: any) => {
-       
         this.commissionList = res;
       }
     })
@@ -298,8 +298,10 @@ export class MoneyAddEditComponent implements OnInit {
         this.moneyTransferService.UpdateMoneyTransfer(this.moneyData.TransferID, formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/money-transfer']); // Navigate back to the money-transfer list
+            this.openSnackBar('Updated successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error updating money-transfer', error);
           }
         });
@@ -308,18 +310,27 @@ export class MoneyAddEditComponent implements OnInit {
         this.moneyTransferService.AddMoneyTransfer(formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/money-transfer']); // Navigate back to the money-transfer list
+            this.openSnackBar('Added successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error adding money-transfer', error);
           }
         });
       }
     } else {
-      
+
     }
   }
 
   get formControls() {
     return this.transactionForm.controls;
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

@@ -5,13 +5,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { userService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-update-vendor-balance',
   standalone: true,
   imports: [MatButtonModule, CommonModule, ReactiveFormsModule,
-    FormsModule, MatFormFieldModule, MatInputModule,],
+    FormsModule, MatFormFieldModule, MatInputModule, MatSnackBarModule],
   templateUrl: './update-vendor-balance.component.html',
   styleUrl: './update-vendor-balance.component.css'
 })
@@ -22,6 +23,7 @@ export class UpdateVendorBalanceComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private userService: userService,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<UpdateVendorBalanceComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -74,13 +76,23 @@ export class UpdateVendorBalanceComponent implements OnInit {
     this.userService.addVendorLog(logs).subscribe({
       next: (response) => {
         this.dialogRef.close(true);
+        this.openSnackBar('Added successfully!', 'Close');
       },
       error: (error) => {
         console.error('Error updating portal', error);
+        this.openSnackBar(`${error}`, 'Close');
+
       }
     });
   }
   onCancel(): void {
     this.dialogRef.close(false);
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

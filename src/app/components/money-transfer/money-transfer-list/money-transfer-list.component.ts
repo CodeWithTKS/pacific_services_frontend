@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
@@ -17,14 +18,15 @@ import { ExcelService } from '../../../services/excel.service';
 import { MoneyTransferService } from '../../../services/moneyTransfer.service';
 import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
-import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
 import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
+import { TransactionAddComponent } from '../transaction-add/transaction-add.component';
 
 @Component({
   selector: 'app-money-transfer-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDatepickerModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule, RouterModule,
+    MatSnackBarModule,
     MatInputModule, MatButtonModule, MatSortModule, MatDialogModule, MatSelectModule],
   providers: [provideNativeDateAdapter()],
   templateUrl: './money-transfer-list.component.html',
@@ -60,6 +62,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   constructor(private moneyTransferService: MoneyTransferService,
     private portalService: portalService,
     private router: Router,
+    private snackBar: MatSnackBar,
     private userService: userService,
     private ExcelService: ExcelService,
     private dialog: MatDialog, private fb: FormBuilder) {
@@ -228,9 +231,11 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
         this.moneyTransferService.DeleteMoneyTransfer(TransferID).subscribe({
           next: (response) => {
             this.GetMoneyTransfers();
+            this.openSnackBar('Deleted successfully!', 'Close');
             // Optionally refresh the list or navigate
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error deleting Commission:', error);
           }
         });
@@ -293,8 +298,15 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the excel file
     this.ExcelService.generateExcel(reportData);
-
+    this.openSnackBar('Excel Download successfully!', 'Close');
     // Clear data after export
     this.dataForExcel = [];
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

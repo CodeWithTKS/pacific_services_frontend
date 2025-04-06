@@ -9,12 +9,13 @@ import { RouterModule } from '@angular/router';
 import { userService } from '../../../services/user.service';
 import { MatIconModule } from '@angular/material/icon';
 import { RazorpayService } from '../../../services/razorpay.service';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
-    MatFormFieldModule, MatIconModule,
+    MatFormFieldModule, MatIconModule, MatSnackBarModule,
     MatInputModule, MatButtonModule, RouterModule],
   templateUrl: './user-add-edit.component.html',
   styleUrl: './user-add-edit.component.css'
@@ -27,6 +28,7 @@ export class UserAddEditComponent implements OnInit {
     private userService: userService,
     private razorpayService: RazorpayService,
     public dialogRef: MatDialogRef<UserAddEditComponent>,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -71,8 +73,10 @@ export class UserAddEditComponent implements OnInit {
           //   });
           // }
           this.dialogRef.close(true);
+          this.openSnackBar('Added successfully!', 'Close');
         },
         error: (error) => {
+          this.openSnackBar(`${error}`, 'Close');
           console.error('Error adding User', error);
         }
       });
@@ -86,5 +90,13 @@ export class UserAddEditComponent implements OnInit {
   // Getter for easy access to form controls in the template
   get formControls() {
     return this.loginForm.controls;
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommissionService } from '../../../services/commission.service';
 import { portalService } from '../../../services/portal.service';
@@ -13,8 +14,9 @@ import { userService } from '../../../services/user.service';
 @Component({
   selector: 'app-commission-add-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatSelectModule,
-    MatFormFieldModule, MatInputModule, MatButtonModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule,
+    MatSelectModule, MatFormFieldModule, MatInputModule,
+    MatButtonModule, RouterModule, MatSnackBarModule],
   templateUrl: './commission-add-edit.component.html',
   styleUrl: './commission-add-edit.component.css'
 })
@@ -32,6 +34,7 @@ export class CommissionAddEditComponent implements OnInit {
     private commissionService: CommissionService,
     private portalService: portalService,
     private userService: userService,
+    private snackBar: MatSnackBar,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
   }
@@ -92,7 +95,7 @@ export class CommissionAddEditComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
+
         this.portalList = res;
         if (this.commissionData?.CommissionID) {
           this.myForm.patchValue({
@@ -139,8 +142,10 @@ export class CommissionAddEditComponent implements OnInit {
         this.commissionService.UpdateCommission(this.commissionData.CommissionID, formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/commission']); // Navigate back to the commission list
+            this.openSnackBar('Updated successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error updating commission', error);
           }
         });
@@ -149,19 +154,28 @@ export class CommissionAddEditComponent implements OnInit {
         this.commissionService.AddCommission(formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/commission']); // Navigate back to the commission list
+            this.openSnackBar('Added successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error adding commission', error);
           }
         });
       }
     } else {
-      
+
     }
   }
 
   // Getter for easy access to form controls in the template
   get formControls() {
     return this.myForm.controls;
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

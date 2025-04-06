@@ -8,13 +8,14 @@ import { MatInputModule } from '@angular/material/input';
 import { userService } from '../../../services/user.service';
 import { portalService } from '../../../services/portal.service';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-portal-transfer',
   standalone: true,
   imports: [MatButtonModule, CommonModule, ReactiveFormsModule,
     FormsModule, MatFormFieldModule, MatInputModule,
-    MatSelectModule],
+    MatSelectModule, MatSnackBarModule],
   templateUrl: './portal-transfer.component.html',
   styleUrl: './portal-transfer.component.css'
 })
@@ -27,10 +28,11 @@ export class PortalTransferComponent implements OnInit {
     private fb: FormBuilder,
     private portalService: portalService,
     private userService: userService,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<PortalTransferComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    
+
 
     this.transferForm = this.fb.group({
       vendorId: [this.data.id, Validators.required],
@@ -47,7 +49,6 @@ export class PortalTransferComponent implements OnInit {
   GetPortals() {
     this.portalService.GetPortals().subscribe({
       next: (res: any) => {
-       
         this.portals = res;
       }
     });
@@ -92,10 +93,19 @@ export class PortalTransferComponent implements OnInit {
     this.userService.addVendorLog(logs).subscribe({
       next: (response) => {
         this.dialogRef.close(true);
+        this.openSnackBar('Updated successfully!', 'Close');
       },
       error: (error) => {
+        this.openSnackBar(`${error}`, 'Close');
         console.error('Error updating portal', error);
       }
+    });
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
     });
   }
 }

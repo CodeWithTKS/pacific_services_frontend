@@ -8,12 +8,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { portalService } from '../../../services/portal.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-portal-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
-    MatFormFieldModule, MatDatepickerModule,
+    MatFormFieldModule, MatDatepickerModule, MatSnackBarModule,
     MatInputModule, MatButtonModule, RouterModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,7 @@ export class PortalAddEditComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private portalService: portalService,
+    private snackBar: MatSnackBar,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
   }
@@ -82,14 +84,16 @@ export class PortalAddEditComponent implements OnInit {
       const openingBalanceDate = new Date(formData.openingBalanceDate);
       openingBalanceDate.setDate(openingBalanceDate.getDate() + 1);
       formData.openingBalanceDate = openingBalanceDate;
-      
+
       if (this.portalData && this.portalData.PortalID) {
         // Update an existing portal
         this.portalService.UpdatePortal(this.portalData.PortalID, formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/portal']); // Navigate back to the portal list
+            this.openSnackBar('Updated successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error updating portal', error);
           }
         });
@@ -98,20 +102,28 @@ export class PortalAddEditComponent implements OnInit {
         this.portalService.AddPortal(formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/portal']); // Navigate back to the portal list
+            this.openSnackBar('Added successfully!', 'Close');
           },
           error: (error) => {
             console.error('Error adding portal', error);
+            this.openSnackBar(`${error}`, 'Close');
           }
         });
       }
     } else {
-      
+
     }
   }
-
 
   // Getter for easy access to form controls in the template
   get formControls() {
     return this.myForm.controls;
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

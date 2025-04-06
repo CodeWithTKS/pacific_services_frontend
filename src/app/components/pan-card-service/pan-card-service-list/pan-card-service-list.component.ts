@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
@@ -20,6 +21,7 @@ import { pancardService } from '../../../services/panCard.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDatepickerModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule, RouterModule,
+    MatSnackBarModule,
     MatInputModule, MatButtonModule, MatSortModule, MatSelectModule],
   providers: [provideNativeDateAdapter()],
   templateUrl: './pan-card-service-list.component.html',
@@ -47,6 +49,7 @@ export class PanCardServiceListComponent implements OnInit, AfterViewInit {
 
   constructor(private pancardService: pancardService,
     private ExcelService: ExcelService,
+    private snackBar: MatSnackBar,
     private router: Router, private fb: FormBuilder) {
     this.range = this.fb.group({
       start: [null],
@@ -189,5 +192,15 @@ export class PanCardServiceListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the file
     this.ExcelService.generateExcel(reportData);
+    this.openSnackBar('Excel Download successfully!', 'Close');
+    this.dataForExcel = [];
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

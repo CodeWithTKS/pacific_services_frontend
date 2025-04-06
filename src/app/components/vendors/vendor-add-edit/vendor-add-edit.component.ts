@@ -7,12 +7,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { userService } from '../../../services/user.service';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-vendor-add-edit',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
-    MatFormFieldModule,
+    MatFormFieldModule, MatSnackBarModule,
     MatInputModule, MatButtonModule, RouterModule],
   templateUrl: './vendor-add-edit.component.html',
   styleUrl: './vendor-add-edit.component.css'
@@ -24,6 +25,7 @@ export class VendorAddEditComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private userService: userService,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<VendorAddEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.createForm();
@@ -69,8 +71,10 @@ export class VendorAddEditComponent implements OnInit {
         this.userService.Updateuser(this.UserData.id, formData).subscribe({
           next: (response) => {
             this.dialogRef.close(true);
+            this.openSnackBar('Updated successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error updating User', error);
           }
         });
@@ -79,8 +83,10 @@ export class VendorAddEditComponent implements OnInit {
         this.userService.Adduser(formData).subscribe({
           next: (response) => {
             this.dialogRef.close(true);
+            this.openSnackBar('Added successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error adding User', error);
           }
         });
@@ -94,5 +100,12 @@ export class VendorAddEditComponent implements OnInit {
   // Getter for easy access to form controls in the template
   get formControls() {
     return this.vendorForm.controls;
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

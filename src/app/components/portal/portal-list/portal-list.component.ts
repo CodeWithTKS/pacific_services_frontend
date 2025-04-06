@@ -13,6 +13,7 @@ import { ExcelService } from '../../../services/excel.service';
 import { portalService } from '../../../services/portal.service';
 import { UpdateBalanceComponent } from '../update-balance/update-balance.component';
 import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-portal-list',
@@ -20,7 +21,7 @@ import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatPaginatorModule, MatTableModule, MatFormFieldModule,
     MatInputModule, MatButtonModule, RouterModule,
-    MatSortModule, MatDialogModule],
+    MatSnackBarModule, MatSortModule, MatDialogModule],
   templateUrl: './portal-list.component.html',
   styleUrl: './portal-list.component.css'
 })
@@ -46,6 +47,7 @@ export class PortalListComponent implements OnInit, AfterViewInit {
   constructor(private portalService: portalService,
     private ExcelService: ExcelService,
     private router: Router,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -132,10 +134,12 @@ export class PortalListComponent implements OnInit, AfterViewInit {
         this.portalService.DeletePortal(portalId).subscribe({
           next: (response) => {
             this.GetPortals();
+            this.openSnackBar('Deleted successfully!', 'Close');
             // Optionally refresh the list or navigate
           },
           error: (error) => {
             console.error('Error deleting portal:', error);
+            this.openSnackBar(`${error}`, 'Close');
           }
         });
       } else {
@@ -183,8 +187,16 @@ export class PortalListComponent implements OnInit, AfterViewInit {
 
     // Call the Excel service to generate the excel file
     this.ExcelService.generateExcel(reportData);
-
+    this.openSnackBar('Excel Download successfully!', 'Close');
     // Clear data after export
     this.dataForExcel = [];
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

@@ -9,6 +9,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AepsService } from '../../../services/aeps.service';
 import { CommissionService } from '../../../services/commission.service';
@@ -20,7 +21,7 @@ import { userService } from '../../../services/user.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule,
     MatSelectModule, MatFormFieldModule, MatInputModule,
-    MatCheckboxModule,
+    MatCheckboxModule, MatSnackBarModule,
     MatButtonModule, RouterModule, MatCardModule, MatDatepickerModule],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +68,7 @@ export class AepsAddEditComponent implements OnInit {
     private AepsService: AepsService,
     private commissionService: CommissionService,
     private userService: userService,
+    private snackBar: MatSnackBar,
     private router: Router, private route: ActivatedRoute) {
     this.createForm();
   }
@@ -178,7 +180,6 @@ export class AepsAddEditComponent implements OnInit {
   GetCommissions() {
     this.commissionService.GetCommissions().subscribe({
       next: (res: any) => {
-       
         this.commissionList = res;
       }
     })
@@ -258,8 +259,10 @@ export class AepsAddEditComponent implements OnInit {
         this.AepsService.UpdateMoneyTransfer(this.moneyData.TransferID, formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/aeps']); // Navigate back to the money-transfer list
+            this.openSnackBar('Updated successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error updating money-transfer', error);
           }
         });
@@ -268,8 +271,10 @@ export class AepsAddEditComponent implements OnInit {
         this.AepsService.AddMoneyTransfer(formData).subscribe({
           next: (response) => {
             this.router.navigate(['/admin/aeps']); // Navigate back to the money-transfer list
+            this.openSnackBar('Added successfully!', 'Close');
           },
           error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
             console.error('Error adding money-transfer', error);
           }
         });
@@ -280,5 +285,12 @@ export class AepsAddEditComponent implements OnInit {
 
   get formControls() {
     return this.transactionForm.controls;
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }
