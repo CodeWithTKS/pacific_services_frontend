@@ -135,7 +135,10 @@ export class CommissionAddEditComponent implements OnInit {
   // Submit function
   onSubmit(): void {
     if (this.myForm.valid) {
-      const formData = this.myForm.value;
+      const formData = {
+        ...this.myForm.value,
+        VendorID: this.myForm.value?.CommissionFor === "self" ? '0' : this.myForm.value?.VendorID
+      }
 
       if (this.commissionData && this.commissionData.CommissionID) {
         // Update an existing commission
