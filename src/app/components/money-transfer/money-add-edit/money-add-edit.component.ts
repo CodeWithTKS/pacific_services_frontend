@@ -259,20 +259,34 @@ export class MoneyAddEditComponent implements OnInit {
         if (commission) {
           if (commission.VendorID === vendorID) {
             if (commission.VendorID > 0) {
+              // Existing vendor mode logic remains unchanged
               FixedAmtControl?.setValue(commission.PacificFixedAmount || 0, { emitEvent: false });
               bankChargeControl?.setValue(commission.PacificAmount || 0, { emitEvent: false });
               ExtraControl?.setValue(
-                commission.Percentage ? (totalCash * commission.Percentage / 100) : commission.PacificExtraAmount,
+                commission.Percentage ? ((totalCash * commission.Percentage) / 100 ) : commission.PacificExtraAmount,
                 { emitEvent: false }
               );
               bankDepositControl?.setValue(totalCash, { emitEvent: false });
               custDepositControl?.setValue(totalCash, { emitEvent: false });
             } else {
-              FixedAmtControl?.setValue(commission.PacificFixedAmount || 0, { emitEvent: false });
-              bankChargeControl?.setValue(commission.PacificAmount || 0, { emitEvent: false });
-              ExtraControl?.setValue(commission.PacificExtraAmount || 0, { emitEvent: false });
-              bankDepositControl?.setValue(totalCash - (commission.PacificExtraAmount || 0), { emitEvent: false });
-              custDepositControl?.setValue(totalCash - (commission.PacificFixedAmount || 0), { emitEvent: false });
+              // Updated self mode
+              if (commission.CommissionType === 'Percentage') {
+                FixedAmtControl?.setValue(commission.PacificFixedAmount || 0, { emitEvent: false });
+                bankChargeControl?.setValue(commission.PacificAmount || 0, { emitEvent: false });
+                ExtraControl?.setValue(
+                  commission.Percentage ? ((totalCash * commission.Percentage) / 100) : commission.PacificExtraAmount,
+                  { emitEvent: false }
+                );
+                bankDepositControl?.setValue(totalCash, { emitEvent: false });
+                custDepositControl?.setValue(totalCash, { emitEvent: false });
+              } else {
+                // Default (fixed) logic
+                FixedAmtControl?.setValue(commission.PacificFixedAmount || 0, { emitEvent: false });
+                bankChargeControl?.setValue(commission.PacificAmount || 0, { emitEvent: false });
+                ExtraControl?.setValue(commission.PacificExtraAmount || 0, { emitEvent: false });
+                bankDepositControl?.setValue(totalCash - (commission.PacificExtraAmount || 0), { emitEvent: false });
+                custDepositControl?.setValue(totalCash - (commission.PacificFixedAmount || 0), { emitEvent: false });
+              }
             }
           }
         }
