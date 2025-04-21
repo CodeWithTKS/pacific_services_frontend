@@ -75,6 +75,14 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    this.filters = {
+      fromDate: moment(today).format('YYYY-MM-DD'),
+      toDate: moment(tomorrow).format('YYYY-MM-DD'),
+    };
     this.GetMoneyTransfers();
     this.GetPortals();
     this.GetVendor();
