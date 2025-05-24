@@ -116,7 +116,9 @@ export class AepsAddEditComponent implements OnInit {
       HighlightEntry: [false],
       PendingAmount: [],
       ReceivedAmount: [],
-      AOB: []
+      AOB: [],
+      self: [false],
+      selfPortalId: ['']
     });
   }
 
@@ -148,6 +150,8 @@ export class AepsAddEditComponent implements OnInit {
       ReceivedAmount: money.ReceivedAmount,
       HighlightEntry: money.HighlightEntry,
       AOB: money.AOB,
+      self: money.self,
+      selfPortalId: money.selfPortalId,
     });
     this.GetCommissions();
     this.updateTotalCash();

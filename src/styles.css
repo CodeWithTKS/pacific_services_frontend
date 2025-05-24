@@ -73,3 +73,6 @@ p {
     font-size: 18px;
     font-weight: bold;
 }
+.cursor-pointer{
+    cursor: pointer;
+}

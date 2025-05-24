@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   salesData: any[] = [];
+  summeryData: any[] = [];
   portalList: any[] = [];
   PaymentList: any[] = [];
   // Chart options
@@ -55,6 +56,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.GetPortals();
+    this.Getsummary();
     this.GethighlightEntry();
   }
 
@@ -92,6 +94,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           value: Number(item.Balance), // Convert Balance to a number
         }));
       }
+    });
+  }
+
+  Getsummary() {
+    const today = new Date();
+    const startDate = today.toISOString().split('T')[0];
+    const endDate = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
+
+    this.portalService.Getsummary(startDate, endDate).subscribe({
+      next: (res: any[]) => {
+        this.summeryData = Object.values(
+          res.reduce((acc: any, { source, total_amount }) => {
+            acc[source] = acc[source] || { name: source, value: 0 };
+            acc[source].value += total_amount;
+            return acc;
+          }, {})
+        );
+        console.log(this.summeryData);
+        
+      },
+      error: (err) => console.error('Error fetching summary:', err)
     });
   }
 

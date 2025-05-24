@@ -20,6 +20,11 @@ export class portalService {
             .get(environment.baseURL + `/portal`)
             .pipe(catchError(this.handleError));
     }
+    
+    Getsummary(startDate: string, endDate: string): Observable<any> {
+        const url = `${environment.baseURL}/summary?startDate=${startDate}&endDate=${endDate}`;
+        return this.httpClient.get(url).pipe(catchError(this.handleError));
+    }
 
     GethighlightEntry(): Observable<any> {
         return this.httpClient

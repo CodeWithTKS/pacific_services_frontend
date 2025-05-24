@@ -224,7 +224,18 @@
                             </mat-form-field>
                         </div>
                         <div class="col-12 col-sm-6 col-md-4 col-xl-6">
+                            <mat-checkbox formControlName='self'>Self Account</mat-checkbox>
                             <mat-checkbox formControlName='HighlightEntry'>Highlight Entry</mat-checkbox>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-6" *ngIf="transactionForm.value?.self">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Self Portal</mat-label>
+                                <mat-select formControlName="selfPortalId">
+                                    <mat-option *ngFor="let portal of portalList" [value]="portal.PortalID">
+                                        {{ portal.Name }} ({{ portal.Code }})
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                     </div>
                 </mat-card>

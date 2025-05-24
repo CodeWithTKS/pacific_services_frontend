@@ -145,6 +145,7 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
 
   getTotalExtra() {
     return this.dataSource.data
+      .filter((transfer: any) => transfer.self !== 1)
       .map((transfer: any) => transfer.Extra)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
@@ -158,24 +159,28 @@ export class MoneyTransferListComponent implements OnInit, AfterViewInit {
 
   getTotalFixedAmt() {
     return this.dataSource.data
+      .filter((transfer: any) => transfer.self !== 1)
       .map((transfer: any) => transfer.FixedAmt)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
 
   getTotalBankCharge() {
     return this.dataSource.data
+      .filter((transfer: any) => transfer.self !== 1)
       .map((transfer: any) => transfer.BankCharge)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
 
   getTotalBankDeposit() {
     return this.dataSource.data
+      .filter((transfer: any) => transfer.self !== 1)
       .map((transfer: any) => transfer.BankDeposit)
       .reduce((acc, value) => acc + (value || 0), 0);
   }
 
   getTotalCustDeposit() {
     return this.dataSource.data
+      .filter((transfer: any) => transfer.self !== 1)
       .map((transfer: any) => transfer.CustDeposit)
       .reduce((acc, value) => acc + (value || 0), 0);
   }

@@ -101,7 +101,8 @@ export class MoneyAddEditComponent implements OnInit {
       BankCharge: ['', Validators.required],
       Extra: ['', Validators.required],
       BankDeposit: ['', Validators.required],
-      CustDeposit: ['', Validators.required]
+      CustDeposit: ['', Validators.required],
+      selfPortalId: ['']
     });
   }
 
@@ -133,6 +134,7 @@ export class MoneyAddEditComponent implements OnInit {
       Extra: money.Extra,
       BankDeposit: money.BankDeposit,
       CustDeposit: money.CustDeposit,
+      selfPortalId: money.selfPortalId,
     });
     this.GetCommissions();
     this.updateTotalCash();

@@ -1,0 +1,63 @@
+<div class="container py-4">
+  <mat-card class="rounded shadow-sm p-4">
+    <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+      <h2 class="mb-4 text-center">🚀 Create New Company</h2>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Company Name</mat-label>
+            <input matInput formControlName="companyName" required placeholder="Enter company name" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" required type="email" placeholder="example@company.com" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone" required placeholder="Enter phone number" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Company Type</mat-label>
+            <mat-select formControlName="companyType" required>
+              <mat-option value="fintech_service">Fintech Service</mat-option>
+              <mat-option value="product_business">Product Business</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Additional Fields -->
+      <!-- Add more fields here as needed -->
+
+      <div *ngIf="selectedModules.length > 0" class="mt-4">
+        <h4 class="mb-3">🧩 Select Modules</h4>
+
+        <div formArrayName="modules">
+          <div class="row">
+            <div class="col-md-4 mb-2" *ngFor="let module of selectedModules; let i = index">
+              <mat-checkbox [formControlName]="i" class="d-block">
+                {{ module.view }}
+              </mat-checkbox>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button mat-raised-button color="primary" type="submit" [disabled]="companyForm.invalid">
+          ➕ Create Company
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

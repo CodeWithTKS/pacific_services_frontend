@@ -89,8 +89,10 @@ export class MobileTransferAddEditComponent implements OnInit {
       Cash1: ['', [Validators.pattern(/^\d+$/)]],
       TotalCash: [{ value: '0' }], // Calculated field
       CollectionAmt: ['', Validators.required],
-      Extra: ['', Validators.required],
-      HighlightEntry: [false]
+      Extra: ['0', Validators.required],
+      HighlightEntry: [false],
+      self: [false],
+      selfPortalId: ['']
     });
   }
 
@@ -116,6 +118,8 @@ export class MobileTransferAddEditComponent implements OnInit {
       CollectionAmt: mobile.CollectionAmt,
       Extra: mobile.Extra,
       HighlightEntry: mobile.HighlightEntry,
+      self: mobile.self,
+      selfPortalId: mobile.selfPortalId,
     });
     this.updateTotalCash();
   }

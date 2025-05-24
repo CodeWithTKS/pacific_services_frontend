@@ -2,7 +2,7 @@
     <div class="row">
         <!-- Portal Chart Column -->
         <div class="col-xl-6 col-lg-12 ">
-            <h3 class="m-0">Portal Balance Chart</h3>
+            <h4 class="m-0 text-primary">Portal Balance Chart</h4>
             <div class="card2 shadow-lg">
                 <ngx-charts-pie-chart [scheme]="colorScheme" [results]="salesData" [legend]="showLegend"
                     [labels]="showLabels" [doughnut]="isDoughnut" [gradient]="gradient" [explodeSlices]="explodeSlices"
@@ -12,7 +12,7 @@
         </div>
         <div class="col-xl-6 col-lg-12 ">
             <div class="desktop phone justify-content-between align-content-center">
-                <h3 class="m-0">Pending Payments</h3>
+                <h4 class="text-danger mb-1">Pending Payments</h4>
                 <button mat-flat-button (click)="excelDownload('Pending-payment-list')">Export To Excel</button>
             </div>
             <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8  sort"
@@ -55,6 +55,23 @@
             <!-- Pagination -->
             <mat-paginator [length]="portalList.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]"
                 showFirstLastButtons></mat-paginator>
+        </div>
+        <!-- Total Sales with price -->
+        <div class="col-xl-6 col-lg-12">
+            <h4 class="m-0 text-success">Service Count</h4>
+            <div class="card2 shadow-lg">
+                <div style="height: 250px;" class="d-flex justify-content-center align-items-center">
+                    <p *ngIf="summeryData.length === 0">No Records Avaliable</p>
+                </div>
+                <!-- Show N/A if no data -->
+
+                <!-- Show chart if there's at least 1 data item -->
+                <ngx-charts-bar-vertical *ngIf="summeryData.length > 0" [scheme]="colorScheme" [results]="summeryData"
+                    [gradient]="gradient" [xAxis]="true" [yAxis]="true" [legend]="showLegend" [showXAxisLabel]="true"
+                    [showYAxisLabel]="true" [xAxisLabel]="'Service'" [yAxisLabel]="'Count'" [barPadding]="10"
+                    [roundEdges]="true">
+                </ngx-charts-bar-vertical>
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,28 @@
+<h2 mat-dialog-title class="dialog-title">🚀 Choose Your Plan</h2>
+
+<mat-dialog-content class="dialog-content">
+    <p class="dialog-description">
+        Start with a <strong>3-day free trial</strong> or subscribe for just <strong>₹99/month</strong> to unlock all
+        premium features.
+    </p>
+
+    <div class="plan-options">
+        <mat-card class="plan-card trial" (click)="choose('trial')">
+            <mat-card-title>🎁 3-Day Free Trial</mat-card-title>
+            <mat-card-content>
+                <p>No commitment. Try all features for free.</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="plan-card buy" (click)="choose('buy')">
+            <mat-card-title>💎 Full Access – ₹99/month</mat-card-title>
+            <mat-card-content>
+                <p>Unlock all features with a low monthly subscription.</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-stroked-button color="warn" (click)="close()">Cancel</button>
+</mat-dialog-actions>

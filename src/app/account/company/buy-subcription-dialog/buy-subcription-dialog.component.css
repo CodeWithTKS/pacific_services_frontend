@@ -1,0 +1,40 @@
+.dialog-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.dialog-content {
+    text-align: center;
+}
+
+.dialog-description {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.plan-options {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.plan-card {
+    width: 250px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.plan-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.plan-card.trial {
+    border-left: 4px solid #03a9f4;
+}
+
+.plan-card.buy {
+    border-left: 4px solid #4caf50;
+}
