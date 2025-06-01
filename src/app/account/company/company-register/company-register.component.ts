@@ -4,17 +4,20 @@ import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
+import { companyService } from '../../../services/company.service';
 import { BuySubcriptionDialogComponent } from '../buy-subcription-dialog/buy-subcription-dialog.component';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-company-register',
   standalone: true,
-  imports: [CommonModule, MatCheckboxModule, MatInputModule,
+  imports: [CommonModule, MatCheckboxModule, MatInputModule, RouterModule,
     MatFormFieldModule, FormsModule, ReactiveFormsModule, MatDialogModule,
     MatCardModule, MatSelectModule, MatButtonModule, MatIconModule],
   templateUrl: './company-register.component.html',
@@ -52,7 +55,12 @@ export class CompanyRegisterComponent implements OnInit {
 
   selectedModules: any[] = [];
 
-  constructor(private fb: FormBuilder, private dialog: MatDialog) { }
+  constructor(
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private companyService: companyService,
+    private snackBar: MatSnackBar,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.companyForm = this.fb.group({
@@ -79,34 +87,53 @@ export class CompanyRegisterComponent implements OnInit {
   }
 
   onSubmit() {
-
     if (this.companyForm.valid) {
+      const selectedModuleIds = this.companyForm.value.modules
+        .map((checked: boolean, i: number) => checked ? this.selectedModules[i].id : null)
+        .filter((v: number | null) => v !== null);
+
+      const payload = {
+        ...this.companyForm.value,
+        moduleIds: selectedModuleIds
+      };
+
       const dialogRef = this.dialog.open(BuySubcriptionDialogComponent, {
-        // width: '400px',
         disableClose: true
       });
 
       dialogRef.afterClosed().subscribe((choice) => {
         if (choice === 'trial') {
-          // Handle 3-day trial logic
           console.log('Trial selected');
-          // e.g., save company with trial status
+          payload.subscriptionType = 'trial'; // Add optional trial flag if needed
         } else if (choice === 'buy') {
-          // Redirect to payment or subscription page
           console.log('Buy Now selected');
+          payload.subscriptionType = 'paid'; // Optional: mark as paid if required
+        } else {
+          console.log('No choice made, aborting...');
+          return; // Prevent service call if dialog closed without selection
         }
+
+        console.log('Final Payload:', payload);
+
+        this.companyService.AddCompany(payload).subscribe({
+          next: (response) => {
+            this.router.navigate(['/admin/dashboard']);
+            this.openSnackBar('Added successfully!', 'Close');
+          },
+          error: (error) => {
+            this.openSnackBar(`${error}`, 'Close');
+            console.error('Error adding company', error);
+          }
+        });
       });
     }
-    const selectedModuleIds = this.companyForm.value.modules
-      .map((checked: boolean, i: number) => checked ? this.selectedModules[i].id : null)
-      .filter((v: number | null) => v !== null);
+  }
 
-    const payload = {
-      ...this.companyForm.value,
-      moduleIds: selectedModuleIds
-    };
-
-    console.log('Final Payload:', payload);
-    // call service to send data to Node API here
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 3000, // Snackbar will auto-dismiss after 3 seconds
+      horizontalPosition: 'center', // Center horizontally
+      verticalPosition: 'bottom' // Show on top
+    });
   }
 }

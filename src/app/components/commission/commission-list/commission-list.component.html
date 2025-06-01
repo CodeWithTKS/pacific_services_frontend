@@ -34,21 +34,24 @@
             <ng-container matColumnDef="vendorName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">Vendor Name</th>
-                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.vendorName || 'N/A'}}</td>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.vendorName || 'N/A'}}
+                </td>
             </ng-container>
 
             <!-- FromAmount Column -->
             <ng-container matColumnDef="FromAmount">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">From Amount</th>
-                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.FromAmount | currency:'INR'  }}</td>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.FromAmount |
+                    currency:'INR' }}</td>
             </ng-container>
 
             <!-- ToAmount Column -->
             <ng-container matColumnDef="ToAmount">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     style="background: #004d99; color: white; padding: 10px;">To Amount</th>
-                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.ToAmount  | currency:'INR' }}</td>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.ToAmount | currency:'INR'
+                    }}</td>
             </ng-container>
 
             <!-- BankType Column -->
@@ -77,30 +80,33 @@
             <!-- PacificType Column -->
             <ng-container matColumnDef="PacificType">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Pacific Type</th>
+                    style="background: #004d99; color: white; padding: 10px;"> Type</th>
                 <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificType }}</td>
             </ng-container>
 
             <!-- PacificFixedAmount Column -->
             <ng-container matColumnDef="PacificFixedAmount">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Pacific Fixed Amount</th>
-                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificFixedAmount | currency:'INR'  }}
+                    style="background: #004d99; color: white; padding: 10px;"> Fixed Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificFixedAmount |
+                    currency:'INR' }}
                 </td>
             </ng-container>
 
             <!-- PacificAmount Column -->
             <ng-container matColumnDef="PacificAmount">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Pacific Amount</th>
-                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificAmount  | currency:'INR' }}</td>
+                    style="background: #004d99; color: white; padding: 10px;">Charge Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificAmount |
+                    currency:'INR' }}</td>
             </ng-container>
 
             <!-- PacificExtraAmount Column -->
             <ng-container matColumnDef="PacificExtraAmount">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    style="background: #004d99; color: white; padding: 10px;">Pacific Extra Amount</th>
-                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificExtraAmount  | currency:'INR' }}
+                    style="background: #004d99; color: white; padding: 10px;">Commission Amount</th>
+                <td mat-cell *matCellDef="let commission" style="padding: 10px;">{{ commission.PacificExtraAmount |
+                    currency:'INR' }}
                 </td>
             </ng-container>
 
