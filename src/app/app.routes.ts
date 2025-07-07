@@ -13,6 +13,5 @@ export const routes: Routes = [
     {
         path: 'admin',
         loadChildren: () => import('./components/components-routing.module').then(m => m.AdminRoutingModule),
-        canActivate: [AuthGuard]
     },
 ];
