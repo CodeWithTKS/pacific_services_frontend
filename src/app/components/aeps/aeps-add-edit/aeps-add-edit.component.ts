@@ -108,6 +108,7 @@ export class AepsAddEditComponent implements OnInit {
       Cash5: ['', [Validators.pattern(/^\d+$/)]],
       TotalCash: [{ value: '0' }], // Calculated field
       CollectionAmt: ['', Validators.required],
+      Discount: [0, [Validators.min(0), Validators.pattern(/^\d+$/)]], // Added discount field
       Extra: ['', Validators.required],
       TransactionType: ['', Validators.required],
       OtherType: [''],
@@ -253,6 +254,16 @@ export class AepsAddEditComponent implements OnInit {
     // Update TotalCash and CollectionAmt
     totalCashControl?.setValue(totalCash, { emitEvent: false });
     collectionAmtControl?.setValue(totalCash, { emitEvent: false });
+  }
+
+  updateExtra() {
+    const discountValue = this.transactionForm.get('Discount')?.value || 0;
+    const extraControl = this.transactionForm.get('Extra');
+    const extraValue = extraControl?.value || 0;
+
+    if (!isNaN(discountValue) && extraControl) {
+      extraControl.setValue(Math.max(extraValue - discountValue, 0), { emitEvent: false });
+    }
   }
 
   onSubmit(): void {

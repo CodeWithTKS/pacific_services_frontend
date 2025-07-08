@@ -89,6 +89,7 @@ export class MobileTransferAddEditComponent implements OnInit {
       Cash1: ['', [Validators.pattern(/^\d+$/)]],
       TotalCash: [{ value: '0' }], // Calculated field
       CollectionAmt: ['', Validators.required],
+      Discount: [0, [Validators.min(0), Validators.pattern(/^\d+$/)]], // Added discount field
       Extra: ['0', Validators.required],
       HighlightEntry: [false],
       self: [false],

@@ -200,7 +200,13 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-6">
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Discount Amount</mat-label>
+                                <input matInput formControlName="Discount" type="number" min="0"
+                                    placeholder="Enter discount amount" (keyup)="updateExtra()">
+                            </mat-form-field>
+                        </div>
                         <!--  Extra -->
                         <div class="col-12 col-sm-6 col-md-4 col-xl-6">
                             <mat-form-field class="full-width" appearance="outline">

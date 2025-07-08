@@ -91,6 +91,7 @@ export class FundTransferAddEditComponent implements OnInit {
       Cash1: ['', [Validators.pattern(/^\d+$/)]],
       TotalCash: [{ value: '0' }], // Calculated field
       CollectionAmt: ['', Validators.required],
+      Discount: [0, [Validators.min(0), Validators.pattern(/^\d+$/)]], // Added discount field
       Extra: ['', Validators.required],
       HighlightEntry: [false]
     });
