@@ -15,6 +15,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { fundTransferService } from '../../../services/fundTransfer.service';
 import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-fund-transfer-add-edit',
@@ -192,7 +193,10 @@ export class FundTransferAddEditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.transactionForm.valid) {
-      const formData = this.transactionForm.value;
+      const formData = {
+        ...this.transactionForm.value,
+        TransactionDate: moment(this.transactionForm.value.TransactionDate).format('YYYY-MM-DD HH:mm:ss')
+      };
       if (this.fundData && this.fundData.TransferID) {
         // Update an existing fund-transfer
         this.fundtransferService.UpdatefundTransfer(this.fundData.TransferID, formData).subscribe({

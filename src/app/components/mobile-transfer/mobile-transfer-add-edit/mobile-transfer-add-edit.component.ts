@@ -15,6 +15,7 @@ import { MobileTransferService } from '../../../services/mobileTransfer.service'
 import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import moment from 'moment';
 
 @Component({
   selector: 'app-mobile-transfer-add-edit',
@@ -193,7 +194,10 @@ export class MobileTransferAddEditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.transactionForm.valid) {
-      const formData = this.transactionForm.value;
+      const formData = {
+        ...this.transactionForm.value,
+        TransactionDate: moment(this.transactionForm.value.TransactionDate).format('YYYY-MM-DD HH:mm:ss')
+      };
       if (this.mobileData && this.mobileData.TransferID) {
         // Update an existing mobile-transfer
         this.MobileTransferService.UpdatemobileTransfer(this.mobileData.TransferID, formData).subscribe({

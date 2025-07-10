@@ -79,8 +79,10 @@ export class CashbackListComponent implements OnInit, AfterViewInit {
       width: '400px',
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.GetCashbacks();
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res === true) {
+        this.GetCashbacks();
+      }
     })
   }
 

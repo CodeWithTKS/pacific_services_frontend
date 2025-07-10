@@ -16,6 +16,7 @@ import { portalService } from '../../../services/portal.service';
 import { userService } from '../../../services/user.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import moment from 'moment';
 
 @Component({
   selector: 'app-money-add-edit',
@@ -265,7 +266,7 @@ export class MoneyAddEditComponent implements OnInit {
               FixedAmtControl?.setValue(commission.PacificFixedAmount || 0, { emitEvent: false });
               bankChargeControl?.setValue(commission.PacificAmount || 0, { emitEvent: false });
               ExtraControl?.setValue(
-                commission.Percentage ? ((totalCash * commission.Percentage) / 100 ) : commission.PacificExtraAmount,
+                commission.Percentage ? ((totalCash * commission.Percentage) / 100) : commission.PacificExtraAmount,
                 { emitEvent: false }
               );
               bankDepositControl?.setValue(totalCash, { emitEvent: false });
@@ -308,7 +309,10 @@ export class MoneyAddEditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.transactionForm.valid) {
-      const formData = this.transactionForm.value;
+      const formData = {
+        ...this.transactionForm.value,
+        TransactionDate: moment(this.transactionForm.value.TransactionDate).format('YYYY-MM-DD HH:mm:ss')
+      };
       if (this.moneyData && this.moneyData.TransferID) {
         // Update an existing money-transfer
         this.moneyTransferService.UpdateMoneyTransfer(this.moneyData.TransferID, formData).subscribe({
